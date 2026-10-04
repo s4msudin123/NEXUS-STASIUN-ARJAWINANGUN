@@ -1,29 +1,939 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <title>"NEXUS STASIUN ARJAWINANGUN"</title> 
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f5fa',
+              700: '#1b3b6f',
+              800: '#0f274a',
+              900: '#07152b',
+            }
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Courier+Prime:wght@700&display=swap');
+    
     body {
       margin: 0;
       padding: 0;
-      overflow: hidden; /* Biar ga ada scrollbar */
-      background-color: #0d1117; /* Warna background gelap biar pas loading ga silau */
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0d1117;
+      color: #0f172a;
+      overflow-x: hidden;
     }
-    iframe {
-      border: none;
-      width: 100vw;
-      height: 100vh;
-      display: block;
+
+    .form-border {
+      border: 1.5px solid #111827;
+    }
+
+    .handwriting {
+      font-family: 'Courier Prime', monospace;
+      color: #0f274a;
+      font-weight: 700;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #view-nexus {
+        display: none !important;
+      }
+      #view-izin-kerja {
+        display: block !important;
+        padding: 0 !important;
+      }
+      .print-page {
+        box-shadow: none !important;
+        border: 2px solid #000000 !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        background: #ffffff !important;
+      }
+      input, textarea {
+        border-bottom: 1px solid #000000 !important;
+        background: transparent !important;
+      }
     }
   </style>
 </head>
-<body>
+<body class="h-screen flex flex-col bg-[#0d1117]">
 
-  <iframe src="https://script.google.com/macros/s/AKfycbzU3mYHd1VViGv1GfMN-PpNa-UUv2eJEMhpLAJc3NTrcICRzQMLwuOqjhJEENLI1oxEyg/exec"></iframe>
+  <!-- Top Navigation Header (No-Print) -->
+  <header class="no-print bg-[#161b22] border-b border-slate-800 px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-3 flex-shrink-0 z-50">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center font-black text-white text-xs tracking-wider shadow">
+        KAI
+      </div>
+      <div>
+        <h1 class="text-white font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2">
+          NEXUS STASIUN ARJAWINANGUN
+          <span class="text-[10px] bg-slate-800 text-slate-300 border border-slate-700 px-1.5 py-0.5 rounded font-mono">Daop 3 Cirebon</span>
+        </h1>
+      </div>
+    </div>
 
+    <!-- View Switcher Tabs -->
+    <div class="flex items-center bg-slate-900/90 border border-slate-700/80 p-1 rounded-xl shadow-inner text-xs font-semibold">
+      <button id="tabNexus" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-blue-600 text-white shadow">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span>NEXUS Utama</span>
+      </button>
+      <button id="tabIzinKerja" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span>Sheet : Izin Kerja</span>
+      </button>
+    </div>
+
+    <!-- Quick Action for Form (Hidden when on Tab Nexus) -->
+    <div id="formActions" class="hidden flex items-center gap-1.5">
+      <button id="btnIsiContoh" type="button" class="px-2.5 py-1.5 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg transition-all flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+        <span class="hidden sm:inline">Muat Sesuai Gambar</span>
+        <span class="sm:hidden">Contoh</span>
+      </button>
+      <button id="btnReset" type="button" class="px-2.5 py-1.5 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-rose-300 border border-slate-700 rounded-lg transition-all flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        <span>Reset</span>
+      </button>
+      <button id="btnSimpan" type="button" class="px-3 py-1.5 text-[11px] font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-all shadow flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+        <span>Simpan</span>
+      </button>
+      <button onclick="window.print()" type="button" class="px-3 py-1.5 text-[11px] font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all shadow flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        <span>Cetak</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- VIEW 1: Original NEXUS Application (Google Apps Script Iframe - 100% UNCHANGED) -->
+  <main id="view-nexus" class="flex-1 w-full h-[calc(100vh-53px)] bg-[#0d1117] overflow-hidden">
+    <iframe 
+      id="frameNexus" 
+      src="https://script.google.com/macros/s/AKfycbzU3mYHd1VViGv1GfMN-PpNa-UUv2eJEMhpLAJc3NTrcICRzQMLwuOqjhJEENLI1oxEyg/exec"
+      class="w-full h-full border-none block"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </main>
+
+  <!-- VIEW 2: SHEET : IZIN KERJA (Formulir Izin Kerja PT KAI - 100% Exact Words) -->
+  <main id="view-izin-kerja" class="hidden flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 lg:p-8 bg-[#0b1329]">
+    <div class="max-w-5xl mx-auto bg-white rounded-none md:rounded-lg shadow-2xl p-3 sm:p-5 text-black form-border print-page">
+      
+      <!-- Top Metadata Header Table -->
+      <div class="grid grid-cols-12 border-b border-black text-xs">
+        
+        <!-- Top Left & Center Title Area -->
+        <div class="col-span-8 border-r border-black flex flex-col justify-between">
+          <div class="flex items-center justify-between p-2 border-b border-black bg-slate-50">
+            <div class="flex items-center gap-2">
+              <span class="font-bold uppercase tracking-tight text-[11px]">Tanggal Berlaku:</span>
+              <input type="text" id="tgl_berlaku" class="border-b border-black px-1.5 py-0.5 w-32 focus:outline-none focus:bg-amber-50 font-semibold" placeholder="Contoh: 19/08/20">
+            </div>
+            <div class="text-center font-extrabold text-xl tracking-widest uppercase py-1 pr-4">
+              IZIN KERJA
+            </div>
+          </div>
+
+          <!-- Section A: A. Aplikasi -->
+          <div class="p-2 space-y-1.5">
+            <div class="font-bold text-[11px]">A. Aplikasi</div>
+            <div class="grid grid-cols-3 gap-2 pl-2 text-[11px]">
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" id="app_kerja_panas" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+                <span>Kerja Panas</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" id="app_ruang_terbatas" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+                <span>Ruang Terbatas</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" id="app_lain_lain" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+                <span>Lain-Lain</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 border-t border-black text-[11px]">
+            <div class="p-1.5 border-r border-black flex items-center gap-1">
+              <span class="font-bold">Wilayah:</span>
+              <input type="text" id="wilayah" value="Daop 3 Cirebon" class="flex-1 border-b border-dotted border-gray-600 px-1 focus:outline-none">
+            </div>
+            <div class="p-1.5 flex items-center gap-1">
+              <span class="font-bold">Permit No:</span>
+              <input type="text" id="permit_no" class="flex-1 border-b border-dotted border-gray-600 px-1 focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Lokasi Row -->
+          <div class="p-1.5 border-t border-black text-[11px] flex items-center gap-2 bg-amber-50/20">
+            <span class="font-bold min-w-[50px]">Lokasi</span>
+            <input type="text" id="lokasi" placeholder="Km 204+000 s/d 205+000 Jalur Hilir" class="flex-1 border-b border-black font-semibold text-slate-800 px-2 py-0.5 focus:outline-none focus:bg-amber-50">
+          </div>
+        </div>
+
+        <!-- Top Right Document Code Box & Pemohon -->
+        <div class="col-span-4 flex flex-col justify-between text-[11px]">
+          <div class="p-2 border-b border-black bg-slate-50 space-y-1">
+            <div class="flex justify-between">
+              <span class="font-semibold">Kode Dokumen</span>
+              <span>: <strong class="font-mono">P01/P13</strong></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-semibold">Level Dokumen</span>
+              <span>: <strong class="font-mono">04</strong></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-semibold">Revisi Ke</span>
+              <span>: <strong class="font-mono">00</strong></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-semibold">Tgl. Mulai Berlaku</span>
+              <span>: <strong class="font-mono">22 April 2020</strong></span>
+            </div>
+          </div>
+
+          <!-- Pemohon Box -->
+          <div class="p-2 flex-1 flex flex-col justify-between bg-white">
+            <div class="font-bold uppercase tracking-tight text-[11px] border-b border-gray-300 pb-0.5">Pemohon:</div>
+            <div class="mt-1 space-y-1">
+              <div class="flex items-center gap-1">
+                <span class="w-20 font-semibold">Nama:</span>
+                <input type="text" id="pemohon_nama" class="flex-1 border-b border-black px-1 focus:outline-none font-medium">
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="w-20 font-semibold">Tanda Tangan:</span>
+                <input type="text" id="pemohon_ttd" placeholder="[Ttd]" class="flex-1 border-b border-black px-1 focus:outline-none handwriting text-sm">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- B. DESKRIPSI KERJA & Jenis Peralatan -->
+      <div class="grid grid-cols-12 border-b border-black text-xs">
+        <!-- Deskripsi Kerja -->
+        <div class="col-span-7 border-r border-black p-2 flex flex-col justify-between">
+          <div class="font-bold text-[11px] mb-1">B. DESKRIPSI KERJA</div>
+          <textarea id="deskripsi_kerja" rows="3" class="w-full text-xs font-semibold p-1.5 border border-dashed border-gray-300 rounded focus:border-black focus:outline-none resize-none leading-relaxed" placeholder="Perawatan geometri track dgn KPJR"></textarea>
+        </div>
+
+        <!-- Jenis Peralatan -->
+        <div class="col-span-5 p-2 bg-slate-50/50">
+          <div class="font-bold text-[11px] mb-1.5">Jenis Peralatan (Diisi Dengan Tanda Centang)</div>
+          <div class="space-y-1.5 pl-2 text-[11px]">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="alat_mesin" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+              <span>Mesin</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="alat_listrik" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+              <span>Listrik</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="alat_tangan" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+              <span>Peralatan Tangan</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- C. BAHAYA YANG MUNGKIN TERJADI -->
+      <div class="border-b border-black p-2">
+        <div class="font-bold text-[11px] mb-1.5 uppercase tracking-tight">C. BAHAYA YANG MUNGKIN TERJADI (Diisi Dengan Tanda Centang)</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-1 text-[11px]">
+          
+          <!-- Col 1 -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_lantai_licin" class="w-3.5 h-3.5">
+              <span>Lantai Licin</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_bahaya_kebakaran" class="w-3.5 h-3.5">
+              <span>Bahaya Kebakaran</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_jalan_darurat" class="w-3.5 h-3.5">
+              <span>Jalan darurat</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_debu" class="w-3.5 h-3.5">
+              <span>Debu</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_bahan_alat_listrik" class="w-3.5 h-3.5">
+              <span>Bahan Alat Listrik</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_kereta_melintas" class="w-3.5 h-3.5">
+              <span>Kereta Melintas</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_pekerjaan_lain_terdekat" class="w-3.5 h-3.5">
+              <span>Pekerjaan Lain yang Terdekat</span>
+            </label>
+          </div>
+
+          <!-- Col 2 -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_pekerjaan_atas_kepala" class="w-3.5 h-3.5">
+              <span>Pekerjaan di Atas Kepala</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_gas" class="w-3.5 h-3.5">
+              <span>Gas</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_tersandung_jatuh" class="w-3.5 h-3.5">
+              <span>Tersandung/Jatuh</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_salah_penyetelan" class="w-3.5 h-3.5">
+              <span>Salah Penyetelan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_keseleo" class="w-3.5 h-3.5">
+              <span>Keseleo</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_ketinggian" class="w-3.5 h-3.5">
+              <span>Ketinggian</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_tabrakan_benturan" class="w-3.5 h-3.5">
+              <span>Tabrakan/Benturan Benda Bergerak</span>
+            </label>
+          </div>
+
+          <!-- Col 3 -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_orang_masuk_tanpa_izin" class="w-3.5 h-3.5">
+              <span>Orang Masuk Tanpa Izin</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_gelap_malam" class="w-3.5 h-3.5">
+              <span>Gelap (Malam)</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_cuaca_buruk" class="w-3.5 h-3.5">
+              <span>Cuaca Buruk</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_kejatuhan_benda" class="w-3.5 h-3.5">
+              <span>Kejatuhan Benda atau Material</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_beban_berat" class="w-3.5 h-3.5">
+              <span>Beban Berat</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_berangin" class="w-3.5 h-3.5">
+              <span>Berangin</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <input type="checkbox" id="c_lain1_check" class="w-3.5 h-3.5">
+              <input type="text" id="c_lain1_text" placeholder="...................................................." class="w-full border-b border-dotted border-gray-500 text-[10px] focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Col 4 -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_terhantam_benda" class="w-3.5 h-3.5">
+              <span>Terhantam Benda</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_percikan_leburan" class="w-3.5 h-3.5">
+              <span>Percikan/Leburan Besi Panas</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_asap" class="w-3.5 h-3.5">
+              <span>Asap</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_benda_tajam" class="w-3.5 h-3.5">
+              <span>Benda Tajam</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_bising" class="w-3.5 h-3.5">
+              <span>Bising</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_salah_komunikasi" class="w-3.5 h-3.5">
+              <span>Salah Komunikasi</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <input type="checkbox" id="c_lain2_check" class="w-3.5 h-3.5">
+              <input type="text" id="c_lain2_text" placeholder="...................................................." class="w-full border-b border-dotted border-gray-500 text-[10px] focus:outline-none">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- D. TINDAKAN PENCEGAHAN YANG DILAKUKAN SEBELUM DAN SEMASA KERJA -->
+      <div class="border-b border-black p-2">
+        <div class="font-bold text-[11px] mb-1.5 uppercase tracking-tight">D. TINDAKAN PENCEGAHAN YANG DILAKUKAN SEBELUM DAN SEMASA KERJA (Diisi Dengan Tanda Centang)</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1.5 text-[11px]">
+          
+          <!-- Left Column -->
+          <div class="space-y-1.5">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_proteksi_jauh" class="w-3.5 h-3.5">
+              <span>Proteksi/Perlindungan Dari Jauh</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_pemadam_api" class="w-3.5 h-3.5">
+              <span>Pemadam Api/Kebakaran</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_penyangga" class="w-3.5 h-3.5">
+              <span>Penyangga</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_wajib_jsa" class="w-3.5 h-3.5">
+              <span>Wajib Mengikuti Penjelasan JSA</span>
+            </label>
+            <div class="flex items-center gap-1 pt-0.5">
+              <span class="whitespace-nowrap">Tindakan Keselamatan Lain yang Diperlukan:</span>
+              <input type="text" id="d_tindakan_lain" class="w-full border-b border-dotted border-gray-500 focus:outline-none text-[11px]">
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-1.5">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_rambu_rambu" class="w-3.5 h-3.5">
+              <span>Rambu-rambu</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_penyinaran_memadai" class="w-3.5 h-3.5">
+              <span>Penyinaran yang Memadai</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_sertifikat_kompetensi" class="w-3.5 h-3.5">
+              <span>Sertifikat Kompetensi</span>
+            </label>
+            <div class="flex items-center gap-1 pt-0.5">
+              <label class="flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+                <input type="checkbox" id="d_lain_lain_check" class="w-3.5 h-3.5">
+                <span>Lain-Lain:</span>
+              </label>
+              <input type="text" id="d_lain_lain_text" class="w-full border-b border-dotted border-gray-500 focus:outline-none text-[11px]">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- E. ALAT PELINDUNG DIRI -->
+      <div class="border-b border-black p-2">
+        <div class="font-bold text-[11px] mb-1.5 uppercase tracking-tight">E. ALAT PELINDUNG DIRI (Diisi Dengan Tanda Centang)</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-[11px]">
+          
+          <!-- Left Column -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_helm" class="w-3.5 h-3.5">
+              <span>Helm Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_sepatu" class="w-3.5 h-3.5">
+              <span>SepatuKeselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_kacamata" class="w-3.5 h-3.5">
+              <span>Kacamata Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_muka_las" class="w-3.5 h-3.5">
+              <span>Perlindungan Muka/Las</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_kacamata_debu" class="w-3.5 h-3.5">
+              <span>Kacamata Debu</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <input type="checkbox" id="e_sarung_tangan_check" class="w-3.5 h-3.5">
+              <span>Sarung Tangan......</span>
+              <input type="text" id="e_sarung_tangan_text" class="flex-1 border-b border-dotted border-gray-500 text-[10px] focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_rompi1" class="w-3.5 h-3.5">
+              <span>Rompi Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_tali" class="w-3.5 h-3.5">
+              <span>Tali Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_rompi2" class="w-3.5 h-3.5">
+              <span>Rompi Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_masker" class="w-3.5 h-3.5">
+              <span>Masker</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_pendengaran" class="w-3.5 h-3.5">
+              <span>Pelindung Pendengaran</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <input type="checkbox" id="e_lain_check" class="w-3.5 h-3.5">
+              <input type="text" id="e_lain_text" placeholder="...................................................." class="w-full border-b border-dotted border-gray-500 text-[10px] focus:outline-none">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- F. PENGELUARAN SURAT IZIN -->
+      <div class="border-b border-black">
+        <div class="p-1.5 bg-slate-100 font-bold text-[11px] uppercase border-b border-black">
+          F. PENGELUARAN SURAT IZIN
+        </div>
+        <div class="p-2 text-[11px] border-b border-black">
+          Izin diberikan untuk kerja dijalankan yang tertera diatas selama
+        </div>
+        <div class="grid grid-cols-12 text-[11px]">
+          
+          <!-- Rentang Waktu (Dari & Sampai Dengan) -->
+          <div class="col-span-7 border-r border-black p-2 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-24 font-semibold">Dari</span>
+              <span>: Tgl</span>
+              <input type="text" id="f_dari_tgl" placeholder="18-8-20" class="w-24 border-b border-black px-1 focus:outline-none">
+              <span>Jam</span>
+              <input type="text" id="f_dari_jam" placeholder="06-30" class="w-20 border-b border-black px-1 focus:outline-none">
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-24 font-semibold">Sampai Dengan</span>
+              <span>: Tgl</span>
+              <input type="text" id="f_sampai_tgl" placeholder="19-8-20" class="w-24 border-b border-black px-1 focus:outline-none">
+              <span>Jam</span>
+              <input type="text" id="f_sampai_jam" placeholder="09-40" class="w-20 border-b border-black px-1 focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Pejabat Pemberi Izin & Pengawas Pekerjaan -->
+          <div class="col-span-5 flex flex-col text-[11px]">
+            <div class="grid grid-cols-2 border-b border-black flex-1">
+              <div class="p-1.5 border-r border-black font-semibold flex items-center">Pemberi Izin</div>
+              <div class="p-1.5 flex items-center">
+                <input type="text" id="f_pemberi_izin" placeholder="[Ttd / Paraf]" class="w-full border-b border-dotted border-gray-500 px-1 focus:outline-none handwriting">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 flex-1">
+              <div class="p-1.5 border-r border-black font-semibold flex items-center">Pengawas Pekerjaan</div>
+              <div class="p-1.5 flex items-center">
+                <input type="text" id="f_pengawas_pekerjaan" placeholder="SPV JR 37 AWN" class="w-full border-b border-dotted border-gray-500 px-1 focus:outline-none font-semibold">
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- G. PERSETUJUAN PENGGANTIAN PELAKSANA PEKERJAAN -->
+      <div class="border-b border-black">
+        <div class="p-1.5 bg-slate-100 font-bold text-[11px] uppercase border-b border-black">
+          G. PERSETUJUAN PENGGANTIAN PELAKSANA PEKERJAAN (Diisi Oleh Pelaksana Pekerjaan/Kontraktor)
+        </div>
+        <div class="p-2 text-[11px] italic border-b border-black leading-tight">
+          Saya menyatakan bahwa Saya telah membaca & memahami pekerjaan ini, yang akan dilaksanakan sesuai dengan segala persyaratan yang berlaku
+        </div>
+
+        <!-- Table G -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-center border-collapse text-[10.5px]">
+            <thead>
+              <tr class="border-b border-black bg-slate-50 font-bold">
+                <th class="p-1.5 border-r border-black text-left w-1/3">Penanggung Jawab Izin Kerja</th>
+                <th class="p-1.5 border-r border-black w-1/6">Nama</th>
+                <th class="p-1.5 border-r border-black w-1/6">Instansi</th>
+                <th class="p-1.5 border-r border-black w-1/6">Tandatangan</th>
+                <th class="p-1.5 border-r border-black w-1/12">Tanggal</th>
+                <th class="p-1.5 w-1/12">Jam</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-black">
+                <td class="p-1.5 border-r border-black text-left font-semibold">Pelaksana Pekerjaan (Berkompetensi)</td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pelaksana_nama" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pelaksana_instansi" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pelaksana_ttd" class="w-full text-center border-0 focus:outline-none bg-transparent handwriting"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pelaksana_tgl" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1"><input type="text" id="g_pelaksana_jam" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+              </tr>
+              <tr class="border-b border-black">
+                <td class="p-1.5 border-r border-black text-left font-semibold">Orang Pengganti (Berkompetensi)</td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pengganti_nama" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pengganti_instansi" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pengganti_ttd" class="w-full text-center border-0 focus:outline-none bg-transparent handwriting"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pengganti_tgl" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1"><input type="text" id="g_pengganti_jam" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+              </tr>
+              <tr>
+                <td class="p-1.5 border-r border-black text-left font-semibold">Pemberi Izin</td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pemberi_nama" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pemberi_instansi" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pemberi_ttd" class="w-full text-center border-0 focus:outline-none bg-transparent handwriting"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pemberi_tgl" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1"><input type="text" id="g_pemberi_jam" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- H. PEMBATALAN -->
+      <div class="border-b border-black">
+        <div class="p-1.5 bg-slate-100 font-bold text-[11px] uppercase border-b border-black">
+          H. PEMBATALAN
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 text-[10.5px]">
+          
+          <!-- Left Pembatalan Box -->
+          <div class="border-r border-black p-2 flex flex-col justify-between">
+            <p class="leading-snug mb-2">
+              Saya (Pemberi Izin) menyatakan bahwa pekerjaan yang tercantum pada izin kerja ini telah saya hentikan untuk sementara dan saya telah memberitahukan pemberhentian ini kepada Pengawas Pekerja
+            </p>
+            <div class="flex items-start gap-1">
+              <span class="font-bold">Alasan:</span>
+              <input type="text" id="h_alasan" class="w-full border-b border-dotted border-gray-600 focus:outline-none text-[11px]">
+            </div>
+          </div>
+
+          <!-- Right Pembatalan Box -->
+          <div class="p-2">
+            <p class="leading-snug">
+              Saya menyatakan bahwa pekerjaan yang tercantum pada izin kerja yang telah diberhentikan untuk sementara ini, bisa dimulai kembali setelah saya memeriksa kondisi sekitarnya dan telah melaksanakan pencegahan-pencegahan yang diminta
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Pembatalan Sign-off Table -->
+        <div class="border-t border-black grid grid-cols-2 text-[10.5px]">
+          
+          <!-- Left Table -->
+          <div class="border-r border-black overflow-x-auto">
+            <table class="w-full text-center border-collapse">
+              <thead>
+                <tr class="border-b border-black bg-slate-50 font-semibold text-[10px]">
+                  <th class="p-1 border-r border-black w-1/4">Tanggal</th>
+                  <th class="p-1 border-r border-black w-1/4">Waktu</th>
+                  <th class="p-1 border-r border-black w-1/4">Nama</th>
+                  <th class="p-1 w-1/4">Tanda Tangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_left_tgl" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_left_waktu" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_left_nama" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1"><input type="text" id="h_left_ttd" class="w-full text-center border-0 focus:outline-none handwriting text-xs"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Right Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-center border-collapse">
+              <thead>
+                <tr class="border-b border-black bg-slate-50 font-semibold text-[10px]">
+                  <th class="p-1 border-r border-black w-1/4">Tanggal</th>
+                  <th class="p-1 border-r border-black w-1/4">Waktu</th>
+                  <th class="p-1 border-r border-black w-1/4">Nama</th>
+                  <th class="p-1 w-1/4">Tanda Tangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_right_tgl" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_right_waktu" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_right_nama" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1"><input type="text" id="h_right_ttd" class="w-full text-center border-0 focus:outline-none handwriting text-xs"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Penyelesaian Izin Kerja -->
+      <div class="border-b border-black">
+        <div class="p-1.5 bg-slate-100 font-bold text-[11px] uppercase border-b border-black">
+          Penyelesaian Izin Kerja
+        </div>
+        
+        <!-- Checkbox Options -->
+        <div class="p-2 space-y-1.5 text-[11px] border-b border-black">
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="penyelesaian_opt1" class="w-4 h-4 mt-0.5 rounded border-gray-400 text-blue-600 focus:ring-0">
+            <span class="leading-tight">Selesai & diperiksa, tindakan pencegahan khusus (isolasi,...) telah diambil kembali, lokasi kerja ditinggalkan dalam keadaan aman dan bahwa operasional dapat kembali normal</span>
+          </label>
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="penyelesaian_opt2" class="w-4 h-4 mt-0.5 rounded border-gray-400 text-blue-600 focus:ring-0">
+            <span class="leading-tight">Belum selesai dan akan dilanjutkan dengan izin no....</span>
+          </label>
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="penyelesaian_opt3" class="w-4 h-4 mt-0.5 rounded border-gray-400 text-blue-600 focus:ring-0">
+            <span class="leading-tight">Tidak terselesaikan dan secara tegas dihentikan</span>
+          </label>
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="penyelesaian_opt4" class="w-4 h-4 mt-0.5 rounded border-gray-400 text-blue-600 focus:ring-0">
+            <span class="leading-tight">Beberapa langkah harus diambil sebelum operasional dapat berlangsung kembali</span>
+          </label>
+        </div>
+
+        <!-- Sign Table Penyelesaian -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-center border-collapse text-[10.5px]">
+            <thead>
+              <tr class="border-b border-black bg-slate-50 font-bold">
+                <th class="p-1.5 border-r border-black text-left w-1/3">Penanggung Jawab Izin Kerja</th>
+                <th class="p-1.5 border-r border-black w-1/6">Nama</th>
+                <th class="p-1.5 border-r border-black w-1/6">Instansi</th>
+                <th class="p-1.5 border-r border-black w-1/6">Tandatangan</th>
+                <th class="p-1.5 border-r border-black w-1/12">Tanggal</th>
+                <th class="p-1.5 w-1/12">Jam</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="p-1.5 border-r border-black text-left font-semibold">Pemberi Izin</td>
+                <td class="p-1 border-r border-black"><input type="text" id="selesai_nama" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="selesai_instansi" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="selesai_ttd" class="w-full text-center border-0 focus:outline-none bg-transparent handwriting"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="selesai_tgl" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1"><input type="text" id="selesai_jam" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Note section strictly identical to document -->
+      <div class="p-2 text-[10px] space-y-0.5 text-gray-800 leading-tight">
+        <div class="font-bold">Note:</div>
+        <div>Pengisian "Alasan" untuk poin H. Pembatalan:</div>
+        <div class="pl-2">a. Keadaan darurat;</div>
+        <div class="pl-2">b. Untuk alasan keselamatan operasional perkeretaapian;</div>
+        <div class="pl-2">c. Pekerjaan yang dilakukan hanya dalam satu shift; dan</div>
+        <div class="pl-2">d. Pekerjaan ditangguhkan atau ditunda selama sembilan puluh (90) menit atau lebih.</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification Box -->
+  <div id="toastMessage" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-xl border border-slate-700 shadow-2xl flex items-center gap-2.5 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-50">
+    <div id="toastIcon" class="w-5 h-5 text-emerald-400">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <div id="toastContent" class="text-xs font-semibold">Tersimpan!</div>
+  </div>
+
+  <script>
+    const tabNexus = document.getElementById('tabNexus');
+    const tabIzinKerja = document.getElementById('tabIzinKerja');
+    const viewNexus = document.getElementById('view-nexus');
+    const viewIzinKerja = document.getElementById('view-izin-kerja');
+    const formActions = document.getElementById('formActions');
+
+    // Switch View Logic
+    function activateNexus() {
+      tabNexus.className = "px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-blue-600 text-white shadow";
+      tabIzinKerja.className = "px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-white";
+      viewNexus.classList.remove('hidden');
+      viewIzinKerja.classList.add('hidden');
+      formActions.classList.add('hidden');
+    }
+
+    function activateIzinKerja() {
+      tabIzinKerja.className = "px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-amber-600 text-white shadow";
+      tabNexus.className = "px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-white";
+      viewIzinKerja.classList.remove('hidden');
+      viewNexus.classList.add('hidden');
+      formActions.classList.remove('hidden');
+    }
+
+    tabNexus.addEventListener('click', activateNexus);
+    tabIzinKerja.addEventListener('click', activateIzinKerja);
+
+    // Toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toastMessage');
+      const content = document.getElementById('toastContent');
+      const icon = document.getElementById('toastIcon');
+
+      content.textContent = message;
+      if (type === 'success') {
+        icon.className = 'w-5 h-5 text-emerald-400';
+        icon.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+      } else {
+        icon.className = 'w-5 h-5 text-amber-400';
+        icon.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+      }
+
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 3000);
+    }
+
+    // Load exact handwritten sample from the photo
+    function loadExactImageSample() {
+      document.getElementById('tgl_berlaku').value = '19/08/20';
+      document.getElementById('app_kerja_panas').checked = false;
+      document.getElementById('app_ruang_terbatas').checked = false;
+      document.getElementById('app_lain_lain').checked = true;
+      document.getElementById('wilayah').value = 'Daop 3 Cirebon';
+      document.getElementById('permit_no').value = '';
+      document.getElementById('lokasi').value = 'Km 204 + 000 s/d 205 + 000 Jalur Hilir';
+      
+      document.getElementById('pemohon_nama').value = 'Diyan Habiky';
+      document.getElementById('pemohon_ttd').value = 'Diyan';
+
+      document.getElementById('deskripsi_kerja').value = 'Perawatan geometri track dgn KPJR';
+      document.getElementById('alat_mesin').checked = true;
+      document.getElementById('alat_listrik').checked = false;
+      document.getElementById('alat_tangan').checked = false;
+
+      // Bahaya
+      document.getElementById('c_tersandung_jatuh').checked = true;
+      document.getElementById('c_salah_penyetelan').checked = true;
+      document.getElementById('c_tabrakan_benturan').checked = true;
+      document.getElementById('c_kejatuhan_benda').checked = true;
+      document.getElementById('c_terhantam_benda').checked = true;
+      document.getElementById('c_bising').checked = true;
+      document.getElementById('c_salah_komunikasi').checked = true;
+
+      // Pencegahan
+      document.getElementById('d_proteksi_jauh').checked = true;
+      document.getElementById('d_penyinaran_memadai').checked = true;
+      document.getElementById('d_sertifikat_kompetensi').checked = true;
+
+      // APD
+      document.getElementById('e_helm').checked = true;
+      document.getElementById('e_sepatu').checked = true;
+      document.getElementById('e_rompi1').checked = true;
+      document.getElementById('e_pendengaran').checked = true;
+      document.getElementById('e_lain_check').checked = true;
+      document.getElementById('e_lain_text').value = 'HT';
+
+      // F
+      document.getElementById('f_dari_tgl').value = '18-8-20';
+      document.getElementById('f_dari_jam').value = '06-30';
+      document.getElementById('f_sampai_tgl').value = '19-8-20';
+      document.getElementById('f_sampai_jam').value = '09-40';
+      document.getElementById('f_pemberi_izin').value = 'Samsudin';
+      document.getElementById('f_pengawas_pekerjaan').value = 'SPV JR 37 AWN';
+
+      // Penyelesaian
+      document.getElementById('penyelesaian_opt1').checked = true;
+      document.getElementById('selesai_nama').value = 'Samsudin';
+      document.getElementById('selesai_instansi').value = 'KAI';
+      document.getElementById('selesai_ttd').value = 'sdn';
+      document.getElementById('selesai_tgl').value = '19-8-20';
+      document.getElementById('selesai_jam').value = '09.40';
+
+      showToast('Form terisi sesuai dokumen fisik di foto!');
+    }
+
+    function resetFormFields() {
+      const inputs = document.querySelectorAll('#view-izin-kerja input[type="text"], #view-izin-kerja textarea');
+      inputs.forEach(input => {
+        if (input.id === 'wilayah') {
+          input.value = 'Daop 3 Cirebon';
+        } else {
+          input.value = '';
+        }
+      });
+      const checkboxes = document.querySelectorAll('#view-izin-kerja input[type="checkbox"]');
+      checkboxes.forEach(cb => cb.checked = false);
+      showToast('Formulir berhasil dikosongkan.', 'info');
+    }
+
+    function saveFormData() {
+      const formData = {};
+      const inputs = document.querySelectorAll('#view-izin-kerja input, #view-izin-kerja textarea');
+      inputs.forEach(input => {
+        if (input.type === 'checkbox') {
+          formData[input.id] = input.checked;
+        } else {
+          formData[input.id] = input.value;
+        }
+      });
+      localStorage.setItem('NEXUS_IZIN_KERJA_DATA', JSON.stringify(formData));
+      showToast('Data Izin Kerja tersimpan rapi!');
+    }
+
+    function loadSavedFormData() {
+      const raw = localStorage.getItem('NEXUS_IZIN_KERJA_DATA');
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        Object.keys(data).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            if (el.type === 'checkbox') el.checked = data[id];
+            else el.value = data[id];
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    document.getElementById('btnIsiContoh').addEventListener('click', loadExactImageSample);
+    document.getElementById('btnReset').addEventListener('click', resetFormFields);
+    document.getElementById('btnSimpan').addEventListener('click', saveFormData);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('NEXUS_IZIN_KERJA_DATA');
+      if (saved) loadSavedFormData();
+      else loadExactImageSample();
+    });
+  </script>
 </body>
 </html>
