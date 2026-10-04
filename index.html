@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXUS STASIUN ARJAWINANGUN - Izin Kerja (Daop 3 Cirebon)</title>
-  <!-- Tailwind CSS -->
+  <title>NEXUS STASIUN ARJAWINANGUN - Izin Kerja & Buku Gangguan Operasional (Daop 3 Cirebon)</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Google Inter -->
+  <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -18,7 +18,6 @@
       color: #0f172a;
     }
     
-    /* KAI Brand Colors */
     :root {
       --kai-orange: #F37021;
       --kai-blue: #002D62;
@@ -29,7 +28,7 @@
       background: linear-gradient(135deg, #002D62 0%, #1e3a8a 60%, #F37021 100%);
     }
 
-    /* Print styling to match official KAI P01/P13 document */
+    /* Print styling to match official KAI documents */
     @media print {
       body {
         background-color: #ffffff !important;
@@ -52,7 +51,10 @@
         background: transparent !important;
         padding: 0 !important;
       }
-      .signature-modal {
+      .signature-modal, .history-modal {
+        display: none !important;
+      }
+      .sheet-view.hidden-tab {
         display: none !important;
       }
     }
@@ -63,10 +65,20 @@
       cursor: pointer;
     }
     
-    /* Canvas styling */
+    /* Signature Canvas styling */
     .sig-canvas {
       touch-action: none;
       cursor: crosshair;
+    }
+
+    /* Tabel Buku Gangguan Operasional Styling */
+    .buku-table th {
+      border: 1.5px solid #0f172a;
+    }
+    .buku-table td {
+      border: 1px solid #334155;
+      padding: 6px 8px;
+      vertical-align: middle;
     }
   </style>
 </head>
@@ -74,7 +86,7 @@
 
   <!-- Top Navigation & Action Bar -->
   <header class="sticky top-0 z-30 bg-slate-900 text-white shadow-lg border-b border-slate-700 no-print">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
         <div class="bg-white px-2.5 py-1 rounded shadow text-[#002D62] font-black text-xl tracking-tighter">
           KAI
@@ -86,12 +98,24 @@
               Daop 3 Cirebon
             </span>
           </h1>
-          <p class="text-xs text-slate-300">Sistem Digital Izin Kerja Operasional & K3 (Kode Dokumen: P01/P13)</p>
+          <p class="text-xs text-slate-300">Sistem Operasional Digital: Formulir Izin Kerja & Buku Gangguan Operasional</p>
         </div>
       </div>
 
-      <!-- Quick Action Buttons -->
-      <div class="flex items-center flex-wrap gap-2 text-sm">
+      <!-- Tab Switcher (Sheet Selector) -->
+      <div class="flex items-center bg-slate-800 p-1 rounded-lg border border-slate-700">
+        <button id="tab-btn-ptw" onclick="switchSheet('ptw')" class="px-3 py-1.5 rounded-md text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow">
+          <span>📄</span>
+          Izin Kerja (PTW P01/P13)
+        </button>
+        <button id="tab-btn-gangguan" onclick="switchSheet('gangguan')" class="px-3 py-1.5 rounded-md text-xs font-bold transition flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-700">
+          <span>📖</span>
+          Buku Gangguan Operasional
+        </button>
+      </div>
+
+      <!-- Quick Action Buttons: Izin Kerja (PTW) -->
+      <div id="actions-ptw" class="flex items-center flex-wrap gap-2 text-sm">
         <button id="btn-new-form" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-700 hover:bg-slate-600 text-slate-100 transition shadow-sm font-medium">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           Form Baru
@@ -113,10 +137,30 @@
           Cetak Dokumen
         </button>
       </div>
+
+      <!-- Quick Action Buttons: Buku Gangguan Operasional -->
+      <div id="actions-gangguan" class="hidden flex items-center flex-wrap gap-2 text-sm">
+        <button id="btn-add-gangguan" onclick="openInputGangguanModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-500 hover:bg-amber-400 text-slate-950 transition shadow-sm font-bold">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          + Catat Gangguan Baru
+        </button>
+
+        <button id="btn-open-history-gangguan" onclick="openRiwayatGangguanModal()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm font-medium">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Riwayat Gangguan
+          <span id="badge-gangguan-count" class="ml-1 bg-white text-blue-900 text-xs px-1.5 py-0.2 rounded-full font-bold">3</span>
+        </button>
+
+        <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-orange-600 hover:bg-orange-500 text-white transition shadow-sm font-medium">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Cetak Buku Gangguan
+        </button>
+      </div>
     </div>
   </header>
 
-  <main class="flex-1 max-w-5xl mx-auto w-full p-3 sm:p-6">
+  <!-- TAB 1: FORMULIR IZIN KERJA (PTW P01/P13) - 100% PERSIS KODE ASLI -->
+  <main id="sheet-ptw" class="sheet-view flex-1 max-w-5xl mx-auto w-full p-3 sm:p-6">
     <div id="printable-doc" class="bg-white border-2 border-slate-800 rounded-lg shadow-xl print-shadow-none overflow-hidden text-[12px] sm:text-[13px] leading-snug">
 
       <!-- Header Lampiran & Standar KAI -->
@@ -244,7 +288,7 @@
           <div class="font-bold text-slate-900 mb-1">
             B. DESKRIPSI KERJA:
           </div>
-          <textarea id="field-deskripsi-kerja" rows="3" placeholder="Contoh pengisian: Perbaikan dan penggantian bantalan rel serta pengelasan rel wesel 21A di emplasemen Stasiun Arjawinangun..." class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-1 focus:ring-blue-600 outline-none leading-relaxed">Pekerjaan perawatan jalur rel dan wesel km 207+400 Stasiun Arjawinangun Daop 3 Cirebon, penyesuaian geometri jalan rel dan pengencangan penambat rel.</textarea>
+          <textarea id="field-deskripsi-kerja" rows="3" placeholder="Contoh: Perbaikan dan penggantian bantalan rel..." class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-1 focus:ring-blue-600 outline-none leading-relaxed">Pekerjaan perawatan jalur rel dan wesel km 207+400 Stasiun Arjawinangun Daop 3 Cirebon, penyesuaian geometri jalan rel dan pengencangan penambat rel.</textarea>
         </div>
 
         <div class="md:col-span-4 bg-slate-50 p-2.5 rounded border border-slate-300">
@@ -276,7 +320,6 @@
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1 text-[11px]">
-          <!-- Kolom 1 -->
           <div class="space-y-1">
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Lantai Licin"><span>Lantai Licin</span></label>
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Lantai Berlubang"><span>Lantai yang Berlubang</span></label>
@@ -291,7 +334,6 @@
             <label class="flex items-center gap-1.5 cursor-pointer bg-amber-100 p-0.5 rounded font-semibold text-amber-900"><input type="checkbox" class="custom-cb hazard-cb" value="Kereta Melintas" checked><span>Kereta Melintas</span></label>
           </div>
 
-          <!-- Kolom 2 -->
           <div class="space-y-1">
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Orang Masuk Tanpa Izin"><span>Orang Masuk Tanpa Izin</span></label>
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Bahaya Kebakaran"><span>Bahaya Kebakaran</span></label>
@@ -305,7 +347,6 @@
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Tabrakan Benda Bergerak"><span>Tabrakan/Benturan Benda Bergerak</span></label>
           </div>
 
-          <!-- Kolom 3 -->
           <div class="space-y-1">
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Pekerjaan Atas Kepala"><span>Pekerjaan di Atas Kepala</span></label>
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Bahaya Gas"><span>Gas Berbahaya/Beracun</span></label>
@@ -320,7 +361,6 @@
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Obyek Ayunan"><span>Obyek Ayunan</span></label>
           </div>
 
-          <!-- Kolom 4 -->
           <div class="space-y-1">
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Gelap/Malam"><span>Gelap (Malam Hari)</span></label>
             <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" class="custom-cb hazard-cb" value="Tepian Bangunan"><span>Tepian Bangunan/Peron</span></label>
@@ -360,7 +400,7 @@
           </div>
           <div class="mt-2 text-xs">
             <span class="font-semibold text-slate-700">Tindakan Keselamatan Lain:</span>
-            <input type="text" id="field-tindakan-lain" placeholder="Contoh: Berkoordinasi dengan PPKA Stasiun Arjawinangun saat jam KA melintas" value="Koordinasi dengan PPKA Stasiun Arjawinangun terkait jadwal perjalanan KA." class="w-full border-b border-slate-400 text-xs px-1 py-0.5 outline-none focus:border-blue-600">
+            <input type="text" id="field-tindakan-lain" value="Koordinasi dengan PPKA Stasiun Arjawinangun terkait jadwal perjalanan KA." class="w-full border-b border-slate-400 text-xs px-1 py-0.5 outline-none focus:border-blue-600">
           </div>
         </div>
 
@@ -400,7 +440,6 @@
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-          <!-- Waktu Dari & Sampai -->
           <div class="md:col-span-6 bg-slate-50 p-2.5 rounded border border-slate-300 space-y-2 text-xs">
             <div class="flex items-center flex-wrap gap-2">
               <span class="w-24 font-bold text-slate-800">Dari:</span>
@@ -418,7 +457,6 @@
             </div>
           </div>
 
-          <!-- Tanda Tangan: Pemberi Izin & Pengawas Pekerjaan -->
           <div class="md:col-span-6 grid grid-cols-2 gap-2 text-xs text-center">
             <!-- Pemberi Izin -->
             <div class="border border-slate-300 rounded p-1.5 bg-white">
@@ -479,111 +517,63 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Baris 1: Pelaksana Pekerjaan -->
               <tr>
-                <td class="border border-slate-400 p-1.5 font-medium bg-slate-50">
-                  Pelaksana Pekerjaan (Orang yang Berkompeten)
-                </td>
-                <td class="border border-slate-400 p-1">
-                  <input type="text" id="g-pelaksana-nama" value="Agus Priyanto" class="w-full px-1 py-0.5 text-xs outline-none">
-                </td>
-                <td class="border border-slate-400 p-1">
-                  <input type="text" id="g-pelaksana-instansi" value="PT Wahana Track" class="w-full px-1 py-0.5 text-xs outline-none">
-                </td>
+                <td class="border border-slate-400 p-1.5 font-medium bg-slate-50">Pelaksana Pekerjaan (Orang yang Berkompeten)</td>
+                <td class="border border-slate-400 p-1"><input type="text" id="g-pelaksana-nama" value="Agus Priyanto" class="w-full px-1 py-0.5 text-xs outline-none"></td>
+                <td class="border border-slate-400 p-1"><input type="text" id="g-pelaksana-instansi" value="PT Wahana Track" class="w-full px-1 py-0.5 text-xs outline-none"></td>
                 <td class="border border-slate-400 p-1 text-center align-middle">
-                  <div id="ttd-gpelaksana-display" class="h-10 flex items-center justify-center">
-                    <span class="text-[9px] text-slate-400 italic">Belum TTD</span>
-                  </div>
+                  <div id="ttd-gpelaksana-display" class="h-10 flex items-center justify-center"><span class="text-[9px] text-slate-400 italic">Belum TTD</span></div>
                   <div class="flex justify-center gap-1 no-print">
                     <button type="button" onclick="openSignatureModal('gpelaksana')" class="text-[9px] bg-slate-700 text-white px-1 rounded">✍️</button>
-                    <label class="text-[9px] bg-blue-700 text-white px-1 rounded cursor-pointer">
-                      📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'gpelaksana')">
-                    </label>
+                    <label class="text-[9px] bg-blue-700 text-white px-1 rounded cursor-pointer">📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'gpelaksana')"></label>
                     <button type="button" onclick="clearSignature('gpelaksana')" class="text-[9px] text-red-600">✕</button>
                   </div>
                 </td>
-                <td class="border border-slate-400 p-1 text-center">
-                  <input type="date" id="g-pelaksana-tgl" class="w-full text-[11px] p-0.5 outline-none">
-                </td>
-                <td class="border border-slate-400 p-1 text-center">
-                  <input type="time" id="g-pelaksana-jam" value="08:00" class="w-full text-[11px] p-0.5 outline-none">
-                </td>
+                <td class="border border-slate-400 p-1 text-center"><input type="date" id="g-pelaksana-tgl" class="w-full text-[11px] p-0.5 outline-none"></td>
+                <td class="border border-slate-400 p-1 text-center"><input type="time" id="g-pelaksana-jam" value="08:00" class="w-full text-[11px] p-0.5 outline-none"></td>
               </tr>
-
-              <!-- Baris 2: Orang Pengganti -->
               <tr>
-                <td class="border border-slate-400 p-1.5 font-medium bg-slate-50">
-                  Orang Pengganti yang Berkompeten / Pelaksana
-                </td>
-                <td class="border border-slate-400 p-1">
-                  <input type="text" id="g-pengganti-nama" placeholder="Nama Pengganti..." class="w-full px-1 py-0.5 text-xs outline-none">
-                </td>
-                <td class="border border-slate-400 p-1">
-                  <input type="text" id="g-pengganti-instansi" placeholder="Instansi..." class="w-full px-1 py-0.5 text-xs outline-none">
-                </td>
+                <td class="border border-slate-400 p-1.5 font-medium bg-slate-50">Orang Pengganti yang Berkompeten / Pelaksana</td>
+                <td class="border border-slate-400 p-1"><input type="text" id="g-pengganti-nama" placeholder="Nama Pengganti..." class="w-full px-1 py-0.5 text-xs outline-none"></td>
+                <td class="border border-slate-400 p-1"><input type="text" id="g-pengganti-instansi" placeholder="Instansi..." class="w-full px-1 py-0.5 text-xs outline-none"></td>
                 <td class="border border-slate-400 p-1 text-center align-middle">
-                  <div id="ttd-gpengganti-display" class="h-10 flex items-center justify-center">
-                    <span class="text-[9px] text-slate-400 italic">Belum TTD</span>
-                  </div>
+                  <div id="ttd-gpengganti-display" class="h-10 flex items-center justify-center"><span class="text-[9px] text-slate-400 italic">Belum TTD</span></div>
                   <div class="flex justify-center gap-1 no-print">
                     <button type="button" onclick="openSignatureModal('gpengganti')" class="text-[9px] bg-slate-700 text-white px-1 rounded">✍️</button>
-                    <label class="text-[9px] bg-blue-700 text-white px-1 rounded cursor-pointer">
-                      📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'gpengganti')">
-                    </label>
+                    <label class="text-[9px] bg-blue-700 text-white px-1 rounded cursor-pointer">📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'gpengganti')"></label>
                     <button type="button" onclick="clearSignature('gpengganti')" class="text-[9px] text-red-600">✕</button>
                   </div>
                 </td>
-                <td class="border border-slate-400 p-1 text-center">
-                  <input type="date" id="g-pengganti-tgl" class="w-full text-[11px] p-0.5 outline-none">
-                </td>
-                <td class="border border-slate-400 p-1 text-center">
-                  <input type="time" id="g-pengganti-jam" class="w-full text-[11px] p-0.5 outline-none">
-                </td>
+                <td class="border border-slate-400 p-1 text-center"><input type="date" id="g-pengganti-tgl" class="w-full text-[11px] p-0.5 outline-none"></td>
+                <td class="border border-slate-400 p-1 text-center"><input type="time" id="g-pengganti-jam" class="w-full text-[11px] p-0.5 outline-none"></td>
               </tr>
-
-              <!-- Baris 3: Pemberi Izin -->
               <tr>
-                <td class="border border-slate-400 p-1.5 font-medium bg-slate-50">
-                  Pemberi Izin
-                </td>
-                <td class="border border-slate-400 p-1">
-                  <input type="text" id="g-pemberi-nama" value="Budi Santoso, S.T." class="w-full px-1 py-0.5 text-xs outline-none">
-                </td>
-                <td class="border border-slate-400 p-1">
-                  <input type="text" id="g-pemberi-instansi" value="KAI Daop 3 Cirebon" class="w-full px-1 py-0.5 text-xs outline-none">
-                </td>
+                <td class="border border-slate-400 p-1.5 font-medium bg-slate-50">Pemberi Izin</td>
+                <td class="border border-slate-400 p-1"><input type="text" id="g-pemberi-nama" value="Budi Santoso, S.T." class="w-full px-1 py-0.5 text-xs outline-none"></td>
+                <td class="border border-slate-400 p-1"><input type="text" id="g-pemberi-instansi" value="KAI Daop 3 Cirebon" class="w-full px-1 py-0.5 text-xs outline-none"></td>
                 <td class="border border-slate-400 p-1 text-center align-middle">
-                  <div id="ttd-gpemberi-display" class="h-10 flex items-center justify-center">
-                    <span class="text-[9px] text-slate-400 italic">Belum TTD</span>
-                  </div>
+                  <div id="ttd-gpemberi-display" class="h-10 flex items-center justify-center"><span class="text-[9px] text-slate-400 italic">Belum TTD</span></div>
                   <div class="flex justify-center gap-1 no-print">
                     <button type="button" onclick="openSignatureModal('gpemberi')" class="text-[9px] bg-slate-700 text-white px-1 rounded">✍️</button>
-                    <label class="text-[9px] bg-blue-700 text-white px-1 rounded cursor-pointer">
-                      📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'gpemberi')">
-                    </label>
+                    <label class="text-[9px] bg-blue-700 text-white px-1 rounded cursor-pointer">📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'gpemberi')"></label>
                     <button type="button" onclick="clearSignature('gpemberi')" class="text-[9px] text-red-600">✕</button>
                   </div>
                 </td>
-                <td class="border border-slate-400 p-1 text-center">
-                  <input type="date" id="g-pemberi-tgl" class="w-full text-[11px] p-0.5 outline-none">
-                </td>
-                <td class="border border-slate-400 p-1 text-center">
-                  <input type="time" id="g-pemberi-jam" value="08:00" class="w-full text-[11px] p-0.5 outline-none">
-                </td>
+                <td class="border border-slate-400 p-1 text-center"><input type="date" id="g-pemberi-tgl" class="w-full text-[11px] p-0.5 outline-none"></td>
+                <td class="border border-slate-400 p-1 text-center"><input type="time" id="g-pemberi-jam" value="08:00" class="w-full text-[11px] p-0.5 outline-none"></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- SECTION H: Pembatalan & Mulai Kembali -->
+      <!-- SECTION H: Pembatalan -->
       <div class="border-b-2 border-slate-800 p-3">
         <div class="font-bold text-slate-900 text-xs mb-1">
           H. PEMBATALAN
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x-2 divide-slate-800 border border-slate-400 rounded">
-          <!-- Hentikan Sementara -->
           <div class="p-2 space-y-2">
             <p class="text-[11px] text-slate-700 leading-snug">
               Saya (Pemberi Izin) menyatakan bahwa pekerjaan yang tercantum pada izin kerja ini telah saya hentikan untuk sementara dan saya telah memberitahukan pemberhentian ini kepada Pengawas Pekerja.
@@ -593,7 +583,6 @@
               <input type="text" id="h-alasan-batal" placeholder="Keadaan darurat / Cuaca / KA melintas..." class="w-full border-b border-slate-400 text-xs px-1 py-0.5 outline-none">
             </div>
 
-            <!-- Tabel Pembatalan TTD -->
             <table class="w-full border border-slate-400 text-center text-[10px]">
               <tr class="bg-slate-100 font-bold">
                 <th class="border border-slate-400 p-1">Tanggal</th>
@@ -606,14 +595,10 @@
                 <td class="border border-slate-400 p-0.5"><input type="time" id="h-batal-jam" class="w-full text-[10px]"></td>
                 <td class="border border-slate-400 p-0.5"><input type="text" id="h-batal-nama" placeholder="Nama..." class="w-full text-[10px]"></td>
                 <td class="border border-slate-400 p-0.5">
-                  <div id="ttd-hbatal-display" class="h-8 flex items-center justify-center">
-                    <span class="text-[8px] text-slate-400 italic">TTD</span>
-                  </div>
+                  <div id="ttd-hbatal-display" class="h-8 flex items-center justify-center"><span class="text-[8px] text-slate-400 italic">TTD</span></div>
                   <div class="flex justify-center gap-1 no-print">
                     <button type="button" onclick="openSignatureModal('hbatal')" class="text-[8px] bg-slate-700 text-white px-1 rounded">✍️</button>
-                    <label class="text-[8px] bg-blue-700 text-white px-1 rounded cursor-pointer">
-                      📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'hbatal')">
-                    </label>
+                    <label class="text-[8px] bg-blue-700 text-white px-1 rounded cursor-pointer">📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'hbatal')"></label>
                     <button type="button" onclick="clearSignature('hbatal')" class="text-[8px] text-red-600">✕</button>
                   </div>
                 </td>
@@ -621,14 +606,12 @@
             </table>
           </div>
 
-          <!-- Dimulai Kembali -->
           <div class="p-2 space-y-2">
             <p class="text-[11px] text-slate-700 leading-snug">
               Saya menyatakan bahwa pekerjaan yang tercantum pada izin kerja yang telah diberhentikan untuk sementara ini, bisa dimulai kembali setelah saya memeriksa kondisi sekitarnya dan telah melaksanakan pencegahan-pencegahan yang diminta.
             </p>
             <div class="h-4"></div>
 
-            <!-- Tabel Dimulai Kembali TTD -->
             <table class="w-full border border-slate-400 text-center text-[10px]">
               <tr class="bg-slate-100 font-bold">
                 <th class="border border-slate-400 p-1">Tanggal</th>
@@ -641,14 +624,10 @@
                 <td class="border border-slate-400 p-0.5"><input type="time" id="h-kembali-jam" class="w-full text-[10px]"></td>
                 <td class="border border-slate-400 p-0.5"><input type="text" id="h-kembali-nama" placeholder="Nama..." class="w-full text-[10px]"></td>
                 <td class="border border-slate-400 p-0.5">
-                  <div id="ttd-hkembali-display" class="h-8 flex items-center justify-center">
-                    <span class="text-[8px] text-slate-400 italic">TTD</span>
-                  </div>
+                  <div id="ttd-hkembali-display" class="h-8 flex items-center justify-center"><span class="text-[8px] text-slate-400 italic">TTD</span></div>
                   <div class="flex justify-center gap-1 no-print">
                     <button type="button" onclick="openSignatureModal('hkembali')" class="text-[8px] bg-slate-700 text-white px-1 rounded">✍️</button>
-                    <label class="text-[8px] bg-blue-700 text-white px-1 rounded cursor-pointer">
-                      📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'hkembali')">
-                    </label>
+                    <label class="text-[8px] bg-blue-700 text-white px-1 rounded cursor-pointer">📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'hkembali')"></label>
                     <button type="button" onclick="clearSignature('hkembali')" class="text-[8px] text-red-600">✕</button>
                   </div>
                 </td>
@@ -686,7 +665,6 @@
           </label>
         </div>
 
-        <!-- Tabel Penyelesaian -->
         <table class="w-full border-collapse border border-slate-400 text-xs">
           <thead>
             <tr class="bg-slate-200 text-slate-900 text-center font-bold">
@@ -704,14 +682,10 @@
               <td class="border border-slate-400 p-1"><input type="text" id="selesai-pemberi-nama" value="Budi Santoso, S.T." class="w-full px-1 py-0.5 text-xs outline-none"></td>
               <td class="border border-slate-400 p-1"><input type="text" id="selesai-pemberi-instansi" value="KAI Daop 3 Cirebon" class="w-full px-1 py-0.5 text-xs outline-none"></td>
               <td class="border border-slate-400 p-1 text-center align-middle">
-                <div id="ttd-selesai-display" class="h-10 flex items-center justify-center">
-                  <span class="text-[9px] text-slate-400 italic">Belum TTD</span>
-                </div>
+                <div id="ttd-selesai-display" class="h-10 flex items-center justify-center"><span class="text-[9px] text-slate-400 italic">Belum TTD</span></div>
                 <div class="flex justify-center gap-1 no-print">
                   <button type="button" onclick="openSignatureModal('selesai')" class="text-[9px] bg-slate-700 text-white px-1 rounded">✍️</button>
-                  <label class="text-[9px] bg-blue-700 text-white px-1 rounded cursor-pointer">
-                    📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'selesai')">
-                  </label>
+                  <label class="text-[9px] bg-blue-700 text-white px-1 rounded cursor-pointer">📁<input type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'selesai')"></label>
                   <button type="button" onclick="clearSignature('selesai')" class="text-[9px] text-red-600">✕</button>
                 </div>
               </td>
@@ -736,7 +710,115 @@
     </div>
   </main>
 
-  <!-- MODAL: Gores / Gambar Tanda Tangan Langsung -->
+  <!-- TAB 2: BUKU GANGGUAN OPERASIONAL STASIUN ARJAWINANGUN (PERSIS GAMBAR DOKUMEN ASLI) -->
+  <main id="sheet-gangguan" class="sheet-view hidden max-w-7xl mx-auto w-full p-2 sm:p-5">
+    <div id="printable-buku" class="bg-white border-2 border-slate-800 rounded-lg shadow-xl print-shadow-none overflow-hidden text-[12px] sm:text-[13px] leading-snug">
+
+      <!-- Header Buku Gangguan Operasional Persis Sesuai Gambar -->
+      <div class="p-4 sm:p-5 border-b-2 border-slate-800 bg-white">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-3">
+            <div class="bg-[#002D62] text-white font-extrabold text-2xl px-3.5 py-1.5 rounded tracking-tighter">
+              KAI
+            </div>
+            <div class="text-[11px] text-slate-500 font-semibold uppercase tracking-wider hidden sm:block">
+              PT KERETA API INDONESIA (PERSERO) — DAOP 3 CIREBON
+            </div>
+          </div>
+
+          <div class="text-right text-[11px] text-slate-600 font-mono">
+            <span class="bg-slate-100 px-2 py-1 rounded border border-slate-300">
+              STASIUN ARJAWINANGUN (AWN)
+            </span>
+          </div>
+        </div>
+
+        <!-- Judul Tengah Persis Sesuai Gambar -->
+        <div class="text-center my-3">
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight uppercase">
+            BUKU GANGGUAN OPERASIONAL
+          </h2>
+          <h3 class="text-sm sm:text-base font-bold text-slate-800 uppercase tracking-wide">
+            STASIUN ARJAWINANGUN
+          </h3>
+        </div>
+
+        <!-- Kolom Bulan Sesuai Gambar -->
+        <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-slate-300">
+          <div class="flex items-center gap-2 text-sm font-bold text-slate-900">
+            <span>BULAN :</span>
+            <input type="text" id="buku-bulan-input" value="Desember 2025" placeholder="Contoh: Desember 2025" class="border-b-2 border-slate-700 px-2 py-0.5 font-bold text-sm bg-transparent outline-none focus:border-amber-600 min-w-[180px]">
+          </div>
+
+          <div class="no-print flex items-center gap-2">
+            <button onclick="openRiwayatGangguanModal()" class="px-2.5 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-900 rounded font-bold border border-blue-300 inline-flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              Filter Tanggal / Riwayat
+            </button>
+            <button onclick="openInputGangguanModal()" class="px-2.5 py-1 text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 rounded font-bold border border-amber-600 inline-flex items-center gap-1 shadow-sm">
+              + Tambah Baris Gangguan
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabel Buku Gangguan Operasional Persis Sesuai Kolom Gambar Asli -->
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse buku-table text-[11px] sm:text-xs">
+          <thead>
+            <!-- Baris 1 Header (Warna Kuning Emas Persis Buku Fisik) -->
+            <tr class="bg-[#F59E0B] text-slate-950 font-black text-center uppercase tracking-wider">
+              <th rowspan="2" class="w-10 p-2 border-2 border-slate-900">NO</th>
+              <th colspan="5" class="p-2 border-2 border-slate-900 bg-[#EAB308]">GANGGUAN</th>
+              <th colspan="4" class="p-2 border-2 border-slate-900 bg-[#F59E0B]">PERBAIKAN</th>
+              <th rowspan="2" class="w-16 p-2 border-2 border-slate-900 no-print bg-amber-300">Aksi</th>
+            </tr>
+            <!-- Baris 2 Sub-Header (Persis Kalimat & Huruf Besar-Kecil pada Gambar Asli) -->
+            <tr class="bg-[#FDE047] text-slate-950 font-bold text-center border-b-2 border-slate-900">
+              <th class="p-2 border-2 border-slate-900 min-w-[95px]">Tanggal</th>
+              <th class="p-2 border-2 border-slate-900 min-w-[240px]">Uraian Gangguan</th>
+              <th class="p-2 border-2 border-slate-900 min-w-[80px]">Jam Mulai</th>
+              <th class="p-2 border-2 border-slate-900 min-w-[85px]">Lapor Ke</th>
+              <th class="p-2 border-2 border-slate-900 min-w-[100px]">PPKA</th>
+
+              <th class="p-2 border-2 border-slate-900 min-w-[95px]">tanggal</th>
+              <th class="p-2 border-2 border-slate-900 min-w-[220px]">Uraian Perbaikan</th>
+              <th class="p-2 border-2 border-slate-900 min-w-[80px]">Jam Selesai</th>
+              <th class="p-2 border-2 border-slate-900 min-w-[95px]">Petugas</th>
+            </tr>
+          </thead>
+          <tbody id="buku-table-body" class="divide-y divide-slate-400 bg-white">
+            <!-- Data baris gangguan operasional akan di-render di sini lewat JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Bagian Paraf Bawah (Persis Dokumen Fisik: QC OP 24 CN) -->
+      <div class="p-4 bg-slate-50 border-t-2 border-slate-800 flex flex-wrap justify-between items-end gap-4 text-xs">
+        <div class="space-y-1">
+          <div class="font-bold text-slate-800">Catatan Operasional:</div>
+          <div class="text-[11px] text-slate-600">
+            * Setiap gangguan wajib dilaporkan segera ke unit terkait (Sintel/JJ/Listrik) dan dicatat waktu penyelesaiannya secara akurat.
+          </div>
+        </div>
+
+        <div class="border border-slate-400 rounded p-2.5 bg-white text-center min-w-[240px]">
+          <div class="text-[11px] font-bold text-slate-800 mb-1">
+            Mengetahui / Pengawas QC OP 24 CN:
+          </div>
+          <div class="h-14 flex items-center justify-center border border-dashed border-slate-300 rounded mb-1 bg-slate-50">
+            <div class="text-center">
+              <span class="text-xs font-semibold text-blue-900">Agus Triyanto</span>
+              <div class="text-[9px] text-slate-500">NIPP. 47316</div>
+            </div>
+          </div>
+          <div class="text-[10px] text-slate-500">Stasiun Arjawinangun - Daop 3 Cirebon</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL: Gores / Gambar Tanda Tangan Langsung (Izin Kerja) -->
   <div id="signature-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-300">
       <div class="px-4 py-3 bg-slate-900 text-white flex justify-between items-center">
@@ -755,7 +837,6 @@
           Gunakan jari di layar ponsel atau kursor mouse di komputer.
         </p>
 
-        <!-- Pilihan Alternatif: Upload langsung di dalam modal juga -->
         <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between">
           <label class="inline-flex items-center gap-1.5 text-xs text-blue-700 hover:text-blue-800 font-semibold cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
@@ -777,11 +858,10 @@
     </div>
   </div>
 
-  <!-- MODAL: Riwayat Izin Kerja (Permit to Work History) dengan Fitur Pilih Tanggal -->
+  <!-- MODAL: Riwayat Izin Kerja (PTW) dengan Fitur Pilih Tanggal -->
   <div id="history-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-6">
     <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-300">
       
-      <!-- History Modal Header -->
       <div class="px-5 py-3.5 bg-[#002D62] text-white flex justify-between items-center">
         <div class="flex items-center gap-2">
           <div class="bg-orange-500 text-white px-2 py-0.5 rounded font-black text-xs">KAI</div>
@@ -793,9 +873,7 @@
         <button onclick="closeHistoryModal()" class="text-slate-300 hover:text-white text-xl">✕</button>
       </div>
 
-      <!-- History Toolbar: Fitur Pilih Tanggal & Pencarian -->
       <div class="p-4 bg-slate-100 border-b border-slate-200 flex flex-wrap gap-3 items-end justify-between">
-        <!-- FITUR PILIH TANGGAL -->
         <div class="flex flex-wrap items-center gap-2">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
@@ -806,23 +884,17 @@
           </div>
 
           <div class="flex gap-1.5 self-end">
-            <button onclick="setDateTodayFilter()" class="px-2.5 py-1 text-xs bg-slate-200 hover:bg-slate-300 text-slate-800 rounded font-semibold transition">
-              Hari Ini
-            </button>
-            <button onclick="resetDateFilter()" class="px-2.5 py-1 text-xs bg-slate-200 hover:bg-slate-300 text-slate-800 rounded font-semibold transition">
-              Semua Tanggal
-            </button>
+            <button onclick="setDateTodayFilter()" class="px-2.5 py-1 text-xs bg-slate-200 hover:bg-slate-300 text-slate-800 rounded font-semibold transition">Hari Ini</button>
+            <button onclick="resetDateFilter()" class="px-2.5 py-1 text-xs bg-slate-200 hover:bg-slate-300 text-slate-800 rounded font-semibold transition">Semua Tanggal</button>
           </div>
         </div>
 
-        <!-- Filter Pencarian Nomor / Nama -->
         <div class="flex-1 min-w-[200px] max-w-xs">
           <label class="block text-xs font-bold text-slate-700 mb-1">Cari Permit / Pemohon:</label>
           <input type="text" id="history-search-input" onkeyup="filterHistory()" placeholder="Ketik no permit, nama, lokasi..." class="w-full border border-slate-400 rounded px-2.5 py-1 text-xs bg-white outline-none">
         </div>
       </div>
 
-      <!-- History Table Body -->
       <div class="p-4 flex-1 overflow-y-auto">
         <div class="overflow-x-auto">
           <table class="w-full border-collapse border border-slate-300 text-xs">
@@ -837,7 +909,7 @@
               </tr>
             </thead>
             <tbody id="history-table-body" class="divide-y divide-slate-200">
-              <!-- Baris riwayat di-render lewat Javascript -->
+              <!-- Rendered via JS -->
             </tbody>
           </table>
         </div>
@@ -848,12 +920,164 @@
         </div>
       </div>
 
-      <!-- History Modal Footer -->
       <div class="px-5 py-3 bg-slate-100 border-t border-slate-200 flex justify-between items-center text-xs">
         <span id="history-status-info" class="text-slate-600 font-medium">Menampilkan riwayat</span>
-        <button onclick="closeHistoryModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded font-medium">
-          Tutup
-        </button>
+        <button onclick="closeHistoryModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded font-medium">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Riwayat Gangguan Operasional DENGAN FILTER TANGGAL (DIMINTA PENGGUNA) -->
+  <div id="riwayat-gangguan-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-6">
+    <div class="bg-white rounded-xl shadow-2xl max-w-5xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-300">
+      
+      <div class="px-5 py-3.5 bg-amber-500 text-slate-950 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="bg-slate-900 text-white px-2 py-0.5 rounded font-black text-xs">KAI</div>
+          <div>
+            <h3 class="font-bold text-base">Riwayat Gangguan Operasional - Stasiun Arjawinangun</h3>
+            <p class="text-xs text-amber-950 font-medium">Pencarian & Filter Tanggal Gangguan / Perbaikan</p>
+          </div>
+        </div>
+        <button onclick="closeRiwayatGangguanModal()" class="text-slate-900 hover:text-black font-bold text-xl">✕</button>
+      </div>
+
+      <div class="p-4 bg-slate-100 border-b border-slate-200 flex flex-wrap gap-3 items-end justify-between">
+        <div class="flex flex-wrap items-center gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              Filter Berdasarkan Tanggal:
+            </label>
+            <input type="date" id="filter-gangguan-date" onchange="filterRiwayatGangguan()" class="border border-slate-400 rounded px-2.5 py-1 text-xs bg-white font-medium focus:ring-2 focus:ring-amber-500 outline-none">
+          </div>
+
+          <div class="flex gap-1.5 self-end">
+            <button onclick="setGangguanFilterToday()" class="px-2.5 py-1 text-xs bg-amber-200 hover:bg-amber-300 text-amber-900 rounded font-semibold transition">Hari Ini</button>
+            <button onclick="resetGangguanDateFilter()" class="px-2.5 py-1 text-xs bg-slate-200 hover:bg-slate-300 text-slate-800 rounded font-semibold transition">Semua Tanggal</button>
+          </div>
+        </div>
+
+        <div class="flex-1 min-w-[200px] max-w-xs">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Cari Uraian / PPKA / Petugas:</label>
+          <input type="text" id="filter-gangguan-search" onkeyup="filterRiwayatGangguan()" placeholder="Ketik sinyal, wesel, PPKA, petugas..." class="w-full border border-slate-400 rounded px-2.5 py-1 text-xs bg-white outline-none">
+        </div>
+      </div>
+
+      <div class="p-4 flex-1 overflow-y-auto">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse border border-slate-300 text-xs">
+            <thead>
+              <tr class="bg-amber-100 text-slate-900 text-left font-bold">
+                <th class="border border-slate-300 p-2 text-center w-10">No</th>
+                <th class="border border-slate-300 p-2">Tanggal & Jam Gangguan</th>
+                <th class="border border-slate-300 p-2">Uraian Gangguan</th>
+                <th class="border border-slate-300 p-2">Lapor Ke / PPKA</th>
+                <th class="border border-slate-300 p-2">Uraian Perbaikan</th>
+                <th class="border border-slate-300 p-2">Jam Selesai / Petugas</th>
+                <th class="border border-slate-300 p-2 text-center w-20">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="riwayat-gangguan-tbody" class="divide-y divide-slate-200">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="gangguan-empty-state" class="hidden py-10 text-center text-slate-400 text-xs">
+          <svg class="w-10 h-10 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Tidak ada data riwayat gangguan operasional yang sesuai dengan tanggal atau kata kunci ini.
+        </div>
+      </div>
+
+      <div class="px-5 py-3 bg-slate-100 border-t border-slate-200 flex justify-between items-center text-xs">
+        <span id="riwayat-gangguan-info" class="text-slate-600 font-medium">Menampilkan riwayat</span>
+        <button onclick="closeRiwayatGangguanModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded font-medium">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Catat Gangguan Baru -->
+  <div id="input-gangguan-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-300 max-h-[92vh] flex flex-col">
+      <div class="px-5 py-3.5 bg-[#002D62] text-white flex justify-between items-center">
+        <div>
+          <h3 class="font-bold text-base">Catat Gangguan Operasional Baru</h3>
+          <p class="text-xs text-blue-200">Stasiun Arjawinangun - Daop 3 Cirebon</p>
+        </div>
+        <button onclick="closeInputGangguanModal()" class="text-slate-300 hover:text-white text-xl">✕</button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-4 text-xs">
+        <div class="p-3 bg-amber-50 rounded-lg border border-amber-300 space-y-3">
+          <div class="font-extrabold text-amber-900 border-b border-amber-300 pb-1 flex items-center justify-between">
+            <span>BAGIAN GANGGUAN:</span>
+            <span class="text-[10px] text-amber-700">Wajib diisi saat terjadi indikasi gangguan</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">Tanggal (Gangguan):</label>
+              <input type="text" id="in-gangguan-tgl" placeholder="Contoh: 13/12-2025" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-medium">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">Jam Mulai:</label>
+              <input type="text" id="in-gangguan-jam" placeholder="22.35" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-medium">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">Lapor Ke:</label>
+              <input type="text" id="in-gangguan-lapor" placeholder="Sintel / JJ / LAA" value="Sintel" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-medium">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">PPKA Bertugas:</label>
+              <input type="text" id="in-gangguan-ppka" placeholder="Nama PPKA" value="M. Fadli" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-medium">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">Pilih Kalender (Format Otomatis):</label>
+              <input type="date" id="in-gangguan-date-picker" onchange="syncDateToCustomFormat(this.value, 'in-gangguan-tgl')" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-medium">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-0.5">Uraian Gangguan (Sesuai Lapangan):</label>
+            <textarea id="in-gangguan-uraian" rows="2" placeholder="Contoh: Gangguan sinyal masuk J10 padam dan gangguan Trek blok merah..." class="w-full border border-slate-300 rounded p-2 bg-white"></textarea>
+          </div>
+        </div>
+
+        <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-300 space-y-3">
+          <div class="font-extrabold text-emerald-900 border-b border-emerald-300 pb-1 flex items-center justify-between">
+            <span>BAGIAN PERBAIKAN:</span>
+            <span class="text-[10px] text-emerald-700">Diisi oleh Petugas Penanganan</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">tanggal (Perbaikan):</label>
+              <input type="text" id="in-perbaikan-tgl" placeholder="Contoh: 13/12-2025" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-medium">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">Jam Selesai:</label>
+              <input type="text" id="in-perbaikan-jam" placeholder="22.50" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-medium">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">Petugas:</label>
+              <input type="text" id="in-perbaikan-petugas" placeholder="Nama Petugas (cth: Ismail)" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-medium">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-0.5">Uraian Perbaikan:</label>
+            <textarea id="in-perbaikan-uraian" rows="2" placeholder="Contoh: Reset trek 1714T dan 1810T..." class="w-full border border-slate-300 rounded p-2 bg-white"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-5 py-3 bg-slate-100 border-t border-slate-200 flex justify-end gap-2">
+        <button onclick="closeInputGangguanModal()" class="px-3 py-1.5 rounded text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50">Batal</button>
+        <button onclick="simpanGangguanBaru()" class="px-4 py-1.5 rounded text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 shadow">Simpan ke Buku Gangguan</button>
       </div>
     </div>
   </div>
@@ -878,13 +1102,12 @@
       selesai: null
     };
 
-    // Current active signature key for drawing modal
     let activeSigKey = null;
+    let currentActiveSheet = 'ptw';
 
-    // Default Seed History Records for Stasiun Arjawinangun Daop 3 Cirebon
-    const todayStr = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
     
-    // Calculate a couple of dates for sample history
     const dYesterday = new Date();
     dYesterday.setDate(dYesterday.getDate() - 1);
     const yesterdayStr = dYesterday.toISOString().split('T')[0];
@@ -893,6 +1116,7 @@
     dPast.setDate(dPast.getDate() - 3);
     const pastStr = dPast.toISOString().split('T')[0];
 
+    // Seed Data Izin Kerja (PTW)
     let permitRecords = [
       {
         id: "REC-001",
@@ -929,9 +1153,53 @@
       }
     ];
 
-    /* Initialize Application on DOM Content Loaded */
+    /* DATA BUKU GANGGUAN OPERASIONAL PERSIS DARI GAMBAR ASLI DOKUMEN FISIK */
+    let dataGangguanOperasional = [
+      {
+        id: "GNG-001",
+        no: 1,
+        tanggalGangguan: "13/12-2025",
+        isoDate: "2025-12-13",
+        uraianGangguan: "Gangguan sinyal masuk J10 padam dan gangguan Trek blok merah antara KTM-AWN Jalur Hulu",
+        jamMulai: "22.35",
+        laporKe: "Sintel",
+        ppka: "M. Fadli",
+        tanggalPerbaikan: "13/12-2025",
+        uraianPerbaikan: "Reset trek 1714T dan 1810T",
+        jamSelesai: "22.50",
+        petugas: "Ismail"
+      },
+      {
+        id: "GNG-002",
+        no: 2,
+        tanggalGangguan: "17/12-2025",
+        isoDate: "2025-12-17",
+        uraianGangguan: "Gangguan sinyal blok B1710 tidak bisa menunjukan aspek hijau",
+        jamMulai: "17.15",
+        laporKe: "Sintel",
+        ppka: "M. Fadli",
+        tanggalPerbaikan: "17/12-2025",
+        uraianPerbaikan: "Penggantian trafo",
+        jamSelesai: "18.00",
+        petugas: "Zaynal"
+      },
+      {
+        id: "GNG-003",
+        no: 3,
+        tanggalGangguan: "27/12-2025",
+        isoDate: "2025-12-27",
+        uraianGangguan: "Track jalur 24AT , 29BT merah",
+        jamMulai: "11.50",
+        laporKe: "Sintel",
+        ppka: "Irvan",
+        tanggalPerbaikan: "27/12-2025",
+        uraianPerbaikan: "Reset 102A & 1829B",
+        jamSelesai: "12.23",
+        petugas: "Widakdo"
+      }
+    ];
+
     document.addEventListener('DOMContentLoaded', () => {
-      // Set today's date on main fields
       document.getElementById('field-tgl-berlaku').value = todayStr;
       document.getElementById('field-dari-tgl').value = todayStr;
       document.getElementById('field-sampai-tgl').value = todayStr;
@@ -939,19 +1207,44 @@
       document.getElementById('g-pemberi-tgl').value = todayStr;
       document.getElementById('selesai-tgl').value = todayStr;
       
-      // Update history badge count
       updateBadgeCount();
-      
-      // Setup canvas pad
+      updateGangguanBadge();
       setupCanvas();
+      renderBukuGangguanTable();
 
-      // Setup button listeners
       document.getElementById('btn-open-history').addEventListener('click', openHistoryModal);
       document.getElementById('btn-save-record').addEventListener('click', saveCurrentPermitToHistory);
       document.getElementById('btn-new-form').addEventListener('click', resetNewForm);
     });
 
-    /* Toast Notification function (No alert) */
+    function switchSheet(sheetKey) {
+      currentActiveSheet = sheetKey;
+      const ptwTabBtn = document.getElementById('tab-btn-ptw');
+      const gangguanTabBtn = document.getElementById('tab-btn-gangguan');
+      const ptwActions = document.getElementById('actions-ptw');
+      const gangguanActions = document.getElementById('actions-gangguan');
+      const ptwSheet = document.getElementById('sheet-ptw');
+      const gangguanSheet = document.getElementById('sheet-gangguan');
+
+      if (sheetKey === 'ptw') {
+        ptwTabBtn.className = "px-3 py-1.5 rounded-md text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow";
+        gangguanTabBtn.className = "px-3 py-1.5 rounded-md text-xs font-bold transition flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-700";
+        ptwActions.classList.remove('hidden');
+        gangguanActions.classList.add('hidden');
+        ptwSheet.classList.remove('hidden');
+        gangguanSheet.classList.add('hidden');
+        showToast('Beralih ke Formulir Izin Kerja (PTW P01/P13)');
+      } else {
+        gangguanTabBtn.className = "px-3 py-1.5 rounded-md text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow";
+        ptwTabBtn.className = "px-3 py-1.5 rounded-md text-xs font-bold transition flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-700";
+        gangguanActions.classList.remove('hidden');
+        ptwActions.classList.add('hidden');
+        gangguanSheet.classList.remove('hidden');
+        ptwSheet.classList.add('hidden');
+        showToast('Beralih ke Buku Gangguan Operasional Stasiun Arjawinangun');
+      }
+    }
+
     function showToast(message, isError = false) {
       const toast = document.getElementById('toast-msg');
       const text = document.getElementById('toast-text');
@@ -976,7 +1269,231 @@
       }, 3200);
     }
 
-    // FITUR UPLOAD FILE TTD
+    function renderBukuGangguanTable() {
+      const tbody = document.getElementById('buku-table-body');
+      tbody.innerHTML = '';
+
+      if (dataGangguanOperasional.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="11" class="text-center py-6 text-slate-400 italic">
+              Belum ada catatan gangguan operasional. Klik tombol "+ Catat Gangguan Baru" di atas.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      dataGangguanOperasional.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-amber-50/50 transition duration-150";
+
+        tr.innerHTML = `
+          <td class="text-center font-bold text-slate-900 bg-slate-50">${index + 1}</td>
+          <td class="font-mono text-center font-medium whitespace-nowrap text-slate-800">${item.tanggalGangguan || '-'}</td>
+          <td class="font-medium text-slate-900 leading-snug">${item.uraianGangguan || '-'}</td>
+          <td class="font-mono text-center font-bold text-blue-900">${item.jamMulai || '-'}</td>
+          <td class="text-center font-semibold text-slate-800">${item.laporKe || '-'}</td>
+          <td class="text-center font-medium text-slate-900">${item.ppka || '-'}</td>
+          
+          <td class="font-mono text-center font-medium whitespace-nowrap text-slate-800 bg-emerald-50/30">${item.tanggalPerbaikan || '-'}</td>
+          <td class="text-slate-800 leading-snug bg-emerald-50/30">${item.uraianPerbaikan || '-'}</td>
+          <td class="font-mono text-center font-bold text-emerald-800 bg-emerald-50/30">${item.jamSelesai || '-'}</td>
+          <td class="text-center font-semibold text-slate-900 bg-emerald-50/30">${item.petugas || '-'}</td>
+          <td class="text-center no-print">
+            <button onclick="hapusBarisGangguan('${item.id}')" title="Hapus catatan" class="px-2 py-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded text-xs font-bold transition">
+              ✕
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateGangguanBadge();
+    }
+
+    function updateGangguanBadge() {
+      const badge = document.getElementById('badge-gangguan-count');
+      if (badge) {
+        badge.innerText = dataGangguanOperasional.length;
+      }
+    }
+
+    function openInputGangguanModal() {
+      const modal = document.getElementById('input-gangguan-modal');
+      modal.classList.remove('hidden');
+
+      const dateParts = todayStr.split('-');
+      const formattedDefault = `${dateParts[2]}/${dateParts[1]}-${dateParts[0]}`;
+      document.getElementById('in-gangguan-tgl').value = formattedDefault;
+      document.getElementById('in-perbaikan-tgl').value = formattedDefault;
+      document.getElementById('in-gangguan-date-picker').value = todayStr;
+      
+      const now = new Date();
+      const currentHours = String(now.getHours()).padStart(2, '0');
+      const currentMins = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('in-gangguan-jam').value = `${currentHours}.${currentMins}`;
+    }
+
+    function closeInputGangguanModal() {
+      document.getElementById('input-gangguan-modal').classList.add('hidden');
+    }
+
+    function syncDateToCustomFormat(isoVal, targetInputId) {
+      if (!isoVal) return;
+      const parts = isoVal.split('-');
+      document.getElementById(targetInputId).value = `${parts[2]}/${parts[1]}-${parts[0]}`;
+    }
+
+    function simpanGangguanBaru() {
+      const uraianGangguan = document.getElementById('in-gangguan-uraian').value.trim();
+      const tglGangguan = document.getElementById('in-gangguan-tgl').value.trim();
+
+      if (!uraianGangguan) {
+        showToast('Mohon isi Uraian Gangguan!', true);
+        return;
+      }
+
+      const isoVal = document.getElementById('in-gangguan-date-picker').value || todayStr;
+
+      const newRecord = {
+        id: "GNG-" + Date.now(),
+        no: dataGangguanOperasional.length + 1,
+        tanggalGangguan: tglGangguan || `${today.getDate()}/${today.getMonth() + 1}-${today.getFullYear()}`,
+        isoDate: isoVal,
+        uraianGangguan: uraianGangguan,
+        jamMulai: document.getElementById('in-gangguan-jam').value.trim(),
+        laporKe: document.getElementById('in-gangguan-lapor').value.trim(),
+        ppka: document.getElementById('in-gangguan-ppka').value.trim(),
+        tanggalPerbaikan: document.getElementById('in-perbaikan-tgl').value.trim(),
+        uraianPerbaikan: document.getElementById('in-perbaikan-uraian').value.trim(),
+        jamSelesai: document.getElementById('in-perbaikan-jam').value.trim(),
+        petugas: document.getElementById('in-perbaikan-petugas').value.trim()
+      };
+
+      dataGangguanOperasional.push(newRecord);
+      renderBukuGangguanTable();
+      closeInputGangguanModal();
+      showToast('Gangguan operasional berhasil dicatat!');
+      
+      document.getElementById('in-gangguan-uraian').value = '';
+      document.getElementById('in-perbaikan-uraian').value = '';
+      document.getElementById('in-perbaikan-petugas').value = '';
+    }
+
+    function hapusBarisGangguan(id) {
+      dataGangguanOperasional = dataGangguanOperasional.filter(g => g.id !== id);
+      renderBukuGangguanTable();
+      showToast('Catatan gangguan berhasil dihapus.');
+    }
+
+    function openRiwayatGangguanModal() {
+      const modal = document.getElementById('riwayat-gangguan-modal');
+      modal.classList.remove('hidden');
+      document.getElementById('filter-gangguan-date').value = '';
+      document.getElementById('filter-gangguan-search').value = '';
+      renderRiwayatGangguanRows(dataGangguanOperasional);
+    }
+
+    function closeRiwayatGangguanModal() {
+      document.getElementById('riwayat-gangguan-modal').classList.add('hidden');
+    }
+
+    function setGangguanFilterToday() {
+      document.getElementById('filter-gangguan-date').value = todayStr;
+      filterRiwayatGangguan();
+    }
+
+    function resetGangguanDateFilter() {
+      document.getElementById('filter-gangguan-date').value = '';
+      filterRiwayatGangguan();
+    }
+
+    function filterRiwayatGangguan() {
+      const selectedDate = document.getElementById('filter-gangguan-date').value;
+      const searchKey = document.getElementById('filter-gangguan-search').value.toLowerCase().trim();
+
+      const filtered = dataGangguanOperasional.filter(item => {
+        let matchDate = true;
+        if (selectedDate) {
+          if (item.isoDate) {
+            matchDate = item.isoDate === selectedDate;
+          } else if (item.tanggalGangguan) {
+            const dateParts = selectedDate.split('-');
+            const customDateMatch = `${dateParts[2]}/${dateParts[1]}-${dateParts[0]}`;
+            matchDate = item.tanggalGangguan.includes(customDateMatch);
+          }
+        }
+
+        const matchSearch = !searchKey ||
+          (item.uraianGangguan && item.uraianGangguan.toLowerCase().includes(searchKey)) ||
+          (item.uraianPerbaikan && item.uraianPerbaikan.toLowerCase().includes(searchKey)) ||
+          (item.ppka && item.ppka.toLowerCase().includes(searchKey)) ||
+          (item.petugas && item.petugas.toLowerCase().includes(searchKey)) ||
+          (item.laporKe && item.laporKe.toLowerCase().includes(searchKey));
+
+        return matchDate && matchSearch;
+      });
+
+      renderRiwayatGangguanRows(filtered);
+    }
+
+    function renderRiwayatGangguanRows(records) {
+      const tbody = document.getElementById('riwayat-gangguan-tbody');
+      const emptyState = document.getElementById('gangguan-empty-state');
+      const infoSpan = document.getElementById('riwayat-gangguan-info');
+
+      tbody.innerHTML = '';
+      infoSpan.innerText = `Menampilkan ${records.length} arsip catatan gangguan`;
+
+      if (records.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      } else {
+        emptyState.classList.add('hidden');
+      }
+
+      records.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+
+        tr.innerHTML = `
+          <td class="border border-slate-200 p-2 text-center font-bold">${idx + 1}</td>
+          <td class="border border-slate-200 p-2 whitespace-nowrap">
+            <div class="font-mono font-bold text-slate-800">📅 ${item.tanggalGangguan || '-'}</div>
+            <div class="text-[10px] text-slate-500 font-mono">Jam: ${item.jamMulai || '-'}</div>
+          </td>
+          <td class="border border-slate-200 p-2 font-medium text-slate-900 max-w-xs">
+            ${item.uraianGangguan || '-'}
+          </td>
+          <td class="border border-slate-200 p-2">
+            <div><span class="font-bold text-slate-700">Lapor:</span> ${item.laporKe || '-'}</div>
+            <div class="text-[10px] text-slate-500"><span class="font-semibold">PPKA:</span> ${item.ppka || '-'}</div>
+          </td>
+          <td class="border border-slate-200 p-2 text-slate-800 max-w-xs">
+            ${item.uraianPerbaikan || '-'}
+          </td>
+          <td class="border border-slate-200 p-2 whitespace-nowrap">
+            <div class="font-mono font-bold text-emerald-800">Jam: ${item.jamSelesai || '-'}</div>
+            <div class="text-[10px] font-semibold text-slate-700">Petugas: ${item.petugas || '-'}</div>
+          </td>
+          <td class="border border-slate-200 p-2 text-center">
+            <button onclick="hapusDariRiwayatGangguan('${item.id}')" title="Hapus" class="px-2 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded text-[11px] font-bold transition">
+              ✕
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function hapusDariRiwayatGangguan(id) {
+      dataGangguanOperasional = dataGangguanOperasional.filter(g => g.id !== id);
+      renderBukuGangguanTable();
+      filterRiwayatGangguan();
+      showToast('Data gangguan telah dihapus.');
+    }
+
     function handleFileUpload(event, key) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
@@ -991,12 +1508,11 @@
         const dataUrl = e.target.result;
         signatures[key] = dataUrl;
         renderSignatureDisplay(key, dataUrl);
-        showToast('Foto / file tanda tangan berhasil diunggah!');
+        showToast('Foto tanda tangan berhasil diunggah!');
       };
       reader.readAsDataURL(file);
     }
 
-    // Modal File Upload alternative
     function handleModalFileUpload(event) {
       const file = event.target.files && event.target.files[0];
       if (!file || !activeSigKey) return;
@@ -1012,7 +1528,6 @@
       reader.readAsDataURL(file);
     }
 
-    // Render signature image inside table cell or box
     function renderSignatureDisplay(key, dataUrl) {
       const display = document.getElementById(`ttd-${key}-display`);
       if (!display) return;
@@ -1024,14 +1539,13 @@
       }
     }
 
-    // Clear signature
     function clearSignature(key) {
       signatures[key] = null;
       renderSignatureDisplay(key, null);
       showToast('Tanda tangan dihapus.');
     }
 
-    // CANVAS SIGNATURE DRAWING PAD
+    /* Canvas Drawing Engine */
     let canvas, ctx, isDrawing = false;
 
     function setupCanvas() {
@@ -1043,12 +1557,10 @@
       ctx.lineJoin = 'round';
       ctx.strokeStyle = '#002D62';
 
-      // Mouse Events
       canvas.addEventListener('mousedown', startDrawing);
       canvas.addEventListener('mousemove', draw);
       window.addEventListener('mouseup', stopDrawing);
 
-      // Touch Events for mobile & tablet
       canvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
         const touch = e.touches[0];
@@ -1114,7 +1626,6 @@
 
     function saveCanvasSignature() {
       if (!activeSigKey || !canvas) return;
-      // Convert canvas to image data
       const dataUrl = canvas.toDataURL('image/png');
       signatures[activeSigKey] = dataUrl;
       renderSignatureDisplay(activeSigKey, dataUrl);
@@ -1122,11 +1633,9 @@
       showToast('Tanda tangan digital tersimpan!');
     }
 
-    // FITUR RIWAYAT IZIN KERJA & FITUR PILIH TANGGAL
     function openHistoryModal() {
       const modal = document.getElementById('history-modal');
       modal.classList.remove('hidden');
-      // Default to no filter so all historical records are visible
       document.getElementById('history-filter-date').value = '';
       document.getElementById('history-search-input').value = '';
       renderHistoryTable(permitRecords);
@@ -1136,29 +1645,23 @@
       document.getElementById('history-modal').classList.add('hidden');
     }
 
-    // Set filter to today
     function setDateTodayFilter() {
       const dateInput = document.getElementById('history-filter-date');
       dateInput.value = todayStr;
       filterHistory();
     }
 
-    // Reset date filter
     function resetDateFilter() {
       document.getElementById('history-filter-date').value = '';
       filterHistory();
     }
 
-    // Filter History records by chosen date and search keyword
     function filterHistory() {
       const selectedDate = document.getElementById('history-filter-date').value;
       const searchKey = document.getElementById('history-search-input').value.toLowerCase().trim();
 
       const filtered = permitRecords.filter(item => {
-        // Date match (if selected)
         const matchDate = !selectedDate || item.tglBerlaku === selectedDate;
-        
-        // Search text match
         const matchSearch = !searchKey || 
           (item.permitNo && item.permitNo.toLowerCase().includes(searchKey)) ||
           (item.pemohonNama && item.pemohonNama.toLowerCase().includes(searchKey)) ||
@@ -1171,7 +1674,6 @@
       renderHistoryTable(filtered);
     }
 
-    // Render table rows
     function renderHistoryTable(data) {
       const tbody = document.getElementById('history-table-body');
       const emptyState = document.getElementById('history-empty-state');
@@ -1191,7 +1693,6 @@
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
 
-        // Status badge
         let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Selesai</span>`;
         if (item.status === 'Aktif') {
           statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">Sedang Berjalan</span>`;
@@ -1202,9 +1703,7 @@
         tr.innerHTML = `
           <td class="border border-slate-200 p-2 font-mono font-bold text-blue-900">${item.permitNo || '-'}</td>
           <td class="border border-slate-200 p-2 whitespace-nowrap">
-            <span class="inline-flex items-center gap-1 font-semibold text-slate-800">
-              📅 ${item.tglBerlaku || '-'}
-            </span>
+            <span class="inline-flex items-center gap-1 font-semibold text-slate-800">📅 ${item.tglBerlaku || '-'}</span>
           </td>
           <td class="border border-slate-200 p-2 font-medium">
             <div>${item.pemohonNama || '-'}</div>
@@ -1217,12 +1716,8 @@
           <td class="border border-slate-200 p-2 text-center">${statusBadge}</td>
           <td class="border border-slate-200 p-2 text-center">
             <div class="flex items-center justify-center gap-1">
-              <button onclick="loadPermitRecord('${item.id}')" title="Muat ke Formulir" class="px-2 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-[11px] font-medium transition">
-                Muat
-              </button>
-              <button onclick="deletePermitRecord('${item.id}')" title="Hapus Dari Riwayat" class="px-1.5 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded text-[11px] transition">
-                ✕
-              </button>
+              <button onclick="loadPermitRecord('${item.id}')" title="Muat ke Formulir" class="px-2 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-[11px] font-medium transition">Muat</button>
+              <button onclick="deletePermitRecord('${item.id}')" title="Hapus Dari Riwayat" class="px-1.5 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded text-[11px] transition">✕</button>
             </div>
           </td>
         `;
@@ -1230,7 +1725,6 @@
       });
     }
 
-    // Save current active form into history
     function saveCurrentPermitToHistory() {
       const permitNo = document.getElementById('field-permit-no').value.trim() || `PTW/AWN/${new Date().getFullYear()}/${(new Date().getMonth()+1).toString().padStart(2, '0')}/${Math.floor(100 + Math.random() * 900)}`;
       document.getElementById('field-permit-no').value = permitNo;
@@ -1247,17 +1741,14 @@
         status: "Aktif",
         dariTgl: document.getElementById('field-dari-tgl').value,
         sampaiTgl: document.getElementById('field-sampai-tgl').value,
-        // Store cloned signatures
         signatures: { ...signatures }
       };
 
-      // Add to front of history list
       permitRecords.unshift(record);
       updateBadgeCount();
       showToast(`Izin Kerja ${permitNo} berhasil disimpan ke Riwayat!`);
     }
 
-    // Load selected record from history back into the main form
     function loadPermitRecord(recId) {
       const rec = permitRecords.find(r => r.id === recId);
       if (!rec) return;
@@ -1273,7 +1764,6 @@
       if (rec.dariTgl) document.getElementById('field-dari-tgl').value = rec.dariTgl;
       if (rec.sampaiTgl) document.getElementById('field-sampai-tgl').value = rec.sampaiTgl;
 
-      // Restore signatures if any
       if (rec.signatures) {
         Object.keys(rec.signatures).forEach(key => {
           signatures[key] = rec.signatures[key];
@@ -1282,11 +1772,10 @@
       }
 
       closeHistoryModal();
-      showToast(`Izin kerja ${rec.permitNo} berhasil dimuat ke dokumen.`);
+      showToast(`Izin kerja ${rec.permitNo} dimuat.`);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Delete record from history
     function deletePermitRecord(recId) {
       permitRecords = permitRecords.filter(r => r.id !== recId);
       updateBadgeCount();
@@ -1294,15 +1783,12 @@
       showToast('Arsip izin kerja berhasil dihapus.');
     }
 
-    // Reset Form Baru
     function resetNewForm() {
-      // Clear signatures
       Object.keys(signatures).forEach(k => {
         signatures[k] = null;
         renderSignatureDisplay(k, null);
       });
 
-      // Clear permit no for fresh generation
       document.getElementById('field-permit-no').value = `PTW/AWN/${new Date().getFullYear()}/${(new Date().getMonth()+1).toString().padStart(2, '0')}/${Math.floor(100 + Math.random() * 900)}`;
       document.getElementById('field-tgl-berlaku').value = todayStr;
       document.getElementById('field-dari-tgl').value = todayStr;
@@ -1314,7 +1800,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Update history counter badge
     function updateBadgeCount() {
       const badge = document.getElementById('badge-history-count');
       if (badge) {
