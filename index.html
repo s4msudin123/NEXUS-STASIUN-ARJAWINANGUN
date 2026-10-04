@@ -3,1671 +3,937 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXUS STASIUN ARJAWINANGUN - DAOP 3 CIREBON</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <title>"NEXUS STASIUN ARJAWINANGUN"</title> 
   
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f5fa',
+              700: '#1b3b6f',
+              800: '#0f274a',
+              900: '#07152b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Courier+Prime:wght@700&display=swap');
+    
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f1f5f9;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0d1117;
       color: #0f172a;
+      overflow-x: hidden;
     }
-    .font-mono-num {
-      font-family: 'JetBrains Mono', monospace;
+
+    .form-border {
+      border: 1.5px solid #111827;
     }
-    /* Tampilan Grid Buku Ledger */
-    .ledger-table th, .ledger-table td {
-      border: 1px solid #334155;
+
+    .handwriting {
+      font-family: 'Courier Prime', monospace;
+      color: #0f274a;
+      font-weight: 700;
     }
+
+    /* Print Styles */
     @media print {
       body {
-        background-color: #ffffff;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
       }
       .no-print {
         display: none !important;
       }
-      .print-only {
-        display: block !important;
-      }
-      .sheet-content {
+      #view-nexus {
         display: none !important;
       }
-      .sheet-content.active-print {
+      #view-izin-kerja {
         display: block !important;
+        padding: 0 !important;
       }
-      @page {
-        size: A4 landscape;
-        margin: 10mm;
+      .print-page {
+        box-shadow: none !important;
+        border: 2px solid #000000 !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        background: #ffffff !important;
+      }
+      input, textarea {
+        border-bottom: 1px solid #000000 !important;
+        background: transparent !important;
       }
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="h-screen flex flex-col bg-[#0d1117]">
 
-  <header class="bg-gradient-to-r from-blue-950 via-slate-900 to-blue-900 text-white shadow-lg sticky top-0 z-30 no-print border-b border-blue-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center space-x-3">
-        <div class="bg-orange-500 text-white font-extrabold px-3 py-1.5 rounded-lg text-lg tracking-wider shadow">
-          KAI
-        </div>
-        <div>
-          <h1 class="text-base sm:text-xl font-bold tracking-tight flex items-center gap-2">
-            NEXUS STASIUN ARJAWINANGUN
-            <span class="text-xs bg-blue-800/80 text-blue-200 border border-blue-600 px-2 py-0.5 rounded-md font-medium">
-              Daop 3 Cirebon
-            </span>
-          </h1>
-          <p class="text-xs text-slate-300">Sistem Informasi Digital Operasional & Keselamatan Stasiun</p>
-        </div>
+  <!-- Top Navigation Header (No-Print) -->
+  <header class="no-print bg-[#161b22] border-b border-slate-800 px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-3 flex-shrink-0 z-50">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center font-black text-white text-xs tracking-wider shadow">
+        KAI
       </div>
-
-      <nav class="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700 shadow-inner">
-        <button id="btnTabPTW" onclick="switchSheet('ptw')" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 bg-blue-600 text-white shadow">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-          Izin Kerja (PTW) K3
-        </button>
-        <button id="btnTabCounter" onclick="switchSheet('counter')" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-700/50">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-          Buku Penjagaan Bentuk & Counter
-        </button>
-        <button id="btnTabGangguan" onclick="switchSheet('gangguan')" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-700/50">
-          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-          Buku Gangguan Operasional
-        </button>
-      </nav>
-
-      <div class="flex items-center gap-2">
-        <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs sm:text-sm font-medium px-3 py-1.5 rounded-lg transition border border-slate-600 flex items-center gap-1">
-          <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-          Cetak
-        </button>
-        <button id="btnMainAction" onclick="handlePrimaryAction()" class="bg-orange-600 hover:bg-orange-500 text-white text-xs sm:text-sm font-medium px-3.5 py-1.5 rounded-lg transition shadow flex items-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
-          <span id="btnMainActionLabel">Simpan PTW</span>
-        </button>
+      <div>
+        <h1 class="text-white font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2">
+          NEXUS STASIUN ARJAWINANGUN
+          <span class="text-[10px] bg-slate-800 text-slate-300 border border-slate-700 px-1.5 py-0.5 rounded font-mono">Daop 3 Cirebon</span>
+        </h1>
       </div>
+    </div>
+
+    <!-- View Switcher Tabs -->
+    <div class="flex items-center bg-slate-900/90 border border-slate-700/80 p-1 rounded-xl shadow-inner text-xs font-semibold">
+      <button id="tabNexus" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-blue-600 text-white shadow">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span>NEXUS Utama</span>
+      </button>
+      <button id="tabIzinKerja" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span>Sheet : Izin Kerja</span>
+      </button>
+    </div>
+
+    <!-- Quick Action for Form (Hidden when on Tab Nexus) -->
+    <div id="formActions" class="hidden flex items-center gap-1.5">
+      <button id="btnIsiContoh" type="button" class="px-2.5 py-1.5 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg transition-all flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+        <span class="hidden sm:inline">Muat Sesuai Gambar</span>
+        <span class="sm:hidden">Contoh</span>
+      </button>
+      <button id="btnReset" type="button" class="px-2.5 py-1.5 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-rose-300 border border-slate-700 rounded-lg transition-all flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        <span>Reset</span>
+      </button>
+      <button id="btnSimpan" type="button" class="px-3 py-1.5 text-[11px] font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-all shadow flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+        <span>Simpan</span>
+      </button>
+      <button onclick="window.print()" type="button" class="px-3 py-1.5 text-[11px] font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all shadow flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        <span>Cetak</span>
+      </button>
     </div>
   </header>
 
-  <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6">
-
-    <!-- ========================================================================= -->
-    <!-- SHEET 2: BUKU PENJAGAAN BENTUK DAN PENJAGAAN NOMOR COUNTER (FITUR BARU) -->
-    <!-- ========================================================================= -->
-    <section id="sheetCounter" class="sheet-content hidden">
-      <!-- Toolbar Buku Counter -->
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-5 no-print">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="flex flex-wrap items-center gap-3">
-            <div>
-              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Periode Bulan & Tahun</label>
-              <div class="flex items-center gap-2">
-                <input type="text" id="periodeCounterInput" value="OKTOBER 2024" class="font-bold text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none w-44 uppercase tracking-wide">
-                <button onclick="updatePeriodeHeader()" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-2.5 py-1.5 rounded-lg font-medium">Ubah</button>
-              </div>
-            </div>
-
-            <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Cari Catatan / Tanggal</label>
-              <input type="text" id="searchCounterInput" oninput="filterCounterTable()" placeholder="Ketik kata kunci..." class="text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none w-52">
-            </div>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-2">
-            <button onclick="openAddCounterModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg transition shadow flex items-center gap-1.5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-              + Tambah Baris Counter
-            </button>
-            <button onclick="exportCounterCSV()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-medium px-3 py-2 rounded-lg transition border border-slate-300 flex items-center gap-1">
-              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-              Ekspor CSV
-            </button>
-            <button onclick="resetDefaultCounterData()" class="text-xs text-rose-600 hover:text-rose-800 underline px-2 py-1">
-              Reset Contoh
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-md border-2 border-slate-800 overflow-hidden p-4 sm:p-6">
-        <!-- Sub-Header KAI Stasiun -->
-        <div class="flex items-center justify-between pb-3 border-b-2 border-slate-800 mb-2">
-          <div class="flex items-center gap-2">
-            <span class="bg-orange-600 text-white font-black text-sm px-2 py-0.5 rounded">KAI</span>
-            <span class="font-bold text-xs sm:text-sm text-slate-800 uppercase tracking-tight">
-              PT KERETA API INDONESIA (PERSERO) — DAOP 3 CIREBON — STASIUN ARJAWINANGUN
-            </span>
-          </div>
-          <div id="displayPeriodeCounter" class="text-sm sm:text-lg font-black font-mono-num text-slate-900 uppercase">
-            OKTOBER 2024
-          </div>
-        </div>
-
-        <!-- Judul Gambar Persis Tanpa Diubah -->
-        <div class="text-center py-2.5 bg-slate-100 border border-slate-800 mb-3 rounded">
-          <h2 class="text-base sm:text-xl font-extrabold uppercase tracking-wide text-slate-900">
-            BUKU PENJAGAAN BENTUK DAN PENJAGAAN NOMOR COUNTER
-          </h2>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table id="tableCounterMain" class="w-full text-xs sm:text-sm text-center border-collapse ledger-table bg-white">
-            <thead>
-              <tr class="bg-slate-300/80 text-slate-900 font-bold uppercase">
-                <!-- TANGGAL (Rowspan 2) -->
-                <th rowspan="2" class="p-2.5 w-28 tracking-wide">TANGGAL</th>
-                <!-- NOMOR BENTUK (Colspan 4) -->
-                <th colspan="4" class="p-2 tracking-wide bg-slate-300">NOMOR BENTUK</th>
-                <!-- NOMOR COUNTER (Colspan 6) -->
-                <th colspan="6" class="p-2 tracking-wide bg-slate-300">NOMOR COUNTER</th>
-                <!-- CATATAN (Rowspan 2) -->
-                <th rowspan="2" class="p-2.5 min-w-[220px] text-left pl-3 tracking-wide">CATATAN</th>
-                <!-- Aksi (No Print) -->
-                <th rowspan="2" class="p-2 w-16 no-print bg-slate-200">OPSI</th>
-              </tr>
-              <tr class="bg-slate-200 text-slate-800 font-bold uppercase text-[11px] sm:text-xs">
-                <!-- Sub-kolom NOMOR BENTUK -->
-                <th class="p-1.5 w-12 bg-slate-200/90">PTP</th>
-                <th class="p-1.5 w-12 bg-slate-200/90">BH</th>
-                <th class="p-1.5 w-12 bg-slate-200/90">BK</th>
-                <th class="p-1.5 w-12 bg-slate-200/90">MS</th>
-                <!-- Sub-kolom NOMOR COUNTER -->
-                <th class="p-1.5 w-14 bg-slate-200/90">TBW</th>
-                <th class="p-1.5 w-14 bg-slate-200/90">TPBD</th>
-                <th class="p-1.5 w-14 bg-slate-200/90">TPR</th>
-                <th class="p-1.5 w-14 bg-slate-200/90">TSD</th>
-                <th class="p-1.5 w-14 bg-slate-200/90">TAMS</th>
-                <th class="p-1.5 w-16 bg-slate-200/90">TWT</th>
-              </tr>
-            </thead>
-            <tbody id="counterTableBody" class="font-mono-num text-slate-800 divide-y divide-slate-800">
-              <!-- Baris akan dimuat secara dinamis via JavaScript -->
-            </tbody>
-          </table>
-        </div>
-
-        <div class="mt-4 pt-3 border-t border-slate-300 flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2">
-          <div class="flex items-center gap-3">
-            <span>Total Tercatat: <strong id="counterRowCount" class="text-slate-900">0</strong> baris</span>
-            <span class="text-slate-300">|</span>
-            <span>Stasiun: <strong>Arjawinangun (AWN)</strong></span>
-          </div>
-          <div class="italic text-[11px] text-slate-500">
-            * Tombol Counter: TBW, TPBD, TPR, TSD, TAMS, TWT | Bentuk: PTP, BH, BK, MS
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- SHEET 3: BUKU GANGGUAN OPERASIONAL (PERSIS GAMBAR DOKUMEN ASLI AWN) -->
-    <!-- ========================================================================= -->
-    <section id="sheetGangguan" class="sheet-content hidden">
-      <!-- Toolbar & Filter Riwayat Gangguan Berdasarkan Tanggal -->
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-5 no-print">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <!-- Filter Tanggal & Pencarian Cepat -->
-          <div class="flex flex-wrap items-end gap-3">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">Dari Tanggal</label>
-              <input type="date" id="filterGangguanStartDate" onchange="applyGangguanFilter()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">Sampai Tanggal</label>
-              <input type="date" id="filterGangguanEndDate" onchange="applyGangguanFilter()" class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none">
-            </div>
-
-            <div class="flex items-center gap-1.5">
-              <button onclick="filterGangguanPreset('desember2025')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-2.5 py-1.5 rounded-lg font-medium transition">
-                Desember 2025
-              </button>
-              <button onclick="resetGangguanFilter()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-2.5 py-1.5 rounded-lg font-medium transition">
-                Tampilkan Semua
-              </button>
-            </div>
-
-            <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
-
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">Cari Kata Kunci</label>
-              <input type="text" id="searchGangguanText" oninput="applyGangguanFilter()" placeholder="Uraian / PPKA / Petugas..." class="text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none w-48 sm:w-56">
-            </div>
-          </div>
-
-          <!-- Tombol Aksi Tambah & Ekspor -->
-          <div class="flex flex-wrap items-center gap-2">
-            <button onclick="openAddGangguanModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs sm:text-sm font-bold px-3.5 py-2 rounded-lg transition shadow flex items-center gap-1.5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-              + Catat Gangguan
-            </button>
-            <button onclick="exportGangguanCSV()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-medium px-3 py-2 rounded-lg transition border border-slate-300 flex items-center gap-1">
-              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-              Ekspor CSV
-            </button>
-            <button onclick="resetDefaultGangguanData()" class="text-xs text-rose-600 hover:text-rose-800 underline px-2 py-1">
-              Reset Contoh Foto
-            </button>
-          </div>
-        </div>
-
-        <!-- Ringkasan Filter & Riwayat Gangguan -->
-        <div class="mt-3 pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <div class="flex items-center gap-3">
-            <span class="text-slate-600">Status Filter:</span>
-            <span id="badgeFilterStatus" class="font-semibold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-300">Menampilkan Semua Riwayat</span>
-          </div>
-          <div class="flex items-center gap-4 text-slate-600 font-mono-num">
-            <span>Total: <strong id="statTotalGangguan" class="text-slate-900 font-bold">3</strong></span>
-            <span class="text-slate-300">|</span>
-            <span>Selesai Perbaikan: <strong id="statSelesaiPerbaikan" class="text-emerald-700 font-bold">3</strong></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tampilan Buku Gangguan Operasional Sesuai Format Fisik Foto -->
-      <div class="bg-white rounded-xl shadow-md border-2 border-slate-900 overflow-hidden p-4 sm:p-6">
-        <!-- Bagian Atas Lembar Buku: Logo KAI, Bulan, Judul & Stasiun persis di foto -->
-        <div class="flex flex-col sm:flex-row sm:items-start justify-between pb-3 border-b-2 border-slate-900 mb-3 gap-3">
-          <!-- KAI dan BULAN -->
-          <div class="flex flex-col items-start gap-1">
-            <div class="flex items-center gap-2">
-              <span class="bg-blue-900 text-white font-extrabold text-xl px-3 py-1 rounded tracking-wide shadow-sm">KAI</span>
-            </div>
-            <div class="flex items-center gap-2 mt-1">
-              <span class="font-bold text-xs sm:text-sm text-slate-900 uppercase tracking-wide">BULAN :</span>
-              <input type="text" id="inputBulanGangguan" value="Desember 2025" onchange="updateBulanGangguan()" class="font-bold text-xs sm:text-sm bg-transparent border-b border-dashed border-slate-500 text-slate-900 focus:outline-none focus:border-amber-600 px-1 py-0.5 w-36 uppercase tracking-wider">
-            </div>
-          </div>
-
-          <!-- Judul Tengah: BUKU GANGGUAN OPERASIONAL & STASIUN ARJAWINANGUN -->
-          <div class="text-center sm:pr-8">
-            <h2 class="text-lg sm:text-2xl font-black uppercase tracking-tight text-slate-950">
-              BUKU GANGGUAN OPERASIONAL
-            </h2>
-            <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-slate-800">
-              STASIUN ARJAWINANGUN
-            </h3>
-          </div>
-
-          <!-- Stempel / Pengesahan Operasional kanan atas seperti pada foto -->
-          <div class="text-[10px] text-slate-500 border border-dashed border-slate-300 p-1.5 rounded text-right self-end sm:self-start">
-            <div class="font-semibold text-slate-700">Daop 3 Cirebon</div>
-            <div>Wilayah Operasi AWN</div>
-          </div>
-        </div>
-
-        <!-- Tabel Buku Gangguan Operasional (Header Kuning seperti Buku Asli) -->
-        <div class="overflow-x-auto">
-          <table id="tableGangguanMain" class="w-full text-xs sm:text-sm text-left border-collapse ledger-table bg-white">
-            <thead>
-              <!-- Baris Header 1: NO, GANGGUAN, PERBAIKAN -->
-              <tr class="bg-amber-400 text-slate-950 font-bold uppercase text-center border-b-2 border-slate-900">
-                <th rowspan="2" class="p-2 w-12 border border-slate-900">NO</th>
-                <th colspan="5" class="p-2 border border-slate-900 tracking-wider">GANGGUAN</th>
-                <th colspan="4" class="p-2 border border-slate-900 tracking-wider">PERBAIKAN</th>
-                <th rowspan="2" class="p-2 w-16 no-print border border-slate-900 bg-amber-300">OPSI</th>
-              </tr>
-              <!-- Baris Header 2: Sub-kolom persis pada gambar -->
-              <tr class="bg-amber-300 text-slate-950 font-bold text-center text-[11px] sm:text-xs">
-                <!-- Sub-kolom GANGGUAN -->
-                <th class="p-2 w-28 border border-slate-900">Tanggal</th>
-                <th class="p-2 min-w-[260px] text-left border border-slate-900">Uraian Gangguan</th>
-                <th class="p-2 w-24 border border-slate-900">Jam Mulai</th>
-                <th class="p-2 w-20 border border-slate-900">Lapor Ke</th>
-                <th class="p-2 w-24 border border-slate-900">PPKA</th>
-                <!-- Sub-kolom PERBAIKAN -->
-                <th class="p-2 w-28 border border-slate-900">tanggal</th>
-                <th class="p-2 min-w-[220px] text-left border border-slate-900">Uraian Perbaikan</th>
-                <th class="p-2 w-24 border border-slate-900">Jam Selesai</th>
-                <th class="p-2 w-24 border border-slate-900">Petugas</th>
-              </tr>
-            </thead>
-            <tbody id="gangguanTableBody" class="text-slate-900 divide-y divide-slate-800">
-              <!-- Baris Gangguan dimuat dinamis melalui JavaScript -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Catatan & Pengesahan Bagian Bawah Persis Foto Fisik -->
-        <div class="mt-6 pt-4 border-t-2 border-slate-900 grid grid-cols-1 md:grid-cols-2 items-center gap-4 text-xs">
-          <!-- Catatan Validasi Tanda Tangan QC OP 24 CN Agus Triyanto (Dapat diedit & unggah TTD) -->
-          <div class="border-2 border-slate-800 rounded-lg p-3 bg-amber-50/70 max-w-md shadow-sm">
-            <div class="flex flex-col gap-2">
-              <!-- Baris Atas: Tanggal & Unit QC (Dapat diedit) -->
-              <div class="flex items-center justify-between border-b border-slate-300 pb-2 gap-2">
-                <div class="flex items-center gap-1.5 flex-1">
-                  <label class="text-[10px] font-bold text-slate-600 uppercase">Tgl:</label>
-                  <input type="text" id="inputQcTanggal" value="6/1 2026" onchange="saveQcData()" placeholder="6/1 2026" class="font-mono-num font-bold text-xs bg-white border border-slate-300 rounded px-2 py-0.5 text-slate-900 w-28 focus:ring-1 focus:ring-amber-500 outline-none print:border-none print:bg-transparent" title="Edit Tanggal Verifikasi">
-                </div>
-                <div class="flex items-center gap-1.5 flex-1 justify-end">
-                  <label class="text-[10px] font-bold text-slate-600 uppercase">Unit:</label>
-                  <input type="text" id="inputQcUnit" value="QC OP 24 CN" onchange="saveQcData()" placeholder="QC OP 24 CN" class="font-bold text-xs bg-white border border-slate-300 rounded px-2 py-0.5 text-slate-900 w-32 focus:ring-1 focus:ring-amber-500 outline-none print:border-none print:bg-transparent text-right" title="Edit Unit / Divisi">
-                </div>
-              </div>
-
-              <!-- Area Tanda Tangan / Paraf QC (Upload atau Gores) -->
-              <div class="my-1 flex flex-col items-center justify-center">
-                <div id="previewTtdQcContainer" class="h-20 w-48 border border-dashed border-slate-400 rounded bg-white flex items-center justify-center relative overflow-hidden shadow-inner">
-                  <img id="imgTtdQc" src="" alt="TTD QC" class="max-h-full object-contain hidden">
-                  <div id="svgTtdQcDefault" class="flex flex-col items-center justify-center p-1">
-                    <svg class="w-32 h-14 text-blue-900" viewBox="0 0 120 50" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M10 40 C 30 5, 45 10, 60 45 C 50 25, 75 10, 85 45 C 65 35, 110 30, 95 48 M20 40 L100 35 M45 42 L80 42"></path>
-                    </svg>
-                    <span class="text-[9px] text-slate-500 font-mono italic">Paraf Terverifikasi</span>
-                  </div>
-                </div>
-
-                <!-- Tombol Aksi TTD (Upload File & Gores) - Tidak Dicetak -->
-                <div class="flex items-center gap-2 mt-2 no-print">
-                  <input type="file" id="fileUploadTtdQc" accept="image/*" class="hidden" onchange="handleUploadTtdQc(event)">
-                  <button type="button" onclick="document.getElementById('fileUploadTtdQc').click()" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-800 px-2 py-1 rounded font-semibold flex items-center gap-1 transition shadow-sm">
-                    <svg class="w-3 h-3 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    Upload TTD
-                  </button>
-                  <button type="button" onclick="openSignatureModal('ttdQc')" class="text-[11px] bg-amber-200 hover:bg-amber-300 text-amber-950 px-2 py-1 rounded font-semibold flex items-center gap-1 transition shadow-sm">
-                    ✍️️ Gores TTD
-                  </button>
-                  <button type="button" onclick="resetTtdQc()" title="Kembalikan TTD Default" class="text-[11px] text-rose-600 hover:text-rose-800 p-1 underline">
-                    Reset
-                  </button>
-                </div>
-              </div>
-
-              <!-- Baris Bawah: Nama Agus Triyanto & NIPP (Dapat diedit) -->
-              <div class="space-y-1.5 border-t border-slate-300 pt-2">
-                <div class="flex items-center gap-2">
-                  <label class="text-[10px] font-bold text-slate-600 uppercase w-12">Nama:</label>
-                  <input type="text" id="inputQcNama" value="Agus Triyanto" onchange="saveQcData()" placeholder="Agus Triyanto" class="font-black text-xs uppercase bg-white border border-slate-300 rounded px-2 py-1 text-slate-900 flex-1 focus:ring-1 focus:ring-amber-500 outline-none print:border-none print:bg-transparent" title="Edit Nama">
-                </div>
-                <div class="flex items-center gap-2">
-                  <label class="text-[10px] font-bold text-slate-600 uppercase w-12">NIPP:</label>
-                  <input type="text" id="inputQcNipp" value="47316" onchange="saveQcData()" placeholder="47316" class="font-mono text-xs bg-white border border-slate-300 rounded px-2 py-1 text-slate-900 flex-1 focus:ring-1 focus:ring-amber-500 outline-none print:border-none print:bg-transparent" title="Edit NIPP">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="text-right text-slate-600 text-[11px]">
-            <div>Buku Penjagaan Gangguan Operasional Stasiun Arjawinangun</div>
-            <div class="italic text-slate-500">* Seluruh kejadian gangguan persinyalan & jalur dicatat kronologis</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- SHEET 1: FORMULIR IZIN KERJA (PTW) K3 (DOKUMEN ASLI NEXUS AWN) -->
-    <!-- ========================================================================= -->
-    <section id="sheetPTW" class="sheet-content">
-      <div class="bg-white rounded-xl shadow-sm border border-slate-300 p-4 sm:p-7 max-w-5xl mx-auto space-y-6">
-
-        <div class="border-2 border-slate-800 p-3 sm:p-4 rounded-lg flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50/50">
-          <div class="flex items-center gap-4">
-            <div class="bg-orange-600 text-white font-extrabold text-2xl px-4 py-2 rounded-md shadow-sm">
-              KAI
-            </div>
-            <div>
-              <div class="font-black text-sm sm:text-base text-slate-900 uppercase">PT KERETA API INDONESIA (PERSERO)</div>
-              <div class="font-bold text-xs sm:text-sm text-blue-900">DAERAH OPERASI 3 CIREBON — STASIUN ARJAWINANGUN</div>
-              <div class="text-[11px] sm:text-xs text-slate-600 italic">Peraturan Direksi No: PER.S/KS.102/IV/13/KA-2020 (Tanggal: 22 April 2020)</div>
-            </div>
-          </div>
-
-          <div class="text-xs border border-slate-800 bg-white p-2 rounded shadow-sm w-full md:w-auto">
-            <div class="grid grid-cols-2 gap-x-2 gap-y-1">
-              <span class="font-bold text-slate-700">Kode Dokumen</span>
-              <span class="font-mono text-slate-900">: P01/P13</span>
-              <span class="font-bold text-slate-700">Level Dokumen</span>
-              <span class="font-mono text-slate-900">: 04</span>
-              <span class="font-bold text-slate-700">Revisi Ke</span>
-              <span class="font-mono text-slate-900">: 00</span>
-              <span class="font-bold text-slate-700">Tgl Berlaku</span>
-              <span class="font-mono text-slate-900">: 22 April 2020</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="border border-slate-800 rounded-lg overflow-hidden">
-          <div class="bg-blue-950 text-white font-bold px-3 py-2 text-sm flex justify-between items-center">
-            <span>A. APLIKASI & IDENTITAS PEMOHON</span>
-            <span class="text-xs bg-orange-600 px-2 py-0.5 rounded text-white font-medium">IZIN KERJA (PERMIT TO WORK)</span>
-          </div>
-          <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-white text-xs sm:text-sm">
-            <div class="space-y-3">
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Permit No:</label>
-                <input type="text" id="ptwPermitNo" value="PTW-AWN/2024/X/001" class="w-full border border-slate-300 rounded p-2 font-mono text-sm font-semibold focus:ring-1 focus:ring-blue-600">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Tanggal Berlaku:</label>
-                <input type="date" id="ptwTanggalBerlaku" class="w-full border border-slate-300 rounded p-2">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Wilayah / Resor:</label>
-                <input type="text" id="ptwWilayah" value="Daop 3 Cirebon - Stasiun Arjawinangun" class="w-full border border-slate-300 rounded p-2">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Lokasi Kerja:</label>
-                <input type="text" id="ptwLokasi" placeholder="Contoh: Emplasemen Jalur 1-3 / Wesel 12 / Ruang PPKA" class="w-full border border-slate-300 rounded p-2">
-              </div>
-            </div>
-
-            <div class="space-y-3 border-t md:border-t-0 md:border-l border-slate-200 md:pl-4">
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Nama Pemohon Izin Kerja:</label>
-                <input type="text" id="ptwNamaPemohon" placeholder="Nama Lengkap Penanggung Jawab" class="w-full border border-slate-300 rounded p-2">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Unit / Instansi / Kontraktor:</label>
-                <input type="text" id="ptwUnitPemohon" placeholder="Contoh: JJ / Sintel / PT. Mitra Rekayasa" class="w-full border border-slate-300 rounded p-2">
-              </div>
-
-              <div>
-                <div class="flex justify-between items-center mb-1">
-                  <label class="block font-bold text-slate-700">Tanda Tangan Pemohon:</label>
-                  <button type="button" onclick="openSignatureModal('ttdPemohon')" class="text-xs text-blue-700 hover:underline font-semibold flex items-center gap-1">
-                    ✍️ Gores / Unggah TTD
-                  </button>
-                </div>
-                <div id="previewTtdPemohonContainer" class="h-24 border border-dashed border-slate-300 rounded bg-slate-50 flex items-center justify-center relative overflow-hidden">
-                  <span id="labelTtdPemohon" class="text-xs text-slate-400 italic">Belum ada tanda tangan</span>
-                  <img id="imgTtdPemohon" src="" alt="TTD Pemohon" class="max-h-full object-contain hidden">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="border border-slate-800 rounded-lg overflow-hidden text-xs sm:text-sm">
-          <div class="bg-blue-950 text-white font-bold px-3 py-2">
-            B. DESKRIPSI KERJA & JENIS PERALATAN
-          </div>
-          <div class="p-4 space-y-4">
-            <div>
-              <label class="block font-bold text-slate-700 mb-1">Rincian Pekerjaan:</label>
-              <textarea id="ptwDeskripsi" rows="2" placeholder="Uraikan aktivitas kerja secara jelas..." class="w-full border border-slate-300 rounded p-2"></textarea>
-            </div>
-            <div>
-              <label class="block font-bold text-slate-700 mb-2">Jenis Peralatan (Diisi Dengan Tanda Centang):</label>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <label class="flex items-center gap-2 p-1.5 border rounded hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" class="rounded text-blue-600"> Alat Berat / Track Machine
-                </label>
-                <label class="flex items-center gap-2 p-1.5 border rounded hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" class="rounded text-blue-600"> Perkakas Listrik (Power Tools)
-                </label>
-                <label class="flex items-center gap-2 p-1.5 border rounded hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" class="rounded text-blue-600"> Peralatan Las / Api Terbuka
-                </label>
-                <label class="flex items-center gap-2 p-1.5 border rounded hover:bg-slate-50 cursor-pointer">
-                  <input type="checkbox" class="rounded text-blue-600"> Genset / Portable Generator
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="border border-slate-800 rounded-lg overflow-hidden text-xs sm:text-sm">
-          <div class="bg-blue-950 text-white font-bold px-3 py-2 flex justify-between items-center">
-            <span>C. BAHAYA YANG MUNGKIN TERJADI (Diisi Dengan Tanda Centang)</span>
-            <span class="text-[11px] text-slate-300 font-normal">Standar Dokumen Keselamatan KAI</span>
-          </div>
-          <div class="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
-            <label class="flex items-center gap-2 p-1 border rounded hover:bg-slate-50 text-xs cursor-pointer">
-              <input type="checkbox" class="rounded text-blue-600"> Kereta Api Melintas
-            </label>
-            <label class="flex items-center gap-2 p-1 border rounded hover:bg-slate-50 text-xs cursor-pointer">
-              <input type="checkbox" class="rounded text-blue-600"> Tegangan Listrik / Sintelis
-            </label>
-            <label class="flex items-center gap-2 p-1 border rounded hover:bg-slate-50 text-xs cursor-pointer">
-              <input type="checkbox" class="rounded text-blue-600"> Terjepit Gerakan Wesel
-            </label>
-            <label class="flex items-center gap-2 p-1 border rounded hover:bg-slate-50 text-xs cursor-pointer">
-              <input type="checkbox" class="rounded text-blue-600"> Jatuh dari Ketinggian
-            </label>
-            <label class="flex items-center gap-2 p-1 border rounded hover:bg-slate-50 text-xs cursor-pointer">
-              <input type="checkbox" class="rounded text-blue-600"> Jalur Terhalang / Rintangan
-            </label>
-            <label class="flex items-center gap-2 p-1 border rounded hover:bg-slate-50 text-xs cursor-pointer">
-              <input type="checkbox" class="rounded text-blue-600"> Kebakaran / Percikan Api
-            </label>
-            <label class="flex items-center gap-2 p-1 border rounded hover:bg-slate-50 text-xs cursor-pointer">
-              <input type="checkbox" class="rounded text-blue-600"> Pekerjaan Galian / Longsor
-            </label>
-            <label class="flex items-center gap-2 p-1 border rounded hover:bg-slate-50 text-xs cursor-pointer">
-              <input type="checkbox" class="rounded text-blue-600"> Cuaca Ekstrem / Hujan Badai
-            </label>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
-          <div class="border border-slate-800 rounded-lg overflow-hidden">
-            <div class="bg-blue-950 text-white font-bold px-3 py-2">
-              D. TINDAKAN PENCEGAHAN (Sebelum & Semasa Kerja)
-            </div>
-            <div class="p-3 space-y-2">
-              <label class="flex items-center gap-2">
-                <input type="checkbox" checked class="rounded text-blue-600"> Koordinasi intensif dengan PPKA / PAP Stasiun AWN
-              </label>
-              <label class="flex items-center gap-2">
-                <input type="checkbox" checked class="rounded text-blue-600"> Pemasangan Semboyan / Tanda Pengaman Jalur
-              </label>
-              <label class="flex items-center gap-2">
-                <input type="checkbox" class="rounded text-blue-600"> Pemadaman Listrik / Isolasi Arus Terverifikasi
-              </label>
-              <label class="flex items-center gap-2">
-                <input type="checkbox" checked class="rounded text-blue-600"> Pengawas K3 & Petugas Keamanan Standby
-              </label>
-              <input type="text" placeholder="Tindakan pencegahan lain..." class="w-full border border-slate-300 rounded p-1.5 mt-2 text-xs">
-            </div>
-          </div>
-
-          <div class="border border-slate-800 rounded-lg overflow-hidden">
-            <div class="bg-blue-950 text-white font-bold px-3 py-2">
-              E. ALAT PELINDUNG DIRI (APD)
-            </div>
-            <div class="p-3 grid grid-cols-2 gap-2">
-              <label class="flex items-center gap-2">
-                <input type="checkbox" checked class="rounded text-blue-600"> Helm Keselamatan
-              </label>
-              <label class="flex items-center gap-2">
-                <input type="checkbox" checked class="rounded text-blue-600"> Rompi Reflektif (Hi-Vis)
-              </label>
-              <label class="flex items-center gap-2">
-                <input type="checkbox" checked class="rounded text-blue-600"> Sepatu Safety
-              </label>
-              <label class="flex items-center gap-2">
-                <input type="checkbox" class="rounded text-blue-600"> Sarung Tangan Kerja
-              </label>
-              <label class="flex items-center gap-2">
-                <input type="checkbox" class="rounded text-blue-600"> Kacamata Pelindung
-              </label>
-              <label class="flex items-center gap-2">
-                <input type="checkbox" class="rounded text-blue-600"> Masker / Earplug
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="border border-slate-800 rounded-lg overflow-hidden text-xs sm:text-sm">
-          <div class="bg-blue-950 text-white font-bold px-3 py-2">
-            F. PENGELUARAN SURAT IZIN (VALIDITAS KERJA)
-          </div>
-          <div class="p-4 space-y-4">
-            <p class="text-xs text-slate-600 italic">
-              Izin diberikan untuk pekerjaan dijalankan yang tertera di atas selama rentang waktu berikut:
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-3 rounded border border-slate-200">
-              <div class="flex items-center gap-2">
-                <span class="font-bold text-slate-700 w-16">Dari:</span>
-                <input type="date" class="border border-slate-300 rounded p-1 text-xs">
-                <span>Jam:</span>
-                <input type="time" class="border border-slate-300 rounded p-1 text-xs w-24">
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="font-bold text-slate-700 w-16">Sampai:</span>
-                <input type="date" class="border border-slate-300 rounded p-1 text-xs">
-                <span>Jam:</span>
-                <input type="time" class="border border-slate-300 rounded p-1 text-xs w-24">
-              </div>
-            </div>
-
-            <!-- Tanda Tangan Pemberi Izin & Pengawas -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div class="border rounded p-3 text-center">
-                <div class="font-bold text-slate-800 mb-1">Pemberi Izin (KS / PPKA AWN)</div>
-                <input type="text" placeholder="Nama Pejabat Pemberi Izin" class="w-full text-center border-b border-slate-300 text-xs mb-2 pb-1 outline-none">
-                <div class="h-20 border border-dashed rounded flex items-center justify-center bg-slate-50">
-                  <button type="button" onclick="openSignatureModal('ttdPemberiIzin')" class="text-xs text-blue-600 hover:underline">✍️ Tanda Tangani</button>
-                </div>
-              </div>
-              <div class="border rounded p-3 text-center">
-                <div class="font-bold text-slate-800 mb-1">Pengawas Pekerjaan</div>
-                <input type="text" placeholder="Nama Petugas Pengawas" class="w-full text-center border-b border-slate-300 text-xs mb-2 pb-1 outline-none">
-                <div class="h-20 border border-dashed rounded flex items-center justify-center bg-slate-50">
-                  <button type="button" onclick="openSignatureModal('ttdPengawas')" class="text-xs text-blue-600 hover:underline">✍️ Tanda Tangani</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="border border-slate-800 rounded-lg overflow-hidden text-xs sm:text-sm">
-          <div class="bg-blue-950 text-white font-bold px-3 py-2">
-            H. PEMBATALAN & PENYELESAIAN IZIN KERJA
-          </div>
-          <div class="p-4 space-y-3">
-            <div class="p-3 bg-amber-50 border border-amber-200 rounded text-xs text-amber-900 leading-relaxed">
-              <strong class="font-semibold block mb-1">Alasan Pemberhentian / Pembatalan Izin Kerja:</strong>
-              a. Keadaan darurat;<br>
-              b. Untuk alasan keselamatan operasional perkeretaapian;<br>
-              c. Pekerjaan yang dilakukan hanya dalam satu shift; dan<br>
-              d. Pekerjaan ditangguhkan atau ditunda selama sembilan puluh (90) menit atau lebih.
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
+  <!-- VIEW 1: Original NEXUS Application (Google Apps Script Iframe - 100% UNCHANGED) -->
+  <main id="view-nexus" class="flex-1 w-full h-[calc(100vh-53px)] bg-[#0d1117] overflow-hidden">
+    <iframe 
+      id="frameNexus" 
+      src="https://script.google.com/macros/s/AKfycbzU3mYHd1VViGv1GfMN-PpNa-UUv2eJEMhpLAJc3NTrcICRzQMLwuOqjhJEENLI1oxEyg/exec"
+      class="w-full h-full border-none block"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
   </main>
 
-  <!-- MODAL: TAMBAH / EDIT BARIS COUNTER -->
-  <div id="modalCounterEntry" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
-    <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-300 animate-in fade-in zoom-in duration-150">
-      <div class="bg-slate-900 text-white px-5 py-3.5 flex justify-between items-center">
-        <div>
-          <h3 id="modalCounterTitle" class="font-bold text-base">Tambah Baris Penjagaan Counter</h3>
-          <p class="text-xs text-slate-300">Stasiun Arjawinangun - Daop 3 Cirebon</p>
+  <!-- VIEW 2: SHEET : IZIN KERJA (Formulir Izin Kerja PT KAI - 100% Exact Words) -->
+  <main id="view-izin-kerja" class="hidden flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 lg:p-8 bg-[#0b1329]">
+    <div class="max-w-5xl mx-auto bg-white rounded-none md:rounded-lg shadow-2xl p-3 sm:p-5 text-black form-border print-page">
+      
+      <!-- Top Metadata Header Table -->
+      <div class="grid grid-cols-12 border-b border-black text-xs">
+        
+        <!-- Top Left & Center Title Area -->
+        <div class="col-span-8 border-r border-black flex flex-col justify-between">
+          <div class="flex items-center justify-between p-2 border-b border-black bg-slate-50">
+            <div class="flex items-center gap-2">
+              <span class="font-bold uppercase tracking-tight text-[11px]">Tanggal Berlaku:</span>
+              <input type="text" id="tgl_berlaku" class="border-b border-black px-1.5 py-0.5 w-32 focus:outline-none focus:bg-amber-50 font-semibold" placeholder="Contoh: 19/08/20">
+            </div>
+            <div class="text-center font-extrabold text-xl tracking-widest uppercase py-1 pr-4">
+              IZIN KERJA
+            </div>
+          </div>
+
+          <!-- Section A: A. Aplikasi -->
+          <div class="p-2 space-y-1.5">
+            <div class="font-bold text-[11px]">A. Aplikasi</div>
+            <div class="grid grid-cols-3 gap-2 pl-2 text-[11px]">
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" id="app_kerja_panas" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+                <span>Kerja Panas</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" id="app_ruang_terbatas" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+                <span>Ruang Terbatas</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" id="app_lain_lain" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+                <span>Lain-Lain</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 border-t border-black text-[11px]">
+            <div class="p-1.5 border-r border-black flex items-center gap-1">
+              <span class="font-bold">Wilayah:</span>
+              <input type="text" id="wilayah" value="Daop 3 Cirebon" class="flex-1 border-b border-dotted border-gray-600 px-1 focus:outline-none">
+            </div>
+            <div class="p-1.5 flex items-center gap-1">
+              <span class="font-bold">Permit No:</span>
+              <input type="text" id="permit_no" class="flex-1 border-b border-dotted border-gray-600 px-1 focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Lokasi Row -->
+          <div class="p-1.5 border-t border-black text-[11px] flex items-center gap-2 bg-amber-50/20">
+            <span class="font-bold min-w-[50px]">Lokasi</span>
+            <input type="text" id="lokasi" placeholder="Km 204+000 s/d 205+000 Jalur Hilir" class="flex-1 border-b border-black font-semibold text-slate-800 px-2 py-0.5 focus:outline-none focus:bg-amber-50">
+          </div>
         </div>
-        <button onclick="closeCounterModal()" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
+
+        <!-- Top Right Document Code Box & Pemohon -->
+        <div class="col-span-4 flex flex-col justify-between text-[11px]">
+          <div class="p-2 border-b border-black bg-slate-50 space-y-1">
+            <div class="flex justify-between">
+              <span class="font-semibold">Kode Dokumen</span>
+              <span>: <strong class="font-mono">P01/P13</strong></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-semibold">Level Dokumen</span>
+              <span>: <strong class="font-mono">04</strong></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-semibold">Revisi Ke</span>
+              <span>: <strong class="font-mono">00</strong></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-semibold">Tgl. Mulai Berlaku</span>
+              <span>: <strong class="font-mono">22 April 2020</strong></span>
+            </div>
+          </div>
+
+          <!-- Pemohon Box -->
+          <div class="p-2 flex-1 flex flex-col justify-between bg-white">
+            <div class="font-bold uppercase tracking-tight text-[11px] border-b border-gray-300 pb-0.5">Pemohon:</div>
+            <div class="mt-1 space-y-1">
+              <div class="flex items-center gap-1">
+                <span class="w-20 font-semibold">Nama:</span>
+                <input type="text" id="pemohon_nama" class="flex-1 border-b border-black px-1 focus:outline-none font-medium">
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="w-20 font-semibold">Tanda Tangan:</span>
+                <input type="text" id="pemohon_ttd" placeholder="[Ttd]" class="flex-1 border-b border-black px-1 focus:outline-none handwriting text-sm">
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <form id="formCounterEntry" onsubmit="saveCounterRow(event)" class="p-5 space-y-4 max-h-[85vh] overflow-y-auto">
-        <input type="hidden" id="editRowIndex" value="-1">
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tanggal</label>
-          <input type="text" id="inputTanggal" required placeholder="Contoh: 1/10/2024" class="w-full border border-slate-300 rounded p-1.5 text-xs font-mono focus:ring-2 focus:ring-blue-500 outline-none">
+      <!-- B. DESKRIPSI KERJA & Jenis Peralatan -->
+      <div class="grid grid-cols-12 border-b border-black text-xs">
+        <!-- Deskripsi Kerja -->
+        <div class="col-span-7 border-r border-black p-2 flex flex-col justify-between">
+          <div class="font-bold text-[11px] mb-1">B. DESKRIPSI KERJA</div>
+          <textarea id="deskripsi_kerja" rows="3" class="w-full text-xs font-semibold p-1.5 border border-dashed border-gray-300 rounded focus:border-black focus:outline-none resize-none leading-relaxed" placeholder="Perawatan geometri track dgn KPJR"></textarea>
         </div>
 
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
-          <div class="text-xs font-bold text-slate-800 uppercase tracking-wide">NOMOR BENTUK</div>
-          <div class="grid grid-cols-4 gap-2">
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">PTP</label>
-              <input type="text" id="inputPTP" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">BH</label>
-              <input type="text" id="inputBH" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">BK</label>
-              <input type="text" id="inputBK" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">MS</label>
-              <input type="text" id="inputMS" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
+        <!-- Jenis Peralatan -->
+        <div class="col-span-5 p-2 bg-slate-50/50">
+          <div class="font-bold text-[11px] mb-1.5">Jenis Peralatan (Diisi Dengan Tanda Centang)</div>
+          <div class="space-y-1.5 pl-2 text-[11px]">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="alat_mesin" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+              <span>Mesin</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="alat_listrik" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+              <span>Listrik</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="alat_tangan" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-0">
+              <span>Peralatan Tangan</span>
+            </label>
           </div>
         </div>
-
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
-          <div class="text-xs font-bold text-slate-800 uppercase tracking-wide">NOMOR COUNTER</div>
-          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">TBW</label>
-              <input type="text" id="inputTBW" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">TPBD</label>
-              <input type="text" id="inputTPBD" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">TPR</label>
-              <input type="text" id="inputTPR" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">TSD</label>
-              <input type="text" id="inputTSD" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">TAMS</label>
-              <input type="text" id="inputTAMS" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">TWT</label>
-              <input type="text" id="inputTWT" value="-" class="w-full border border-slate-300 rounded p-1.5 text-xs text-center font-mono">
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Catatan</label>
-          <textarea id="inputCatatan" rows="2" placeholder="Catatan operasional..." class="w-full border border-slate-300 rounded p-1.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
-        </div>
-
-        <div class="flex justify-end gap-2 pt-2 border-t">
-          <button type="button" onclick="closeCounterModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
-          <button type="submit" class="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">Simpan Baris</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: TAMBAH / EDIT GANGGUAN OPERASIONAL -->
-  <div id="modalGangguanEntry" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
-    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-300 animate-in fade-in zoom-in duration-150">
-      <div class="bg-amber-400 text-slate-950 px-5 py-3.5 flex justify-between items-center border-b border-amber-500">
-        <div>
-          <h3 id="modalGangguanTitle" class="font-black text-base uppercase tracking-tight">Catat Gangguan Operasional</h3>
-          <p class="text-xs text-slate-800 font-medium">Buku Gangguan Operasional - Stasiun Arjawinangun</p>
-        </div>
-        <button onclick="closeGangguanModal()" class="text-slate-800 hover:text-black font-bold text-2xl leading-none">&times;</button>
       </div>
 
-      <form id="formGangguanEntry" onsubmit="saveGangguanRow(event)" class="p-5 space-y-4 max-h-[85vh] overflow-y-auto">
-        <input type="hidden" id="editGangguanRowIndex" value="-1">
-
-        <!-- Bagian GANGGUAN -->
-        <div class="p-3 bg-amber-50/70 border border-amber-300 rounded-lg space-y-3">
-          <div class="text-xs font-bold text-amber-950 uppercase tracking-wider border-b border-amber-200 pb-1">
-            GANGGUAN
-          </div>
+      <!-- C. BAHAYA YANG MUNGKIN TERJADI -->
+      <div class="border-b border-black p-2">
+        <div class="font-bold text-[11px] mb-1.5 uppercase tracking-tight">C. BAHAYA YANG MUNGKIN TERJADI (Diisi Dengan Tanda Centang)</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-1 text-[11px]">
           
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Tanggal (Contoh: 13/12-2025)</label>
-              <input type="text" id="inputGangguanTanggal" required placeholder="Contoh: 13/12-2025" class="w-full border border-slate-300 rounded p-1.5 font-mono text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Jam Mulai</label>
-              <input type="text" id="inputGangguanJamMulai" required placeholder="Contoh: 22.35" class="w-full border border-slate-300 rounded p-1.5 font-mono text-xs focus:ring-2 focus:ring-amber-500 outline-none">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Lapor Ke</label>
-              <input type="text" id="inputGangguanLaporKe" required placeholder="Contoh: Sintel" class="w-full border border-slate-300 rounded p-1.5 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+          <!-- Col 1 -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_lantai_licin" class="w-3.5 h-3.5">
+              <span>Lantai Licin</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_bahaya_kebakaran" class="w-3.5 h-3.5">
+              <span>Bahaya Kebakaran</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_jalan_darurat" class="w-3.5 h-3.5">
+              <span>Jalan darurat</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_debu" class="w-3.5 h-3.5">
+              <span>Debu</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_bahan_alat_listrik" class="w-3.5 h-3.5">
+              <span>Bahan Alat Listrik</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_kereta_melintas" class="w-3.5 h-3.5">
+              <span>Kereta Melintas</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_pekerjaan_lain_terdekat" class="w-3.5 h-3.5">
+              <span>Pekerjaan Lain yang Terdekat</span>
+            </label>
+          </div>
+
+          <!-- Col 2 -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_pekerjaan_atas_kepala" class="w-3.5 h-3.5">
+              <span>Pekerjaan di Atas Kepala</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_gas" class="w-3.5 h-3.5">
+              <span>Gas</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_tersandung_jatuh" class="w-3.5 h-3.5">
+              <span>Tersandung/Jatuh</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_salah_penyetelan" class="w-3.5 h-3.5">
+              <span>Salah Penyetelan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_keseleo" class="w-3.5 h-3.5">
+              <span>Keseleo</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_ketinggian" class="w-3.5 h-3.5">
+              <span>Ketinggian</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_tabrakan_benturan" class="w-3.5 h-3.5">
+              <span>Tabrakan/Benturan Benda Bergerak</span>
+            </label>
+          </div>
+
+          <!-- Col 3 -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_orang_masuk_tanpa_izin" class="w-3.5 h-3.5">
+              <span>Orang Masuk Tanpa Izin</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_gelap_malam" class="w-3.5 h-3.5">
+              <span>Gelap (Malam)</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_cuaca_buruk" class="w-3.5 h-3.5">
+              <span>Cuaca Buruk</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_kejatuhan_benda" class="w-3.5 h-3.5">
+              <span>Kejatuhan Benda atau Material</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_beban_berat" class="w-3.5 h-3.5">
+              <span>Beban Berat</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_berangin" class="w-3.5 h-3.5">
+              <span>Berangin</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <input type="checkbox" id="c_lain1_check" class="w-3.5 h-3.5">
+              <input type="text" id="c_lain1_text" placeholder="...................................................." class="w-full border-b border-dotted border-gray-500 text-[10px] focus:outline-none">
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div class="sm:col-span-2">
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Uraian Gangguan</label>
-              <textarea id="inputGangguanUraian" rows="2" required placeholder="Uraikan kondisi gangguan secara terperinci..." class="w-full border border-slate-300 rounded p-1.5 text-xs focus:ring-2 focus:ring-amber-500 outline-none"></textarea>
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">PPKA</label>
-              <input type="text" id="inputGangguanPPKA" required placeholder="Contoh: M. Fadli" class="w-full border border-slate-300 rounded p-1.5 text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+          <!-- Col 4 -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_terhantam_benda" class="w-3.5 h-3.5">
+              <span>Terhantam Benda</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_percikan_leburan" class="w-3.5 h-3.5">
+              <span>Percikan/Leburan Besi Panas</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_asap" class="w-3.5 h-3.5">
+              <span>Asap</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_benda_tajam" class="w-3.5 h-3.5">
+              <span>Benda Tajam</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_bising" class="w-3.5 h-3.5">
+              <span>Bising</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="c_salah_komunikasi" class="w-3.5 h-3.5">
+              <span>Salah Komunikasi</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <input type="checkbox" id="c_lain2_check" class="w-3.5 h-3.5">
+              <input type="text" id="c_lain2_text" placeholder="...................................................." class="w-full border-b border-dotted border-gray-500 text-[10px] focus:outline-none">
             </div>
           </div>
+
+        </div>
+      </div>
+
+      <!-- D. TINDAKAN PENCEGAHAN YANG DILAKUKAN SEBELUM DAN SEMASA KERJA -->
+      <div class="border-b border-black p-2">
+        <div class="font-bold text-[11px] mb-1.5 uppercase tracking-tight">D. TINDAKAN PENCEGAHAN YANG DILAKUKAN SEBELUM DAN SEMASA KERJA (Diisi Dengan Tanda Centang)</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1.5 text-[11px]">
+          
+          <!-- Left Column -->
+          <div class="space-y-1.5">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_proteksi_jauh" class="w-3.5 h-3.5">
+              <span>Proteksi/Perlindungan Dari Jauh</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_pemadam_api" class="w-3.5 h-3.5">
+              <span>Pemadam Api/Kebakaran</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_penyangga" class="w-3.5 h-3.5">
+              <span>Penyangga</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_wajib_jsa" class="w-3.5 h-3.5">
+              <span>Wajib Mengikuti Penjelasan JSA</span>
+            </label>
+            <div class="flex items-center gap-1 pt-0.5">
+              <span class="whitespace-nowrap">Tindakan Keselamatan Lain yang Diperlukan:</span>
+              <input type="text" id="d_tindakan_lain" class="w-full border-b border-dotted border-gray-500 focus:outline-none text-[11px]">
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-1.5">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_rambu_rambu" class="w-3.5 h-3.5">
+              <span>Rambu-rambu</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_penyinaran_memadai" class="w-3.5 h-3.5">
+              <span>Penyinaran yang Memadai</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="d_sertifikat_kompetensi" class="w-3.5 h-3.5">
+              <span>Sertifikat Kompetensi</span>
+            </label>
+            <div class="flex items-center gap-1 pt-0.5">
+              <label class="flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+                <input type="checkbox" id="d_lain_lain_check" class="w-3.5 h-3.5">
+                <span>Lain-Lain:</span>
+              </label>
+              <input type="text" id="d_lain_lain_text" class="w-full border-b border-dotted border-gray-500 focus:outline-none text-[11px]">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- E. ALAT PELINDUNG DIRI -->
+      <div class="border-b border-black p-2">
+        <div class="font-bold text-[11px] mb-1.5 uppercase tracking-tight">E. ALAT PELINDUNG DIRI (Diisi Dengan Tanda Centang)</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-[11px]">
+          
+          <!-- Left Column -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_helm" class="w-3.5 h-3.5">
+              <span>Helm Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_sepatu" class="w-3.5 h-3.5">
+              <span>SepatuKeselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_kacamata" class="w-3.5 h-3.5">
+              <span>Kacamata Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_muka_las" class="w-3.5 h-3.5">
+              <span>Perlindungan Muka/Las</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_kacamata_debu" class="w-3.5 h-3.5">
+              <span>Kacamata Debu</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <input type="checkbox" id="e_sarung_tangan_check" class="w-3.5 h-3.5">
+              <span>Sarung Tangan......</span>
+              <input type="text" id="e_sarung_tangan_text" class="flex-1 border-b border-dotted border-gray-500 text-[10px] focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-1">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_rompi1" class="w-3.5 h-3.5">
+              <span>Rompi Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_tali" class="w-3.5 h-3.5">
+              <span>Tali Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_rompi2" class="w-3.5 h-3.5">
+              <span>Rompi Keselamatan</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_masker" class="w-3.5 h-3.5">
+              <span>Masker</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="e_pendengaran" class="w-3.5 h-3.5">
+              <span>Pelindung Pendengaran</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <input type="checkbox" id="e_lain_check" class="w-3.5 h-3.5">
+              <input type="text" id="e_lain_text" placeholder="...................................................." class="w-full border-b border-dotted border-gray-500 text-[10px] focus:outline-none">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- F. PENGELUARAN SURAT IZIN -->
+      <div class="border-b border-black">
+        <div class="p-1.5 bg-slate-100 font-bold text-[11px] uppercase border-b border-black">
+          F. PENGELUARAN SURAT IZIN
+        </div>
+        <div class="p-2 text-[11px] border-b border-black">
+          Izin diberikan untuk kerja dijalankan yang tertera diatas selama
+        </div>
+        <div class="grid grid-cols-12 text-[11px]">
+          
+          <!-- Rentang Waktu (Dari & Sampai Dengan) -->
+          <div class="col-span-7 border-r border-black p-2 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-24 font-semibold">Dari</span>
+              <span>: Tgl</span>
+              <input type="text" id="f_dari_tgl" placeholder="18-8-20" class="w-24 border-b border-black px-1 focus:outline-none">
+              <span>Jam</span>
+              <input type="text" id="f_dari_jam" placeholder="06-30" class="w-20 border-b border-black px-1 focus:outline-none">
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-24 font-semibold">Sampai Dengan</span>
+              <span>: Tgl</span>
+              <input type="text" id="f_sampai_tgl" placeholder="19-8-20" class="w-24 border-b border-black px-1 focus:outline-none">
+              <span>Jam</span>
+              <input type="text" id="f_sampai_jam" placeholder="09-40" class="w-20 border-b border-black px-1 focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Pejabat Pemberi Izin & Pengawas Pekerjaan -->
+          <div class="col-span-5 flex flex-col text-[11px]">
+            <div class="grid grid-cols-2 border-b border-black flex-1">
+              <div class="p-1.5 border-r border-black font-semibold flex items-center">Pemberi Izin</div>
+              <div class="p-1.5 flex items-center">
+                <input type="text" id="f_pemberi_izin" placeholder="[Ttd / Paraf]" class="w-full border-b border-dotted border-gray-500 px-1 focus:outline-none handwriting">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 flex-1">
+              <div class="p-1.5 border-r border-black font-semibold flex items-center">Pengawas Pekerjaan</div>
+              <div class="p-1.5 flex items-center">
+                <input type="text" id="f_pengawas_pekerjaan" placeholder="SPV JR 37 AWN" class="w-full border-b border-dotted border-gray-500 px-1 focus:outline-none font-semibold">
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- G. PERSETUJUAN PENGGANTIAN PELAKSANA PEKERJAAN -->
+      <div class="border-b border-black">
+        <div class="p-1.5 bg-slate-100 font-bold text-[11px] uppercase border-b border-black">
+          G. PERSETUJUAN PENGGANTIAN PELAKSANA PEKERJAAN (Diisi Oleh Pelaksana Pekerjaan/Kontraktor)
+        </div>
+        <div class="p-2 text-[11px] italic border-b border-black leading-tight">
+          Saya menyatakan bahwa Saya telah membaca & memahami pekerjaan ini, yang akan dilaksanakan sesuai dengan segala persyaratan yang berlaku
         </div>
 
-        <!-- Bagian PERBAIKAN -->
-        <div class="p-3 bg-slate-50 border border-slate-300 rounded-lg space-y-3">
-          <div class="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-1">
-            PERBAIKAN
+        <!-- Table G -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-center border-collapse text-[10.5px]">
+            <thead>
+              <tr class="border-b border-black bg-slate-50 font-bold">
+                <th class="p-1.5 border-r border-black text-left w-1/3">Penanggung Jawab Izin Kerja</th>
+                <th class="p-1.5 border-r border-black w-1/6">Nama</th>
+                <th class="p-1.5 border-r border-black w-1/6">Instansi</th>
+                <th class="p-1.5 border-r border-black w-1/6">Tandatangan</th>
+                <th class="p-1.5 border-r border-black w-1/12">Tanggal</th>
+                <th class="p-1.5 w-1/12">Jam</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-black">
+                <td class="p-1.5 border-r border-black text-left font-semibold">Pelaksana Pekerjaan (Berkompetensi)</td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pelaksana_nama" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pelaksana_instansi" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pelaksana_ttd" class="w-full text-center border-0 focus:outline-none bg-transparent handwriting"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pelaksana_tgl" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1"><input type="text" id="g_pelaksana_jam" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+              </tr>
+              <tr class="border-b border-black">
+                <td class="p-1.5 border-r border-black text-left font-semibold">Orang Pengganti (Berkompetensi)</td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pengganti_nama" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pengganti_instansi" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pengganti_ttd" class="w-full text-center border-0 focus:outline-none bg-transparent handwriting"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pengganti_tgl" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1"><input type="text" id="g_pengganti_jam" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+              </tr>
+              <tr>
+                <td class="p-1.5 border-r border-black text-left font-semibold">Pemberi Izin</td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pemberi_nama" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pemberi_instansi" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pemberi_ttd" class="w-full text-center border-0 focus:outline-none bg-transparent handwriting"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="g_pemberi_tgl" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1"><input type="text" id="g_pemberi_jam" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- H. PEMBATALAN -->
+      <div class="border-b border-black">
+        <div class="p-1.5 bg-slate-100 font-bold text-[11px] uppercase border-b border-black">
+          H. PEMBATALAN
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 text-[10.5px]">
+          
+          <!-- Left Pembatalan Box -->
+          <div class="border-r border-black p-2 flex flex-col justify-between">
+            <p class="leading-snug mb-2">
+              Saya (Pemberi Izin) menyatakan bahwa pekerjaan yang tercantum pada izin kerja ini telah saya hentikan untuk sementara dan saya telah memberitahukan pemberhentian ini kepada Pengawas Pekerja
+            </p>
+            <div class="flex items-start gap-1">
+              <span class="font-bold">Alasan:</span>
+              <input type="text" id="h_alasan" class="w-full border-b border-dotted border-gray-600 focus:outline-none text-[11px]">
+            </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">tanggal</label>
-              <input type="text" id="inputPerbaikanTanggal" placeholder="Contoh: 13/12-2025" class="w-full border border-slate-300 rounded p-1.5 font-mono text-xs focus:ring-2 focus:ring-blue-500 outline-none">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Jam Selesai</label>
-              <input type="text" id="inputPerbaikanJamSelesai" placeholder="Contoh: 22.50" class="w-full border border-slate-300 rounded p-1.5 font-mono text-xs focus:ring-2 focus:ring-blue-500 outline-none">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Petugas</label>
-              <input type="text" id="inputPerbaikanPetugas" placeholder="Contoh: Ismail" class="w-full border border-slate-300 rounded p-1.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
-            </div>
+          <!-- Right Pembatalan Box -->
+          <div class="p-2">
+            <p class="leading-snug">
+              Saya menyatakan bahwa pekerjaan yang tercantum pada izin kerja yang telah diberhentikan untuk sementara ini, bisa dimulai kembali setelah saya memeriksa kondisi sekitarnya dan telah melaksanakan pencegahan-pencegahan yang diminta
+            </p>
           </div>
 
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Uraian Perbaikan</label>
-            <textarea id="inputPerbaikanUraian" rows="2" placeholder="Uraian tindakan penanganan atau perbaikan..." class="w-full border border-slate-300 rounded p-1.5 text-xs focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
-          </div>
         </div>
 
-        <div class="flex justify-end gap-2 pt-2 border-t">
-          <button type="button" onclick="closeGangguanModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
-          <button type="submit" class="px-4 py-2 text-xs font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg shadow">Simpan Catatan Gangguan</button>
+        <!-- Pembatalan Sign-off Table -->
+        <div class="border-t border-black grid grid-cols-2 text-[10.5px]">
+          
+          <!-- Left Table -->
+          <div class="border-r border-black overflow-x-auto">
+            <table class="w-full text-center border-collapse">
+              <thead>
+                <tr class="border-b border-black bg-slate-50 font-semibold text-[10px]">
+                  <th class="p-1 border-r border-black w-1/4">Tanggal</th>
+                  <th class="p-1 border-r border-black w-1/4">Waktu</th>
+                  <th class="p-1 border-r border-black w-1/4">Nama</th>
+                  <th class="p-1 w-1/4">Tanda Tangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_left_tgl" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_left_waktu" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_left_nama" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1"><input type="text" id="h_left_ttd" class="w-full text-center border-0 focus:outline-none handwriting text-xs"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Right Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-center border-collapse">
+              <thead>
+                <tr class="border-b border-black bg-slate-50 font-semibold text-[10px]">
+                  <th class="p-1 border-r border-black w-1/4">Tanggal</th>
+                  <th class="p-1 border-r border-black w-1/4">Waktu</th>
+                  <th class="p-1 border-r border-black w-1/4">Nama</th>
+                  <th class="p-1 w-1/4">Tanda Tangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_right_tgl" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_right_waktu" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1 border-r border-black"><input type="text" id="h_right_nama" class="w-full text-center border-0 focus:outline-none text-xs"></td>
+                  <td class="p-1"><input type="text" id="h_right_ttd" class="w-full text-center border-0 focus:outline-none handwriting text-xs"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
-      </form>
+      </div>
+
+      <!-- Penyelesaian Izin Kerja -->
+      <div class="border-b border-black">
+        <div class="p-1.5 bg-slate-100 font-bold text-[11px] uppercase border-b border-black">
+          Penyelesaian Izin Kerja
+        </div>
+        
+        <!-- Checkbox Options -->
+        <div class="p-2 space-y-1.5 text-[11px] border-b border-black">
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="penyelesaian_opt1" class="w-4 h-4 mt-0.5 rounded border-gray-400 text-blue-600 focus:ring-0">
+            <span class="leading-tight">Selesai & diperiksa, tindakan pencegahan khusus (isolasi,...) telah diambil kembali, lokasi kerja ditinggalkan dalam keadaan aman dan bahwa operasional dapat kembali normal</span>
+          </label>
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="penyelesaian_opt2" class="w-4 h-4 mt-0.5 rounded border-gray-400 text-blue-600 focus:ring-0">
+            <span class="leading-tight">Belum selesai dan akan dilanjutkan dengan izin no....</span>
+          </label>
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="penyelesaian_opt3" class="w-4 h-4 mt-0.5 rounded border-gray-400 text-blue-600 focus:ring-0">
+            <span class="leading-tight">Tidak terselesaikan dan secara tegas dihentikan</span>
+          </label>
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="penyelesaian_opt4" class="w-4 h-4 mt-0.5 rounded border-gray-400 text-blue-600 focus:ring-0">
+            <span class="leading-tight">Beberapa langkah harus diambil sebelum operasional dapat berlangsung kembali</span>
+          </label>
+        </div>
+
+        <!-- Sign Table Penyelesaian -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-center border-collapse text-[10.5px]">
+            <thead>
+              <tr class="border-b border-black bg-slate-50 font-bold">
+                <th class="p-1.5 border-r border-black text-left w-1/3">Penanggung Jawab Izin Kerja</th>
+                <th class="p-1.5 border-r border-black w-1/6">Nama</th>
+                <th class="p-1.5 border-r border-black w-1/6">Instansi</th>
+                <th class="p-1.5 border-r border-black w-1/6">Tandatangan</th>
+                <th class="p-1.5 border-r border-black w-1/12">Tanggal</th>
+                <th class="p-1.5 w-1/12">Jam</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="p-1.5 border-r border-black text-left font-semibold">Pemberi Izin</td>
+                <td class="p-1 border-r border-black"><input type="text" id="selesai_nama" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="selesai_instansi" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="selesai_ttd" class="w-full text-center border-0 focus:outline-none bg-transparent handwriting"></td>
+                <td class="p-1 border-r border-black"><input type="text" id="selesai_tgl" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+                <td class="p-1"><input type="text" id="selesai_jam" class="w-full text-center border-0 focus:outline-none bg-transparent"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Note section strictly identical to document -->
+      <div class="p-2 text-[10px] space-y-0.5 text-gray-800 leading-tight">
+        <div class="font-bold">Note:</div>
+        <div>Pengisian "Alasan" untuk poin H. Pembatalan:</div>
+        <div class="pl-2">a. Keadaan darurat;</div>
+        <div class="pl-2">b. Untuk alasan keselamatan operasional perkeretaapian;</div>
+        <div class="pl-2">c. Pekerjaan yang dilakukan hanya dalam satu shift; dan</div>
+        <div class="pl-2">d. Pekerjaan ditangguhkan atau ditunda selama sembilan puluh (90) menit atau lebih.</div>
+      </div>
+
     </div>
-  </div>
+  </main>
 
-  <!-- MODAL KONFIRMASI HAPUS (MENGGANTIKAN ALERT/CONFIRM) -->
-  <div id="modalConfirmAction" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-5 space-y-4 border border-slate-300">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-lg">!</div>
-        <div>
-          <h4 class="font-bold text-sm text-slate-900">Konfirmasi Penghapusan</h4>
-          <p id="confirmModalText" class="text-xs text-slate-600">Apakah Anda yakin ingin menghapus data ini?</p>
-        </div>
-      </div>
-      <div class="flex justify-end gap-2 pt-2">
-        <button id="btnCancelConfirm" class="px-3.5 py-1.5 text-xs font-semibold border rounded-lg text-slate-700 hover:bg-slate-100">Batal</button>
-        <button id="btnProceedConfirm" class="px-3.5 py-1.5 text-xs font-semibold bg-rose-600 text-white rounded-lg hover:bg-rose-700 shadow">Hapus</button>
-      </div>
+  <!-- Toast Notification Box -->
+  <div id="toastMessage" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-xl border border-slate-700 shadow-2xl flex items-center gap-2.5 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-50">
+    <div id="toastIcon" class="w-5 h-5 text-emerald-400">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
     </div>
-  </div>
-
-  <div id="modalSignature" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
-      <div class="bg-slate-900 text-white px-4 py-3 flex justify-between items-center">
-        <h3 class="font-bold text-sm">Gores Tanda Tangan Digital</h3>
-        <button onclick="closeSignatureModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
-      </div>
-      <div class="p-4 space-y-3">
-        <p class="text-xs text-slate-500">Gunakan jari tangan di smartphone atau mouse di laptop/PC:</p>
-        <div class="border-2 border-dashed border-slate-300 rounded-lg bg-slate-50 flex justify-center">
-          <canvas id="sigCanvas" width="380" height="180" class="touch-none cursor-crosshair bg-white"></canvas>
-        </div>
-        <div class="flex justify-between items-center pt-2">
-          <button type="button" onclick="clearSigCanvas()" class="text-xs text-rose-600 hover:underline">Hapus / Bersihkan</button>
-          <div class="flex gap-2">
-            <button type="button" onclick="closeSignatureModal()" class="text-xs px-3 py-1.5 border rounded">Batal</button>
-            <button type="button" onclick="saveSignaturePad()" class="text-xs px-3 py-1.5 bg-blue-700 text-white font-semibold rounded shadow">Gunakan TTD</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="toastNotification" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-lg shadow-xl border border-slate-700 flex items-center gap-2 transform translate-y-24 opacity-0 transition-all duration-300 z-50">
-    <span class="text-emerald-400 font-bold">✓</span>
-    <span id="toastMessage" class="text-xs sm:text-sm font-medium">Data berhasil disimpan!</span>
+    <div id="toastContent" class="text-xs font-semibold">Tersimpan!</div>
   </div>
 
   <script>
-    /* State Global Aplikasi */
-    let currentSheet = 'ptw'; // 'ptw', 'counter', atau 'gangguan'
-    let currentSigTarget = null;
-    let isDrawing = false;
-    let canvas, ctx;
-    let pendingConfirmCallback = null;
+    const tabNexus = document.getElementById('tabNexus');
+    const tabIzinKerja = document.getElementById('tabIzinKerja');
+    const viewNexus = document.getElementById('view-nexus');
+    const viewIzinKerja = document.getElementById('view-izin-kerja');
+    const formActions = document.getElementById('formActions');
 
-    const defaultGangguanRecords = [
-      {
-        tanggalGangguan: '13/12-2025',
-        uraianGangguan: 'Gangguan sinyal masuk J10 padam dan gangguan Trek blok merah antara KTM - AWN Jalur Hulu',
-        jamMulai: '22.35',
-        laporKe: 'Sintel',
-        ppka: 'M. Fadli',
-        tanggalPerbaikan: '13/12-2025',
-        uraianPerbaikan: 'Reset trek 1714T dan 1810T',
-        jamSelesai: '22.50',
-        petugas: 'Ismail'
-      },
-      {
-        tanggalGangguan: '17/12-2025',
-        uraianGangguan: 'Gangguan sinyal blok B1710 tidak bisa menunjukan aspek hijau',
-        jamMulai: '17.15',
-        laporKe: 'Sintel',
-        ppka: 'M. Fadli',
-        tanggalPerbaikan: '17/12-2025',
-        uraianPerbaikan: 'Penggantian trafo',
-        jamSelesai: '18.00',
-        petugas: 'Zaynal'
-      },
-      {
-        tanggalGangguan: '27/12-2025',
-        uraianGangguan: 'Track jalur 24AT, 24BT merah',
-        jamMulai: '11.50',
-        laporKe: 'Sintel',
-        ppka: 'Irvan',
-        tanggalPerbaikan: '27/12-2025',
-        uraianPerbaikan: 'Reset 1824A 1824B',
-        jamSelesai: '12.23',
-        petugas: 'Widak'
-      }
-    ];
+    // Switch View Logic
+    function activateNexus() {
+      tabNexus.className = "px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-blue-600 text-white shadow";
+      tabIzinKerja.className = "px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-white";
+      viewNexus.classList.remove('hidden');
+      viewIzinKerja.classList.add('hidden');
+      formActions.classList.add('hidden');
+    }
 
-    let gangguanRows = [];
+    function activateIzinKerja() {
+      tabIzinKerja.className = "px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-amber-600 text-white shadow";
+      tabNexus.className = "px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-white";
+      viewIzinKerja.classList.remove('hidden');
+      viewNexus.classList.add('hidden');
+      formActions.classList.remove('hidden');
+    }
 
-    const defaultCounterRecords = [
-      { tanggal: '1/10/2024', ptp: '-', bh: '30', bk: '21', ms: '6', tbw: '6', tpbd: '10', tpr: '239', tsd: '129', tams: '69', twt: '1121', catatan: 'perawatan wsl.' },
-      { tanggal: '1/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '-', tpbd: '-', tpr: '-', tsd: '-', tams: '-', twt: '1135', catatan: 'tutup jln' },
-      { tanggal: '2/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '-', tpbd: '-', tpr: '-', tsd: '131', tams: '70', twt: '-', catatan: 'Buka jln.' },
-      { tanggal: '3/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '-', tpbd: '-', tpr: '-', tsd: '-', tams: '71', twt: '-', catatan: 'wesel jln ki' },
-      { tanggal: '3/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '-', tpbd: '-', tpr: '-', tsd: '132', tams: '-', twt: '-', catatan: 'paska jln. ki' },
-      { tanggal: '4/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '-', tpbd: '-', tpr: '-', tsd: '-', tams: '72', twt: '-', catatan: 'tutup jln.' },
-      { tanggal: '4/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '6', tpbd: '10', tpr: '240', tsd: '132', tams: '72', twt: '1153', catatan: 'Perawatan Sintelis tutup jalur pusau' },
-      { tanggal: '5/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '-', tpbd: '-', tpr: '-', tsd: '-', tams: '73', twt: '-', catatan: 'tutup jln' },
-      { tanggal: '6/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '-', tpbd: '-', tpr: '-', tsd: '-', tams: '74', twt: '-', catatan: 'tutup jln' },
-      { tanggal: '7/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '-', tpbd: '-', tpr: '241', tsd: '-', tams: '-', twt: '-', catatan: 'pembongkaran' },
-      { tanggal: '8/10/2024', ptp: '-', bh: '-', bk: '-', ms: '-', tbw: '-', tpbd: '-', tpr: '242', tsd: '-', tams: '-', twt: '-', catatan: 'Hapus Rute KA 250A' }
-    ];
+    tabNexus.addEventListener('click', activateNexus);
+    tabIzinKerja.addEventListener('click', activateIzinKerja);
 
-    let counterRows = [];
+    // Toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toastMessage');
+      const content = document.getElementById('toastContent');
+      const icon = document.getElementById('toastIcon');
 
-    window.onload = function() {
-      // Load Data Counter dari LocalStorage
-      const savedCounterData = localStorage.getItem('nexus_awn_counter_rows');
-      if (savedCounterData) {
-        try {
-          counterRows = JSON.parse(savedCounterData);
-        } catch (e) {
-          counterRows = [...defaultCounterRecords];
-        }
+      content.textContent = message;
+      if (type === 'success') {
+        icon.className = 'w-5 h-5 text-emerald-400';
+        icon.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
       } else {
-        counterRows = [...defaultCounterRecords];
+        icon.className = 'w-5 h-5 text-amber-400';
+        icon.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
       }
 
-      // Load Periode Counter
-      const savedPeriode = localStorage.getItem('nexus_awn_periode');
-      if (savedPeriode) {
-        document.getElementById('periodeCounterInput').value = savedPeriode;
-        document.getElementById('displayPeriodeCounter').innerText = savedPeriode;
-      }
-
-      // Load Data Gangguan dari LocalStorage
-      const savedGangguan = localStorage.getItem('nexus_awn_gangguan_rows');
-      if (savedGangguan) {
-        try {
-          gangguanRows = JSON.parse(savedGangguan);
-        } catch (e) {
-          gangguanRows = [...defaultGangguanRecords];
-        }
-      } else {
-        gangguanRows = [...defaultGangguanRecords];
-      }
-
-      const savedBulanGangguan = localStorage.getItem('nexus_awn_bulan_gangguan');
-      if (savedBulanGangguan) {
-        const inputBulan = document.getElementById('inputBulanGangguan');
-        if (inputBulan) inputBulan.value = savedBulanGangguan;
-      }
-
-      // Load Data Verifikasi QC Agus Triyanto
-      loadQcData();
-
-      // Inisialisasi Canvas Tanda Tangan
-      initSignatureCanvas();
-
-      // Render Tabel Counter & Gangguan
-      renderCounterTable();
-      renderGangguanTable();
-
-      // Set tanggal default PTW
-      const today = new Date().toISOString().split('T')[0];
-      const ptwTgl = document.getElementById('ptwTanggalBerlaku');
-      if (ptwTgl) ptwTgl.value = today;
-
-      // Inisialisasi modal confirmation
-      document.getElementById('btnCancelConfirm').onclick = closeCustomConfirm;
-    };
-
-    function switchSheet(targetSheet) {
-      currentSheet = targetSheet;
-      const sheetPTW = document.getElementById('sheetPTW');
-      const sheetCounter = document.getElementById('sheetCounter');
-      const sheetGangguan = document.getElementById('sheetGangguan');
-
-      const btnTabPTW = document.getElementById('btnTabPTW');
-      const btnTabCounter = document.getElementById('btnTabCounter');
-      const btnTabGangguan = document.getElementById('btnTabGangguan');
-      const btnMainActionLabel = document.getElementById('btnMainActionLabel');
-
-      // Reset semua sheet
-      sheetPTW.classList.add('hidden');
-      sheetPTW.classList.remove('active-print');
-      sheetCounter.classList.add('hidden');
-      sheetCounter.classList.remove('active-print');
-      sheetGangguan.classList.add('hidden');
-      sheetGangguan.classList.remove('active-print');
-
-      const inactiveBtnClass = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-700/50";
-      btnTabPTW.className = inactiveBtnClass;
-      btnTabCounter.className = inactiveBtnClass;
-      btnTabGangguan.className = inactiveBtnClass;
-
-      if (targetSheet === 'counter') {
-        sheetCounter.classList.remove('hidden');
-        sheetCounter.classList.add('active-print');
-        btnTabCounter.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 bg-blue-600 text-white shadow";
-        btnMainActionLabel.innerText = "Simpan Buku Counter";
-      } else if (targetSheet === 'gangguan') {
-        sheetGangguan.classList.remove('hidden');
-        sheetGangguan.classList.add('active-print');
-        btnTabGangguan.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 bg-amber-500 text-slate-950 font-bold shadow";
-        btnMainActionLabel.innerText = "Simpan Buku Gangguan";
-      } else {
-        sheetPTW.classList.remove('hidden');
-        sheetPTW.classList.add('active-print');
-        btnTabPTW.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 bg-blue-600 text-white shadow";
-        btnMainActionLabel.innerText = "Simpan PTW";
-      }
-    }
-
-    function renderGangguanTable(filteredList = null) {
-      const tbody = document.getElementById('gangguanTableBody');
-      const list = filteredList !== null ? filteredList : gangguanRows;
-      tbody.innerHTML = '';
-
-      if (list.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="11" class="py-8 text-center text-slate-400 italic">
-              Tidak ada data catatan gangguan operasional yang sesuai dengan kriteria penyaringan tanggal.
-            </td>
-          </tr>
-        `;
-        updateGangguanStats(list);
-        return;
-      }
-
-      list.forEach((row, index) => {
-        const actualIndex = filteredList !== null ? gangguanRows.indexOf(row) : index;
-        const tr = document.createElement('tr');
-        tr.className = index % 2 === 0 ? "bg-white hover:bg-amber-50/50" : "bg-slate-50 hover:bg-amber-50/50";
-
-        tr.innerHTML = `
-          <td class="p-2 text-center font-bold text-slate-900 border border-slate-900">${index + 1}</td>
-          <td class="p-2 text-center font-mono-num font-semibold text-slate-900 border border-slate-900">${escapeHtml(row.tanggalGangguan || '-')}</td>
-          <td class="p-2 border border-slate-900 text-slate-900 font-medium">${escapeHtml(row.uraianGangguan || '-')}</td>
-          <td class="p-2 text-center font-mono-num border border-slate-900 text-slate-900 font-bold">${escapeHtml(row.jamMulai || '-')}</td>
-          <td class="p-2 text-center border border-slate-900 text-slate-900 font-semibold">${escapeHtml(row.laporKe || '-')}</td>
-          <td class="p-2 text-center border border-slate-900 text-slate-900 font-semibold">${escapeHtml(row.ppka || '-')}</td>
-          <td class="p-2 text-center font-mono-num font-semibold text-slate-900 border border-slate-900">${escapeHtml(row.tanggalPerbaikan || '-')}</td>
-          <td class="p-2 border border-slate-900 text-slate-900 font-medium">${escapeHtml(row.uraianPerbaikan || '-')}</td>
-          <td class="p-2 text-center font-mono-num border border-slate-900 text-slate-900 font-bold">${escapeHtml(row.jamSelesai || '-')}</td>
-          <td class="p-2 text-center border border-slate-900 text-slate-900 font-semibold">${escapeHtml(row.petugas || '-')}</td>
-          <td class="p-1 no-print border border-slate-900 text-center">
-            <div class="flex items-center justify-center gap-1">
-              <button onclick="editGangguanRow(${actualIndex})" title="Edit" class="text-blue-600 hover:text-blue-900 p-1">
-                ✏️
-              </button>
-              <button onclick="confirmDeleteGangguan(${actualIndex})" title="Hapus" class="text-rose-600 hover:text-rose-900 p-1">
-                🗑️
-              </button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      updateGangguanStats(list);
-    }
-
-    function parseDateToTimestamp(dateStr) {
-      if (!dateStr || dateStr === '-') return null;
-      // Format didukung: "13/12-2025", "13/12/2025", "2025-12-13"
-      const clean = dateStr.trim();
-      if (clean.includes('-') && clean.split('-')[0].length === 4) {
-        // Format ISO "YYYY-MM-DD"
-        return new Date(clean).getTime();
-      }
-
-      // Format "DD/MM-YYYY" atau "DD/MM/YYYY"
-      const normalized = clean.replace('-', '/');
-      const parts = normalized.split('/');
-      if (parts.length === 3) {
-        const d = parseInt(parts[0], 10);
-        const m = parseInt(parts[1], 10) - 1;
-        const y = parseInt(parts[2], 10);
-        if (!isNaN(d) && !isNaN(m) && !isNaN(y)) {
-          return new Date(y, m, d).getTime();
-        }
-      }
-      return null;
-    }
-
-    function applyGangguanFilter() {
-      const startDateStr = document.getElementById('filterGangguanStartDate').value;
-      const endDateStr = document.getElementById('filterGangguanEndDate').value;
-      const searchText = (document.getElementById('searchGangguanText').value || '').toLowerCase().trim();
-
-      const startTime = startDateStr ? new Date(startDateStr).setHours(0,0,0,0) : null;
-      const endTime = endDateStr ? new Date(endDateStr).setHours(23,59,59,999) : null;
-
-      const filtered = gangguanRows.filter(row => {
-        // Filter Tanggal
-        const rowTime = parseDateToTimestamp(row.tanggalGangguan);
-        if (startTime && rowTime && rowTime < startTime) return false;
-        if (endTime && rowTime && rowTime > endTime) return false;
-
-        // Filter Teks
-        if (searchText) {
-          const matchUraian = (row.uraianGangguan || '').toLowerCase().includes(searchText);
-          const matchPerbaikan = (row.uraianPerbaikan || '').toLowerCase().includes(searchText);
-          const matchPPKA = (row.ppka || '').toLowerCase().includes(searchText);
-          const matchPetugas = (row.petugas || '').toLowerCase().includes(searchText);
-          const matchLapor = (row.laporKe || '').toLowerCase().includes(searchText);
-          if (!matchUraian && !matchPerbaikan && !matchPPKA && !matchPetugas && !matchLapor) {
-            return false;
-          }
-        }
-        return true;
-      });
-
-      // Update label status filter
-      const badge = document.getElementById('badgeFilterStatus');
-      if (startDateStr || endDateStr || searchText) {
-        badge.innerText = `Menampilkan ${filtered.length} dari ${gangguanRows.length} Riwayat`;
-        badge.className = "font-semibold text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300";
-      } else {
-        badge.innerText = "Menampilkan Semua Riwayat";
-        badge.className = "font-semibold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-300";
-      }
-
-      renderGangguanTable(filtered);
-    }
-
-    function filterGangguanPreset(preset) {
-      if (preset === 'desember2025') {
-        document.getElementById('filterGangguanStartDate').value = '2025-12-01';
-        document.getElementById('filterGangguanEndDate').value = '2025-12-31';
-        document.getElementById('searchGangguanText').value = '';
-        applyGangguanFilter();
-      }
-    }
-
-    function resetGangguanFilter() {
-      document.getElementById('filterGangguanStartDate').value = '';
-      document.getElementById('filterGangguanEndDate').value = '';
-      document.getElementById('searchGangguanText').value = '';
-      applyGangguanFilter();
-    }
-
-    function updateGangguanStats(list) {
-      document.getElementById('statTotalGangguan').innerText = list.length;
-      const selesai = list.filter(r => (r.jamSelesai && r.jamSelesai !== '-') || (r.uraianPerbaikan && r.uraianPerbaikan !== '-')).length;
-      document.getElementById('statSelesaiPerbaikan').innerText = selesai;
-    }
-
-    function updateBulanGangguan() {
-      const val = document.getElementById('inputBulanGangguan').value.trim();
-      localStorage.setItem('nexus_awn_bulan_gangguan', val);
-      showToast('Bulan operasional diperbarui: ' + val);
-    }
-
-    function openAddGangguanModal() {
-      document.getElementById('modalGangguanTitle').innerText = "Catat Gangguan Operasional";
-      document.getElementById('editGangguanRowIndex').value = "-1";
-      document.getElementById('inputGangguanTanggal').value = "";
-      document.getElementById('inputGangguanJamMulai').value = "";
-      document.getElementById('inputGangguanLaporKe').value = "Sintel";
-      document.getElementById('inputGangguanUraian').value = "";
-      document.getElementById('inputGangguanPPKA').value = "";
-      document.getElementById('inputPerbaikanTanggal').value = "";
-      document.getElementById('inputPerbaikanJamSelesai').value = "";
-      document.getElementById('inputPerbaikanPetugas').value = "";
-      document.getElementById('inputPerbaikanUraian').value = "";
-      document.getElementById('modalGangguanEntry').classList.remove('hidden');
-    }
-
-    function editGangguanRow(index) {
-      const r = gangguanRows[index];
-      if (!r) return;
-      document.getElementById('modalGangguanTitle').innerText = "Edit Gangguan Operasional";
-      document.getElementById('editGangguanRowIndex').value = index;
-      document.getElementById('inputGangguanTanggal').value = r.tanggalGangguan || '';
-      document.getElementById('inputGangguanJamMulai').value = r.jamMulai || '';
-      document.getElementById('inputGangguanLaporKe').value = r.laporKe || '';
-      document.getElementById('inputGangguanUraian').value = r.uraianGangguan || '';
-      document.getElementById('inputGangguanPPKA').value = r.ppka || '';
-      document.getElementById('inputPerbaikanTanggal').value = r.tanggalPerbaikan || '';
-      document.getElementById('inputPerbaikanJamSelesai').value = r.jamSelesai || '';
-      document.getElementById('inputPerbaikanPetugas').value = r.petugas || '';
-      document.getElementById('inputPerbaikanUraian').value = r.uraianPerbaikan || '';
-      document.getElementById('modalGangguanEntry').classList.remove('hidden');
-    }
-
-    function closeGangguanModal() {
-      document.getElementById('modalGangguanEntry').classList.add('hidden');
-    }
-
-    function saveGangguanRow(event) {
-      event.preventDefault();
-      const index = parseInt(document.getElementById('editGangguanRowIndex').value);
-      const rowData = {
-        tanggalGangguan: document.getElementById('inputGangguanTanggal').value.trim() || '-',
-        uraianGangguan: document.getElementById('inputGangguanUraian').value.trim() || '-',
-        jamMulai: document.getElementById('inputGangguanJamMulai').value.trim() || '-',
-        laporKe: document.getElementById('inputGangguanLaporKe').value.trim() || '-',
-        ppka: document.getElementById('inputGangguanPPKA').value.trim() || '-',
-        tanggalPerbaikan: document.getElementById('inputPerbaikanTanggal').value.trim() || '-',
-        uraianPerbaikan: document.getElementById('inputPerbaikanUraian').value.trim() || '-',
-        jamSelesai: document.getElementById('inputPerbaikanJamSelesai').value.trim() || '-',
-        petugas: document.getElementById('inputPerbaikanPetugas').value.trim() || '-'
-      };
-
-      if (index >= 0) {
-        gangguanRows[index] = rowData;
-        showToast('Catatan gangguan berhasil diperbarui!');
-      } else {
-        gangguanRows.push(rowData);
-        showToast('Catatan gangguan baru berhasil ditambahkan!');
-      }
-
-      saveGangguanToStorage();
-      applyGangguanFilter();
-      closeGangguanModal();
-    }
-
-    function confirmDeleteGangguan(index) {
-      openCustomConfirm('Hapus data catatan gangguan operasional baris ke-' + (index + 1) + '?', function() {
-        gangguanRows.splice(index, 1);
-        saveGangguanToStorage();
-        applyGangguanFilter();
-        showToast('Catatan gangguan berhasil dihapus.');
-      });
-    }
-
-    function openCustomConfirm(message, callback) {
-      document.getElementById('confirmModalText').innerText = message;
-      pendingConfirmCallback = callback;
-      const proceedBtn = document.getElementById('btnProceedConfirm');
-      proceedBtn.onclick = function() {
-        if (pendingConfirmCallback) pendingConfirmCallback();
-        closeCustomConfirm();
-      };
-      document.getElementById('modalConfirmAction').classList.remove('hidden');
-    }
-
-    function closeCustomConfirm() {
-      document.getElementById('modalConfirmAction').classList.add('hidden');
-      pendingConfirmCallback = null;
-    }
-
-    function saveGangguanToStorage() {
-      localStorage.setItem('nexus_awn_gangguan_rows', JSON.stringify(gangguanRows));
-    }
-
-    function resetDefaultGangguanData() {
-      gangguanRows = [...defaultGangguanRecords];
-      saveGangguanToStorage();
-      applyGangguanFilter();
-      showToast('Data gangguan operasional dipulihkan sesuai foto!');
-    }
-
-    function exportGangguanCSV() {
-      const bulan = document.getElementById('inputBulanGangguan').value || 'Desember 2025';
-      let csv = 'BUKU GANGGUAN OPERASIONAL - STASIUN ARJAWINANGUN\n';
-      csv += 'BULAN: ' + bulan + '\n\n';
-      csv += 'NO,Tanggal Gangguan,Uraian Gangguan,Jam Mulai,Lapor Ke,PPKA,Tanggal Perbaikan,Uraian Perbaikan,Jam Selesai,Petugas\n';
-
-      gangguanRows.forEach((r, idx) => {
-        const cleanG = `"${(r.uraianGangguan || '').replace(/"/g, '""')}"`;
-        const cleanP = `"${(r.uraianPerbaikan || '').replace(/"/g, '""')}"`;
-        csv += `${idx + 1},${r.tanggalGangguan},${cleanG},${r.jamMulai},${r.laporKe},${r.ppka},${r.tanggalPerbaikan},${cleanP},${r.jamSelesai},${r.petugas}\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `Buku_Gangguan_AWN_${bulan.replace(/\s+/g, '_')}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast('File CSV riwayat gangguan berhasil diunduh!');
-    }
-
-    function renderCounterTable(filteredList = null) {
-      const tbody = document.getElementById('counterTableBody');
-      const list = filteredList !== null ? filteredList : counterRows;
-      tbody.innerHTML = '';
-
-      if (list.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="13" class="py-8 text-center text-slate-400 italic">
-              Belum ada data nomor counter dan nomor bentuk yang tercatat.
-            </td>
-          </tr>
-        `;
-        document.getElementById('counterRowCount').innerText = '0';
-        return;
-      }
-
-      list.forEach((row, index) => {
-        const actualIndex = filteredList !== null ? counterRows.indexOf(row) : index;
-        const tr = document.createElement('tr');
-        tr.className = index % 2 === 0 ? "bg-white hover:bg-blue-50/40" : "bg-slate-50/70 hover:bg-blue-50/40";
-        
-        tr.innerHTML = `
-          <td class="p-2 font-bold text-slate-900 border border-slate-800">${escapeHtml(row.tanggal || '-')}</td>
-          <td class="p-1.5 border border-slate-800">${escapeHtml(row.ptp || '-')}</td>
-          <td class="p-1.5 border border-slate-800 font-semibold">${escapeHtml(row.bh || '-')}</td>
-          <td class="p-1.5 border border-slate-800 font-semibold">${escapeHtml(row.bk || '-')}</td>
-          <td class="p-1.5 border border-slate-800 font-semibold">${escapeHtml(row.ms || '-')}</td>
-          <td class="p-1.5 border border-slate-800 font-semibold">${escapeHtml(row.tbw || '-')}</td>
-          <td class="p-1.5 border border-slate-800 font-semibold">${escapeHtml(row.tpbd || '-')}</td>
-          <td class="p-1.5 border border-slate-800 font-semibold text-blue-900">${escapeHtml(row.tpr || '-')}</td>
-          <td class="p-1.5 border border-slate-800 font-semibold">${escapeHtml(row.tsd || '-')}</td>
-          <td class="p-1.5 border border-slate-800 font-semibold text-orange-900">${escapeHtml(row.tams || '-')}</td>
-          <td class="p-1.5 border border-slate-800 font-bold">${escapeHtml(row.twt || '-')}</td>
-          <td class="p-2 text-left pl-3 font-normal border border-slate-800 text-slate-800">${escapeHtml(row.catatan || '-')}</td>
-          <td class="p-1 no-print border border-slate-800 text-center">
-            <div class="flex items-center justify-center gap-1">
-              <button onclick="editCounterRow(${actualIndex})" title="Edit" class="text-blue-600 hover:text-blue-800 p-1">
-                ✏️
-              </button>
-              <button onclick="deleteCounterRow(${actualIndex})" title="Hapus" class="text-rose-600 hover:text-rose-800 p-1">
-                🗑️
-              </button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById('counterRowCount').innerText = counterRows.length;
-    }
-
-    function filterCounterTable() {
-      const q = document.getElementById('searchCounterInput').value.toLowerCase().trim();
-      if (!q) {
-        renderCounterTable();
-        return;
-      }
-      const filtered = counterRows.filter(r => 
-        (r.tanggal && r.tanggal.toLowerCase().includes(q)) ||
-        (r.catatan && r.catatan.toLowerCase().includes(q)) ||
-        (r.twt && r.twt.toLowerCase().includes(q)) ||
-        (r.tpr && r.tpr.toLowerCase().includes(q))
-      );
-      renderCounterTable(filtered);
-    }
-
-    function updatePeriodeHeader() {
-      const val = document.getElementById('periodeCounterInput').value.trim().toUpperCase();
-      if (val) {
-        document.getElementById('displayPeriodeCounter').innerText = val;
-        localStorage.setItem('nexus_awn_periode', val);
-        showToast('Periode berhasil diubah ke ' + val);
-      }
-    }
-
-    function openAddCounterModal() {
-      document.getElementById('modalCounterTitle').innerText = "Tambah Baris Penjagaan Counter";
-      document.getElementById('editRowIndex').value = "-1";
-      document.getElementById('inputTanggal').value = "";
-      document.getElementById('inputPTP').value = "-";
-      document.getElementById('inputBH').value = "-";
-      document.getElementById('inputBK').value = "-";
-      document.getElementById('inputMS').value = "-";
-      document.getElementById('inputTBW').value = "-";
-      document.getElementById('inputTPBD').value = "-";
-      document.getElementById('inputTPR').value = "-";
-      document.getElementById('inputTSD').value = "-";
-      document.getElementById('inputTAMS').value = "-";
-      document.getElementById('inputTWT').value = "-";
-      document.getElementById('inputCatatan').value = "";
-      document.getElementById('modalCounterEntry').classList.remove('hidden');
-    }
-
-    function editCounterRow(index) {
-      const r = counterRows[index];
-      if (!r) return;
-      document.getElementById('modalCounterTitle').innerText = "Edit Baris Penjagaan Counter";
-      document.getElementById('editRowIndex').value = index;
-      document.getElementById('inputTanggal').value = r.tanggal || '';
-      document.getElementById('inputPTP').value = r.ptp || '-';
-      document.getElementById('inputBH').value = r.bh || '-';
-      document.getElementById('inputBK').value = r.bk || '-';
-      document.getElementById('inputMS').value = r.ms || '-';
-      document.getElementById('inputTBW').value = r.tbw || '-';
-      document.getElementById('inputTPBD').value = r.tpbd || '-';
-      document.getElementById('inputTPR').value = r.tpr || '-';
-      document.getElementById('inputTSD').value = r.tsd || '-';
-      document.getElementById('inputTAMS').value = r.tams || '-';
-      document.getElementById('inputTWT').value = r.twt || '-';
-      document.getElementById('inputCatatan').value = r.catatan || '';
-      document.getElementById('modalCounterEntry').classList.remove('hidden');
-    }
-
-    function closeCounterModal() {
-      document.getElementById('modalCounterEntry').classList.add('hidden');
-    }
-
-    function saveCounterRow(event) {
-      event.preventDefault();
-      const index = parseInt(document.getElementById('editRowIndex').value);
-      const rowData = {
-        tanggal: document.getElementById('inputTanggal').value.trim() || '-',
-        ptp: document.getElementById('inputPTP').value.trim() || '-',
-        bh: document.getElementById('inputBH').value.trim() || '-',
-        bk: document.getElementById('inputBK').value.trim() || '-',
-        ms: document.getElementById('inputMS').value.trim() || '-',
-        tbw: document.getElementById('inputTBW').value.trim() || '-',
-        tpbd: document.getElementById('inputTPBD').value.trim() || '-',
-        tpr: document.getElementById('inputTPR').value.trim() || '-',
-        tsd: document.getElementById('inputTSD').value.trim() || '-',
-        tams: document.getElementById('inputTAMS').value.trim() || '-',
-        twt: document.getElementById('inputTWT').value.trim() || '-',
-        catatan: document.getElementById('inputCatatan').value.trim() || '-'
-      };
-
-      if (index >= 0) {
-        counterRows[index] = rowData;
-        showToast('Baris counter berhasil diperbarui!');
-      } else {
-        counterRows.push(rowData);
-        showToast('Baris counter baru berhasil ditambahkan!');
-      }
-
-      saveCounterToStorage();
-      renderCounterTable();
-      closeCounterModal();
-    }
-
-    function deleteCounterRow(index) {
-      openCustomConfirm('Hapus baris data counter ini?', function() {
-        counterRows.splice(index, 1);
-        saveCounterToStorage();
-        renderCounterTable();
-        showToast('Baris berhasil dihapus.');
-      });
-    }
-
-    function saveCounterToStorage() {
-      localStorage.setItem('nexus_awn_counter_rows', JSON.stringify(counterRows));
-    }
-
-    function resetDefaultCounterData() {
-      counterRows = [...defaultCounterRecords];
-      saveCounterToStorage();
-      renderCounterTable();
-      showToast('Data contoh sesuai foto berhasil dipulihkan!');
-    }
-
-    function exportCounterCSV() {
-      const periode = document.getElementById('periodeCounterInput').value || 'OKTOBER_2024';
-      let csv = 'BUKU PENJAGAAN BENTUK DAN PENJAGAAN NOMOR COUNTER - STASIUN ARJAWINANGUN\n';
-      csv += 'PERIODE: ' + periode + '\n\n';
-      csv += 'TANGGAL,PTP,BH,BK,MS,TBW,TPBD,TPR,TSD,TAMS,TWT,CATATAN\n';
-
-      counterRows.forEach(r => {
-        const cleanCat = `"${(r.catatan || '').replace(/"/g, '""')}"`;
-        csv += `${r.tanggal},${r.ptp},${r.bh},${r.bk},${r.ms},${r.tbw},${r.tpbd},${r.tpr},${r.tsd},${r.tams},${r.twt},${cleanCat}\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `Buku_Counter_AWN_${periode.replace(/\s+/g, '_')}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast('File CSV berhasil diunduh!');
-    }
-
-    function initSignatureCanvas() {
-      canvas = document.getElementById('sigCanvas');
-      ctx = canvas.getContext('2d');
-      ctx.lineWidth = 2.5;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = '#00205B';
-
-      function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        if (e.touches && e.touches[0]) {
-          return {
-            x: e.touches[0].clientX - rect.left,
-            y: e.touches[0].clientY - rect.top
-          };
-        }
-        return {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top
-        };
-      }
-
-      function startDraw(e) {
-        isDrawing = true;
-        const pos = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-      }
-
-      function draw(e) {
-        if (!isDrawing) return;
-        e.preventDefault();
-        const pos = getPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-      }
-
-      function stopDraw() {
-        if (isDrawing) {
-          ctx.closePath();
-          isDrawing = false;
-        }
-      }
-
-      canvas.addEventListener('mousedown', startDraw);
-      canvas.addEventListener('mousemove', draw);
-      window.addEventListener('mouseup', stopDraw);
-
-      canvas.addEventListener('touchstart', startDraw, { passive: false });
-      canvas.addEventListener('touchmove', draw, { passive: false });
-      canvas.addEventListener('touchend', stopDraw);
-    }
-
-    function openSignatureModal(target) {
-      currentSigTarget = target;
-      clearSigCanvas();
-      document.getElementById('modalSignature').classList.remove('hidden');
-    }
-
-    function closeSignatureModal() {
-      document.getElementById('modalSignature').classList.add('hidden');
-      currentSigTarget = null;
-    }
-
-    function clearSigCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function saveSignaturePad() {
-      const dataUrl = canvas.toDataURL('image/png');
-      if (currentSigTarget === 'ttdPemohon') {
-        const img = document.getElementById('imgTtdPemohon');
-        const label = document.getElementById('labelTtdPemohon');
-        img.src = dataUrl;
-        img.classList.remove('hidden');
-        label.classList.add('hidden');
-        showToast('Tanda tangan pemohon berhasil disematkan!');
-      } else if (currentSigTarget === 'ttdQc') {
-        const imgQc = document.getElementById('imgTtdQc');
-        const svgDef = document.getElementById('svgTtdQcDefault');
-        imgQc.src = dataUrl;
-        imgQc.classList.remove('hidden');
-        if (svgDef) svgDef.classList.add('hidden');
-        localStorage.setItem('nexus_awn_qc_ttd', dataUrl);
-        showToast('Tanda tangan QC berhasil digores dan disimpan!');
-      }
-      closeSignatureModal();
-    }
-
-    function saveQcData() {
-      const qcData = {
-        tanggal: document.getElementById('inputQcTanggal').value.trim(),
-        unit: document.getElementById('inputQcUnit').value.trim(),
-        nama: document.getElementById('inputQcNama').value.trim(),
-        nipp: document.getElementById('inputQcNipp').value.trim()
-      };
-      localStorage.setItem('nexus_awn_qc_data', JSON.stringify(qcData));
-      showToast('Data verifikasi QC berhasil diperbarui!');
-    }
-
-    function loadQcData() {
-      const savedQc = localStorage.getItem('nexus_awn_qc_data');
-      if (savedQc) {
-        try {
-          const parsed = JSON.parse(savedQc);
-          if (parsed.tanggal) document.getElementById('inputQcTanggal').value = parsed.tanggal;
-          if (parsed.unit) document.getElementById('inputQcUnit').value = parsed.unit;
-          if (parsed.nama) document.getElementById('inputQcNama').value = parsed.nama;
-          if (parsed.nipp) document.getElementById('inputQcNipp').value = parsed.nipp;
-        } catch (e) {
-          console.error("Gagal memuat QC data", e);
-        }
-      }
-
-      // Load TTD QC
-      const savedTtd = localStorage.getItem('nexus_awn_qc_ttd');
-      const imgQc = document.getElementById('imgTtdQc');
-      const svgDef = document.getElementById('svgTtdQcDefault');
-      if (savedTtd && imgQc) {
-        imgQc.src = savedTtd;
-        imgQc.classList.remove('hidden');
-        if (svgDef) svgDef.classList.add('hidden');
-      } else if (svgDef && imgQc) {
-        imgQc.classList.add('hidden');
-        svgDef.classList.remove('hidden');
-      }
-    }
-
-    function handleUploadTtdQc(event) {
-      const file = event.target.files && event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const dataUrl = e.target.result;
-        const imgQc = document.getElementById('imgTtdQc');
-        const svgDef = document.getElementById('svgTtdQcDefault');
-        imgQc.src = dataUrl;
-        imgQc.classList.remove('hidden');
-        if (svgDef) svgDef.classList.add('hidden');
-
-        localStorage.setItem('nexus_awn_qc_ttd', dataUrl);
-        showToast('Tanda tangan QC berhasil diunggah!');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function resetTtdQc() {
-      localStorage.removeItem('nexus_awn_qc_ttd');
-      const imgQc = document.getElementById('imgTtdQc');
-      const svgDef = document.getElementById('svgTtdQcDefault');
-      if (imgQc) {
-        imgQc.src = "";
-        imgQc.classList.add('hidden');
-      }
-      if (svgDef) svgDef.classList.remove('hidden');
-      showToast('Tanda tangan QC dikembalikan ke format default.');
-    }
-
-    function handlePrimaryAction() {
-      if (currentSheet === 'counter') {
-        saveCounterToStorage();
-        showToast('Data Buku Penjagaan Counter tersimpan di memori browser!');
-      } else if (currentSheet === 'gangguan') {
-        saveGangguanToStorage();
-        showToast('Data Buku Gangguan Operasional tersimpan di memori browser!');
-      } else {
-        const permitNo = document.getElementById('ptwPermitNo').value;
-        showToast(`Izin Kerja ${permitNo} berhasil disimpan!`);
-      }
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toastNotification');
-      const msgElem = document.getElementById('toastMessage');
-      msgElem.innerText = msg;
       toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
       setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
         toast.classList.add('translate-y-24', 'opacity-0');
       }, 3000);
     }
 
-    function escapeHtml(string) {
-      return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    // Load exact handwritten sample from the photo
+    function loadExactImageSample() {
+      document.getElementById('tgl_berlaku').value = '19/08/20';
+      document.getElementById('app_kerja_panas').checked = false;
+      document.getElementById('app_ruang_terbatas').checked = false;
+      document.getElementById('app_lain_lain').checked = true;
+      document.getElementById('wilayah').value = 'Daop 3 Cirebon';
+      document.getElementById('permit_no').value = '';
+      document.getElementById('lokasi').value = 'Km 204 + 000 s/d 205 + 000 Jalur Hilir';
+      
+      document.getElementById('pemohon_nama').value = 'Diyan Habiky';
+      document.getElementById('pemohon_ttd').value = 'Diyan';
+
+      document.getElementById('deskripsi_kerja').value = 'Perawatan geometri track dgn KPJR';
+      document.getElementById('alat_mesin').checked = true;
+      document.getElementById('alat_listrik').checked = false;
+      document.getElementById('alat_tangan').checked = false;
+
+      // Bahaya
+      document.getElementById('c_tersandung_jatuh').checked = true;
+      document.getElementById('c_salah_penyetelan').checked = true;
+      document.getElementById('c_tabrakan_benturan').checked = true;
+      document.getElementById('c_kejatuhan_benda').checked = true;
+      document.getElementById('c_terhantam_benda').checked = true;
+      document.getElementById('c_bising').checked = true;
+      document.getElementById('c_salah_komunikasi').checked = true;
+
+      // Pencegahan
+      document.getElementById('d_proteksi_jauh').checked = true;
+      document.getElementById('d_penyinaran_memadai').checked = true;
+      document.getElementById('d_sertifikat_kompetensi').checked = true;
+
+      // APD
+      document.getElementById('e_helm').checked = true;
+      document.getElementById('e_sepatu').checked = true;
+      document.getElementById('e_rompi1').checked = true;
+      document.getElementById('e_pendengaran').checked = true;
+      document.getElementById('e_lain_check').checked = true;
+      document.getElementById('e_lain_text').value = 'HT';
+
+      // F
+      document.getElementById('f_dari_tgl').value = '18-8-20';
+      document.getElementById('f_dari_jam').value = '06-30';
+      document.getElementById('f_sampai_tgl').value = '19-8-20';
+      document.getElementById('f_sampai_jam').value = '09-40';
+      document.getElementById('f_pemberi_izin').value = 'Samsudin';
+      document.getElementById('f_pengawas_pekerjaan').value = 'SPV JR 37 AWN';
+
+      // Penyelesaian
+      document.getElementById('penyelesaian_opt1').checked = true;
+      document.getElementById('selesai_nama').value = 'Samsudin';
+      document.getElementById('selesai_instansi').value = 'KAI';
+      document.getElementById('selesai_ttd').value = 'sdn';
+      document.getElementById('selesai_tgl').value = '19-8-20';
+      document.getElementById('selesai_jam').value = '09.40';
+
+      showToast('Form terisi sesuai dokumen fisik di foto!');
     }
+
+    function resetFormFields() {
+      const inputs = document.querySelectorAll('#view-izin-kerja input[type="text"], #view-izin-kerja textarea');
+      inputs.forEach(input => {
+        if (input.id === 'wilayah') {
+          input.value = 'Daop 3 Cirebon';
+        } else {
+          input.value = '';
+        }
+      });
+      const checkboxes = document.querySelectorAll('#view-izin-kerja input[type="checkbox"]');
+      checkboxes.forEach(cb => cb.checked = false);
+      showToast('Formulir berhasil dikosongkan.', 'info');
+    }
+
+    function saveFormData() {
+      const formData = {};
+      const inputs = document.querySelectorAll('#view-izin-kerja input, #view-izin-kerja textarea');
+      inputs.forEach(input => {
+        if (input.type === 'checkbox') {
+          formData[input.id] = input.checked;
+        } else {
+          formData[input.id] = input.value;
+        }
+      });
+      localStorage.setItem('NEXUS_IZIN_KERJA_DATA', JSON.stringify(formData));
+      showToast('Data Izin Kerja tersimpan rapi!');
+    }
+
+    function loadSavedFormData() {
+      const raw = localStorage.getItem('NEXUS_IZIN_KERJA_DATA');
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        Object.keys(data).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            if (el.type === 'checkbox') el.checked = data[id];
+            else el.value = data[id];
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    document.getElementById('btnIsiContoh').addEventListener('click', loadExactImageSample);
+    document.getElementById('btnReset').addEventListener('click', resetFormFields);
+    document.getElementById('btnSimpan').addEventListener('click', saveFormData);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('NEXUS_IZIN_KERJA_DATA');
+      if (saved) loadSavedFormData();
+      else loadExactImageSample();
+    });
   </script>
 </body>
 </html>
