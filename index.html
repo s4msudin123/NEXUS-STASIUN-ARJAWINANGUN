@@ -3,879 +3,2724 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXUS - Formulir Izin Kerja Daop 3 Cirebon</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>NEXUS RAIL ARJAWINANGUN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    @media print {
-      body { background: white !important; font-size: 10px !important; }
-      .no-print { display: none !important; }
-      .print-area { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
-      input, textarea { border: none !important; background: transparent !important; resize: none !important; }
-      .border-black-print { border-color: #000 !important; }
+    :root {
+      --bg-base: #f5f6fa;
+      --bg-surface: #ffffff;
+      --primary: #5A45FE;
+      --primary-light: #eceaff;
+      --primary-hover: #4834e0;
+      --text-main: #181920;
+      --text-muted: #7d8494;
+      --border-color: #ebeef5;
+      --card-shadow: 0 10px 30px rgba(18, 38, 63, 0.04);
+      --badge-green: #00ca72;
+      --badge-orange: #ff9f43;
+      --badge-red: #ff4757;
+      --radius-sm: 10px;
+      --radius-md: 18px;
+      --radius-lg: 24px;
     }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* Layout Wrapper */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr 340px;
+      width: 100vw;
+      min-height: 100vh;
+      background: var(--bg-base);
+    }
+
+    /* Left Sidebar */
+    .sidebar {
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-color);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), #8f7bff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.2rem;
+      box-shadow: 0 6px 15px rgba(90, 69, 254, 0.3);
+    }
+
+    .nav-group-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-left: 10px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background: #f7f8fd;
+      color: var(--primary);
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(90, 69, 254, 0.25);
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      padding: 28px 32px;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 20px;
+    }
+
+    .search-box {
+      flex: 1;
+      max-width: 580px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding: 14px 18px 14px 44px;
+      border-radius: 40px;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      width: 18px;
+      height: 18px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .action-btn-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .action-btn-circle:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    /* Banner Hero */
+    .hero-banner {
+      background: linear-gradient(135deg, #5b4bf5 0%, #7663ff 60%, #9583ff 100%);
+      border-radius: var(--radius-lg);
+      padding: 34px 40px;
+      color: #ffffff;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 14px 30px rgba(91, 75, 245, 0.25);
+    }
+
+    .hero-banner::after {
+      content: '✦';
+      position: absolute;
+      right: 50px;
+      top: 10px;
+      font-size: 100px;
+      color: rgba(255, 255, 255, 0.15);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .hero-banner h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      line-height: 1.35;
+      min-height: 68px;
+    }
+
+    /* Typing Effect Cursor Styling */
+    .typing-highlight {
+      color: #ffd84d;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      border-bottom: 2px dashed rgba(255, 216, 77, 0.5);
+      padding-bottom: 1px;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      font-weight: 300;
+      color: #ffd84d;
+      margin-left: 2px;
+      animation: blinkCursor 0.85s infinite;
+    }
+
+    @keyframes blinkCursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hero-banner p {
+      font-size: 0.88rem;
+      opacity: 0.9;
+      max-width: 520px;
+      margin-bottom: 22px;
+    }
+
+    .hero-btn {
+      background: #11131a;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Infinite Logo Slider Section */
+    .logo-slider-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+
+    .logo-slider-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo-slider-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .logo-slider-viewport {
+      width: 100%;
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      position: relative;
+    }
+
+    .logo-slider-viewport:active {
+      cursor: grabbing;
+    }
+
+    .logo-slider-track {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: max-content;
+      will-change: transform;
+    }
+
+    .logo-card-item {
+      background: #fbfbfd;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 10px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      height: 58px;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .logo-card-item:hover {
+      background: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    .logo-svg {
+      height: 34px;
+      width: auto;
+      display: block;
+    }
+
+    .logo-desc-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .logo-desc-title {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+
+    .logo-desc-sub {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Metric Cards Grid */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .metric-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .metric-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .icon-taspat { background: #f0edff; color: #5A45FE; }
+    .icon-stopblok { background: #fdf0f5; color: #ff5e98; }
+    .icon-stabling { background: #eef9fd; color: #1cb5ff; }
+    .icon-sop { background: #eafaf1; color: #2ecc71; }
+
+    .metric-info h4 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .metric-info p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Table Section Header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .section-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-pdf-print {
+      background: #ffffff;
+      border: 1px solid #dcdfe6;
+      color: #333;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-pdf-print:hover {
+      background: #f7f8fd;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Daily Filter & Petak Jalan Controls */
+    .daily-filter-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 1px solid #dcdfe6;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .daily-filter-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .daily-date-input {
+      border: none;
+      background: transparent;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-date-toggle {
+      background: #ffffff;
+      border: 1px solid #dcdfe6;
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-date-toggle:hover, .btn-date-toggle.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Table Component */
+    .table-container {
+      background: var(--bg-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background: #fbfbfd;
+      padding: 14px 18px;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid #f6f7fa;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    tr:hover td {
+      background: #fafbff;
+    }
+
+    .badge-chip {
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .badge-active { background: #e6faf0; color: #00b060; }
+    .file-link-chip {
+      background: #eff2fe;
+      color: var(--primary);
+      padding: 5px 12px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .file-link-chip:hover {
+      background: #e0e5fc;
+    }
+
+    .btn-delete-row {
+      background: #fff1f0;
+      color: #e74c3c;
+      border: 1px solid #ffccc7;
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-delete-row:hover {
+      background: #e74c3c;
+      color: #fff;
+    }
+
+    /* Right Sidebar */
+    .stat-sidebar {
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border-color);
+      padding: 26px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .profile-card {
+      text-align: center;
+      background: #fbfbff;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .avatar-wrapper {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      background: linear-gradient(135deg, var(--primary), #a291ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.7rem;
+      font-weight: 800;
+      box-shadow: 0 6px 15px rgba(90, 69, 254, 0.25);
+    }
+
+    .profile-card h3 {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .profile-card p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .widget-box {
+      background: #fcfdfe;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .widget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    /* Shift Selector Styling */
+    .shift-selector-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: #f1f3f9;
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .shift-pill {
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 2px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.2;
+      transition: all 0.2s ease;
+    }
+
+    .shift-pill small {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .shift-pill.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Countdown Timer & Alarm Pergantian Shift */
+    .shift-timer-box {
+      background: #f7f9fe;
+      border: 1px solid #e2e7f8;
+      border-radius: 12px;
+      padding: 9px 12px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+
+    .shift-timer-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .shift-timer-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .shift-timer-clock {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 0.3px;
+    }
+
+    /* Alarm 15 Menit Jelang Pergantian Shift */
+    .shift-alarm-active {
+      background: #fff4e5 !important;
+      border: 1px solid #ffd19a !important;
+      animation: shiftPulse 1.8s infinite;
+    }
+
+    .shift-alarm-active .shift-timer-label {
+      color: #d97706 !important;
+    }
+
+    .shift-alarm-active .shift-timer-clock {
+      color: #b45309 !important;
+    }
+
+    @keyframes shiftPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+      }
+    }
+
+    .shift-alarm-banner {
+      display: none;
+      background: #ff5722;
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 0.71rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 10px;
+      text-align: center;
+      animation: alertBlink 1.4s infinite;
+    }
+
+    @keyframes alertBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
+    .shift-status-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 0 2px;
+    }
+
+    .shift-badge-info {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-edit-crew {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-edit-crew:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #f7f8fd;
+    }
+
+    /* Crew List Styling (Menampilkan Seluruh Nama Terbuka) */
+    .crew-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .crew-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed #f0f2f7;
+      gap: 8px;
+    }
+
+    .crew-item:last-child {
+      border-bottom: none;
+    }
+
+    .crew-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .crew-avatar {
+      min-width: 44px;
+      height: 36px;
+      border-radius: 10px;
+      background: #eeeef8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--primary);
+      flex-shrink: 0;
+      margin-top: 2px;
+      padding: 0 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .crew-details {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .crew-role-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 3px;
+      display: block;
+    }
+
+    .crew-name-badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .crew-name-badge {
+      background: #f1f3fa;
+      color: var(--text-main);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      line-height: 1.25;
+      word-break: break-word;
+      border: 1px solid #e7eaf2;
+    }
+
+    .crew-btn {
+      background: #f4f5fa;
+      border: none;
+      padding: 5px 9px;
+      border-radius: 16px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: background 0.2s;
+    }
+
+    .crew-btn:hover {
+      background: var(--primary-light);
+    }
+
+    /* Mini Chart */
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 100px;
+      padding-top: 10px;
+    }
+
+    .bar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 22%;
+    }
+
+    .bar-pill {
+      width: 100%;
+      background: var(--primary-light);
+      border-radius: 8px;
+      transition: height 0.4s ease;
+    }
+
+    .bar-pill.active { background: var(--primary); }
+
+    .bar-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(17, 19, 26, 0.45);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 520px;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      animation: modalFadeIn 0.2s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes modalFadeIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .form-group { margin-bottom: 14px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .form-control {
+      width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .form-control:focus { border-color: var(--primary); }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .btn-secondary {
+      background: #f1f2f6;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-danger {
+      background: #ff4757;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    /* Custom Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+    }
+
+    .toast {
+      background: #181920;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      animation: toastSlide 0.3s ease;
+    }
+
+    @keyframes toastSlide {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Area Cetak Dokumen Resmi */
+    #printableReportArea {
+      display: none;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .app-layout, .modal-overlay, .toast-container {
+        display: none !important;
+      }
+      #printableReportArea {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 16px;
+        background: #ffffff !important;
+        visibility: visible !important;
+        z-index: 99999;
+      }
+      #printableReportArea * {
+        visibility: visible !important;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .app-layout { grid-template-columns: 240px 1fr; }
+      .stat-sidebar { display: none; }
+      .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .metric-grid { grid-template-columns: 1fr; }
+      .main-content { padding: 16px; }
+      .hero-banner { padding: 24px 20px; }
+      .hero-banner h1 { font-size: 1.35rem; }
+    }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
+<body>
 
-  <!-- Header Navigasi -->
-  <header class="bg-blue-900 text-white shadow-md sticky top-0 z-50 no-print">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
-      <div class="flex items-center space-x-3">
-        <div class="bg-orange-500 font-black px-2 py-1 rounded text-white tracking-widest text-lg">KAI</div>
+  <div class="app-layout">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-logo">
+        <div class="brand-icon">🚆</div>
         <div>
-          <h1 class="text-lg md:text-xl font-bold tracking-tight leading-tight">NEXUS STASIUN ARJAWINANGUN</h1>
-          <p class="text-xs text-orange-300 font-medium">Daop 3 Cirebon — Sistem Izin Kerja Digital</p>
+          <div>NEXUS RAIL</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">ARJAWINANGUN (AWN)</div>
         </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <button type="button" onclick="switchTab('form')" id="btn-tab-form" class="px-3 py-1.5 rounded text-sm font-semibold bg-orange-500 text-white shadow transition">
-          Formulir Baru
-        </button>
-        <button type="button" onclick="switchTab('riwayat')" id="btn-tab-riwayat" class="px-3 py-1.5 rounded text-sm font-semibold bg-blue-800 hover:bg-blue-700 text-white transition">
-          Riwayat Pengisian
+
+      <div>
+        <div class="nav-group-title">Menu Operasional</div>
+        <ul class="nav-list">
+          <li class="nav-item active" onclick="switchTab('PANTAUAN TASPAT', this)">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+            Pantauan Taspat
+          </li>
+          <li class="nav-item" onclick="switchTab('PANTAUAN PEMASANGAN STOPBLOK', this)">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            Pemasangan Stopblok
+          </li>
+          <li class="nav-item" onclick="switchTab('STABLING KERETA DAN GERBONG', this)">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            Stabling KA & Gerbong
+          </li>
+          <li class="nav-item" onclick="switchTab('LODING PLAN', this)">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Loding Plan
+          </li>
+          <li class="nav-item" onclick="switchTab('INFORMASI UPDATE PERKA', this)">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Update Warta Perka
+          </li>
+          <li class="nav-item" onclick="switchTab('INFORMASI UPDATE PNP', this)">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            Update PNP Kereta
+          </li>
+          <li class="nav-item" onclick="switchTab('SOP DAN INSTRUKSI', this)">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            SOP & Instruksi
+          </li>
+        </ul>
+      </div>
+
+      <div style="margin-top: auto;">
+        <div class="nav-item" onclick="openSpreadsheet()" style="color: var(--text-muted);">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          Buka Spreadsheet
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER / MAIN CONTENT -->
+    <main class="main-content">
+      
+      <!-- Top Search & Utility -->
+      <div class="top-bar">
+        <div class="search-box">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" id="searchInput" placeholder="Cari nomor KA, nomor stopblok, petak jalan, dokumen SOP..." onkeyup="filterTable()">
+        </div>
+        <div class="top-actions">
+          <div class="action-btn-circle" onclick="refreshData()" title="Sinkronisasi Data">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </div>
+          <div class="action-btn-circle" title="Pusat Notifikasi">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Banner dengan Fitur Efek Teks Mengetik Otomatis -->
+      <div class="hero-banner">
+        <span class="hero-tag">OPERASIONAL PPKA & STASIUN</span>
+        <h1>
+          Pusat Kendali Perjalanan KA<br>
+          <span id="typingEffectText" class="typing-highlight">Stasiun Arjawinangun (AWN)</span><span class="typing-cursor">|</span>
+        </h1>
+        <p>Pantau taspat kecepatan, keamanan jalur stabling, loding plan, dokumen SOP hingga warta perka secara real-time.</p>
+        <button class="hero-btn" onclick="openInputModal()">
+          <span id="heroBtnLabel">+ Tambah Catatan Baru</span>
+          <span style="font-size: 1.1rem;">➔</span>
         </button>
       </div>
-    </div>
-  </header>
 
-  <!-- Kontainer Konten -->
-  <main class="max-w-5xl mx-auto p-3 md:p-6">
-
-    <!-- ==================== TAB 1: FORMULIR IZIN KERJA ==================== -->
-    <div id="view-form" class="space-x-0">
-      <form id="formIzinKerja" onsubmit="simpanIzinKerja(event)" class="bg-white p-4 md:p-8 rounded-lg shadow-lg border border-gray-300 print-area text-[11px] leading-tight text-black">
-        
-        <!-- Header Dokumen Sesuai Gambar -->
-        <div class="border-2 border-black mb-3">
-          <div class="grid grid-cols-12 divide-x-2 divide-black">
-            <!-- Kolom Kiri Header -->
-            <div class="col-span-8 p-2 flex flex-col justify-between space-y-2">
-              <div class="flex justify-between items-start">
-                <div class="flex items-center gap-2">
-                  <span class="font-bold">Tanggal Berlaku:</span>
-                  <input type="date" id="tgl_berlaku" required class="border-b border-black font-semibold focus:outline-none px-1">
-                </div>
-                <h2 class="text-xl md:text-2xl font-black text-center flex-1 tracking-wider">IZIN KERJA</h2>
-              </div>
-
-              <!-- Baris A. Aplikasi -->
-              <div class="border-t border-black pt-1">
-                <span class="font-bold">A. Aplikasi</span>
-                <div class="flex flex-wrap gap-4 mt-1 pl-4">
-                  <label class="inline-flex items-center gap-1 cursor-pointer">
-                    <input type="checkbox" name="aplikasi" value="Kerja Panas" class="w-4 h-4 rounded"> Kerja Panas
-                  </label>
-                  <label class="inline-flex items-center gap-1 cursor-pointer">
-                    <input type="checkbox" name="aplikasi" value="Ruang Terbatas" class="w-4 h-4 rounded"> Ruang Terbatas
-                  </label>
-                  <label class="inline-flex items-center gap-1 cursor-pointer">
-                    <input type="checkbox" name="aplikasi" value="Lain-Lain" class="w-4 h-4 rounded"> Lain-Lain
-                  </label>
-                </div>
-              </div>
-
-              <!-- Wilayah & Permit No -->
-              <div class="grid grid-cols-2 gap-2 border-t border-black pt-1">
-                <div class="flex items-center gap-1">
-                  <span class="font-bold">Wilayah:</span>
-                  <input type="text" id="wilayah" value="Daop 3 Cirebon" class="w-full border-b border-black focus:outline-none px-1">
-                </div>
-                <div class="flex items-center gap-1">
-                  <span class="font-bold">Permit No:</span>
-                  <input type="text" id="permit_no" required placeholder="Isi nomor permit" class="w-full border-b border-black focus:outline-none px-1">
-                </div>
-              </div>
-
-              <!-- Lokasi -->
-              <div class="flex items-center gap-2 border-t border-black pt-1">
-                <span class="font-bold">Lokasi:</span>
-                <input type="text" id="lokasi" required placeholder="Contoh: Km 204 + 000 s/d 205 + 000 Jalur Hulu" class="flex-1 border-b border-black focus:outline-none px-1">
+      <!-- Infinite Logo Slider Berjalan Otomatis & Bisa Digeser Mouse -->
+      <div class="logo-slider-container">
+        <div class="logo-slider-header">
+          <span class="logo-slider-tag">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 10h2v4h-2zm0 6h2v2h-2z"/></svg>
+            SINERGI OPERASIONAL & BUMN
+          </span>
+          <span class="logo-slider-hint">⇄ Tahan & geser mouse untuk navigasi cepat</span>
+        </div>
+        <div class="logo-slider-viewport" id="logoSliderViewport">
+          <div class="logo-slider-track" id="logoSliderTrack">
+            
+            <!-- Item 1: PT Kereta Api Indonesia (KAI) -->
+            <div class="logo-card-item">
+              <svg class="logo-svg" viewBox="0 0 210 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 12h17.5l-2.5 17.5 19-17.5h19l-21.5 20 22.5 23H46L26.5 33 24 55H6.5L10 12z" fill="#1C3F7C" transform="skewX(-8)"/>
+                <path d="M72 55l15.5-43h19.5l14 43H102l-2.5-9.5H84.5L82 55H72zm14.5-18H98l-5-17.5-6.5 17.5z" fill="#ED6B23" transform="skewX(-8)"/>
+                <path d="M60 50c26-13 54-27 82-35l-2 5c-26 7-53 20-78 33l-2-3z" fill="#ffffff" transform="skewX(-8)"/>
+                <path d="M128 12h17.5l-3.5 43H124.5l3.5-43z" fill="#1C3F7C" transform="skewX(-8)"/>
+              </svg>
+              <div class="logo-desc-text">
+                <span class="logo-desc-title">PT KERETA API INDONESIA</span>
+                <span class="logo-desc-sub">Daerah Operasi 3 Cirebon</span>
               </div>
             </div>
 
-            <!-- Kolom Kanan Header Dokumen (Metadata Dokumen) -->
-            <div class="col-span-4 p-2 flex flex-col justify-between">
-              <table class="w-full text-[10px] mb-2">
-                <tr><td class="font-semibold w-28">Kode Dokumen</td><td>: P01/P13</td></tr>
-                <tr><td class="font-semibold">Level Dokumen</td><td>: 04</td></tr>
-                <tr><td class="font-semibold">Revisi Ke</td><td>: 00</td></tr>
-                <tr><td class="font-semibold">Tgl. Mulai Berlaku</td><td>: 22 April 2020</td></tr>
-              </table>
-
-              <!-- Pemohon -->
-              <div class="border-t border-black pt-1">
-                <span class="font-bold block">Pemohon:</span>
-                <div class="space-y-1 mt-1">
-                  <div class="flex items-center gap-1">
-                    <span>Nama:</span>
-                    <input type="text" id="pemohon_nama" required class="w-full border-b border-black focus:outline-none px-1">
-                  </div>
-                  <div>
-                    <span class="block text-[10px]">Tanda Tangan:</span>
-                    <div id="slot-ttd-pemohon"></div>
-                  </div>
-                </div>
+            <!-- Item 2: Danantara Indonesia -->
+            <div class="logo-card-item">
+              <svg class="logo-svg" viewBox="0 0 230 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 10h22c13.5 0 25.5 10 25.5 22.5S41.5 55 28 55H6V10z" fill="#11131a"/>
+                <path d="M12 28c8-7 18-9 28-5-8 9-19 12-28 5z" fill="#E31B23"/>
+                <path d="M17 31c6 6 15 8 23 4-5 7-15 9-23-4z" fill="#FFFFFF"/>
+                <text x="64" y="32" fill="#11131a" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="20" letter-spacing="-0.5">Danantara</text>
+                <text x="64" y="51" fill="#11131a" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="19" letter-spacing="-0.5">Indonesia</text>
+              </svg>
+              <div class="logo-desc-text">
+                <span class="logo-desc-title">DANANTARA INDONESIA</span>
+                <span class="logo-desc-sub">Badan Pengelola Investasi</span>
               </div>
             </div>
+
+            <!-- Item 3: PT KAI Arjawinangun -->
+            <div class="logo-card-item">
+              <svg class="logo-svg" viewBox="0 0 210 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 12h17.5l-2.5 17.5 19-17.5h19l-21.5 20 22.5 23H46L26.5 33 24 55H6.5L10 12z" fill="#1C3F7C" transform="skewX(-8)"/>
+                <path d="M72 55l15.5-43h19.5l14 43H102l-2.5-9.5H84.5L82 55H72zm14.5-18H98l-5-17.5-6.5 17.5z" fill="#ED6B23" transform="skewX(-8)"/>
+                <path d="M60 50c26-13 54-27 82-35l-2 5c-26 7-53 20-78 33l-2-3z" fill="#ffffff" transform="skewX(-8)"/>
+                <path d="M128 12h17.5l-3.5 43H124.5l3.5-43z" fill="#1C3F7C" transform="skewX(-8)"/>
+              </svg>
+              <div class="logo-desc-text">
+                <span class="logo-desc-title">STASIUN ARJAWINANGUN</span>
+                <span class="logo-desc-sub">Posisi KM 202+400 AWN</span>
+              </div>
+            </div>
+
+            <!-- Item 4: Danantara Indonesia -->
+            <div class="logo-card-item">
+              <svg class="logo-svg" viewBox="0 0 230 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 10h22c13.5 0 25.5 10 25.5 22.5S41.5 55 28 55H6V10z" fill="#11131a"/>
+                <path d="M12 28c8-7 18-9 28-5-8 9-19 12-28 5z" fill="#E31B23"/>
+                <path d="M17 31c6 6 15 8 23 4-5 7-15 9-23-4z" fill="#FFFFFF"/>
+                <text x="64" y="32" fill="#11131a" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="20" letter-spacing="-0.5">Danantara</text>
+                <text x="64" y="51" fill="#11131a" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="19" letter-spacing="-0.5">Indonesia</text>
+              </svg>
+              <div class="logo-desc-text">
+                <span class="logo-desc-title">DANANTARA INDONESIA</span>
+                <span class="logo-desc-sub">Kedaulatan Investasi RI</span>
+              </div>
+            </div>
+
           </div>
         </div>
+      </div>
 
-        <!-- B. DESKRIPSI KERJA & JENIS PERALATAN -->
-        <div class="border-2 border-black grid grid-cols-12 divide-x-2 divide-black mb-3">
-          <div class="col-span-8 p-2">
-            <span class="font-bold block mb-1">B. DESKRIPSI KERJA</span>
-            <textarea id="deskripsi_kerja" rows="3" required placeholder="Tuliskan deskripsi pekerjaan..." class="w-full border border-gray-300 p-1 focus:outline-none rounded text-xs"></textarea>
-          </div>
-          <div class="col-span-4 p-2">
-            <span class="font-bold block mb-1">Jenis Peralatan (Diisi Dengan Tanda Centang)</span>
-            <div class="space-y-1 pl-1">
-              <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="peralatan" value="Mesin" class="w-4 h-4"> Mesin</label>
-              <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="peralatan" value="Listrik" class="w-4 h-4"> Listrik</label>
-              <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="peralatan" value="Peralatan Tangan" class="w-4 h-4"> Peralatan Tangan</label>
-            </div>
+      <!-- Quick Metrics -->
+      <div class="metric-grid">
+        <div class="metric-card" onclick="switchTab('PANTAUAN TASPAT')">
+          <div class="metric-icon-box icon-taspat">⚠</div>
+          <div class="metric-info">
+            <h4 id="countTaspat">0</h4>
+            <p>Taspat Terpantau</p>
           </div>
         </div>
-
-        <!-- C. BAHAYA YANG MUNGKIN TERJADI -->
-        <div class="border-2 border-black p-2 mb-3">
-          <span class="font-bold block mb-1">C. BAHAYA YANG MUNGKIN TERJADI (Diisi Dengan Tanda Centang)</span>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-1 gap-x-3 text-[10.5px]">
-            <!-- Kolom 1 -->
-            <div class="space-y-1">
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Lantai Licin"> Lantai Licin</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Bahaya Kebakaran"> Bahaya Kebakaran</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Jalan darurat"> Jalan darurat</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Debu"> Debu</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Bahan Alat Listrik"> Bahan Alat Listrik</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Kereta Melintas"> Kereta Melintas</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Pekerjaan Lain yang Terdekat"> Pekerjaan Lain yang Terdekat</label>
-            </div>
-            <!-- Kolom 2 -->
-            <div class="space-y-1">
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Pekerjaan di Atas Kepala"> Pekerjaan di Atas Kepala</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Gas"> Gas</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Tersandung/Jatuh"> Tersandung/Jatuh</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Salah Penyetelan"> Salah Penyetelan</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Keseleo"> Keseleo</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Ketinggian"> Ketinggian</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Tabrakan/Benturan Benda Bergerak"> Tabrakan/Benturan Benda Bergerak</label>
-            </div>
-            <!-- Kolom 3 -->
-            <div class="space-y-1">
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Orang Masuk Tanpa Izin"> Orang Masuk Tanpa Izin</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Gelap (Malam)"> Gelap (Malam)</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Cuaca Buruk"> Cuaca Buruk</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Kejatuhan Benda atau Material"> Kejatuhan Benda atau Material</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Beban Berat"> Beban Berat</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Berangin"> Berangin</label>
-              <div class="flex items-center gap-1">
-                <input type="checkbox" name="bahaya" value="Lainnya1">
-                <input type="text" placeholder="Lainnya..." class="border-b border-black text-[10px] w-full focus:outline-none">
-              </div>
-            </div>
-            <!-- Kolom 4 -->
-            <div class="space-y-1">
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Terhantam Benda"> Terhantam Benda</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Percikan/Leburan Besi Panas"> Percikan/Leburan Besi Panas</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Asap"> Asap</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Benda Tajam"> Benda Tajam</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Bising"> Bising</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="bahaya" value="Salah Komunikasi"> Salah Komunikasi</label>
-              <div class="flex items-center gap-1">
-                <input type="checkbox" name="bahaya" value="Lainnya2">
-                <input type="text" placeholder="Lainnya..." class="border-b border-black text-[10px] w-full focus:outline-none">
-              </div>
-            </div>
+        <div class="metric-card" onclick="switchTab('PANTAUAN PEMASANGAN STOPBLOK')">
+          <div class="metric-icon-box icon-stopblok">🛑</div>
+          <div class="metric-info">
+            <h4 id="countStopblok">0</h4>
+            <p>Stopblok Terpasang</p>
           </div>
         </div>
-
-        <!-- D. TINDAKAN PENCEGAHAN SEBELUM DAN SEMASA KERJA -->
-        <div class="border-2 border-black p-2 mb-3">
-          <span class="font-bold block mb-1">D. TINDAKAN PENCEGAHAN YANG DILAKUKAN SEBELUM DAN SEMASA KERJA (Diisi Dengan Tanda Centang)</span>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1 text-[10.5px]">
-            <div class="space-y-1">
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="pencegahan" value="Proteksi/Perlindungan dari Jauh"> Proteksi/Perlindungan dari Jauh</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="pencegahan" value="Pemadam Api/Kebakaran"> Pemadam Api/Kebakaran</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="pencegahan" value="Penyangga"> Penyangga</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="pencegahan" value="Wajib Mengikuti Penjelasan JSA"> Wajib Mengikuti Penjelasan JSA</label>
-              <div class="flex items-center gap-1 mt-1">
-                <span class="whitespace-nowrap">Tindakan Keselamatan Lain yang Diperlukan:</span>
-                <input type="text" id="pencegahan_lain" class="border-b border-black w-full focus:outline-none text-[10px]">
-              </div>
-            </div>
-            <div class="space-y-1">
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="pencegahan" value="Rambu-rambu"> Rambu-rambu</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="pencegahan" value="Penyinaran yang Memadai"> Penyinaran yang Memadai</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="pencegahan" value="Sertifikat Kompetensi"> Sertifikat Kompetensi</label>
-              <div class="flex items-center gap-1">
-                <span class="whitespace-nowrap">Lain-Lain:</span>
-                <input type="text" id="pencegahan_lain2" class="border-b border-black w-full focus:outline-none text-[10px]">
-              </div>
-            </div>
+        <div class="metric-card" onclick="switchTab('STABLING KERETA DAN GERBONG')">
+          <div class="metric-icon-box icon-stabling">🛤️</div>
+          <div class="metric-info">
+            <h4 id="countStabling">0</h4>
+            <p>Jalur Stabling Terisi</p>
           </div>
         </div>
-
-        <!-- E. ALAT PELINDUNG DIRI -->
-        <div class="border-2 border-black p-2 mb-3">
-          <span class="font-bold block mb-1">E. ALAT PELINDUNG DIRI (Diisi Dengan Tanda Centang)</span>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1 text-[10.5px]">
-            <div class="space-y-1">
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Helm Keselamatan"> Helm Keselamatan</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Sepatu Keselamatan"> Sepatu Keselamatan</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Kacamata Keselamatan"> Kacamata Keselamatan</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Perlindungan Muka/Las"> Perlindungan Muka/Las</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Kacamata Debu"> Kacamata Debu</label>
-              <div class="flex items-center gap-1">
-                <input type="checkbox" name="apd" value="Sarung Tangan">
-                <span>Sarung Tangan:</span>
-                <input type="text" placeholder="Jenis sarung tangan..." class="border-b border-black w-full text-[10px] focus:outline-none">
-              </div>
-            </div>
-            <div class="space-y-1">
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Rompi Keselamatan 1"> Rompi Keselamatan</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Tali Keselamatan"> Tali Keselamatan</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Rompi Keselamatan 2"> Rompi Keselamatan</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Masker"> Masker</label>
-              <label class="flex items-center gap-1.5"><input type="checkbox" name="apd" value="Pelindung Pendengaran"> Pelindung Pendengaran</label>
-              <div class="flex items-center gap-1">
-                <input type="checkbox" name="apd" value="APD Lain">
-                <input type="text" placeholder="Lainnya..." class="border-b border-black w-full text-[10px] focus:outline-none">
-              </div>
-            </div>
+        <div class="metric-card" onclick="switchTab('SOP DAN INSTRUKSI')">
+          <div class="metric-icon-box icon-sop">📑</div>
+          <div class="metric-info">
+            <h4 id="countSop">0</h4>
+            <p>SOP & Dokumen</p>
           </div>
         </div>
+      </div>
 
-        <!-- F. PENGELUARAN SURAT IZIN -->
-        <div class="border-2 border-black p-2 mb-3">
-          <span class="font-bold block">F. PENGELUARAN SURAT IZIN</span>
-          <p class="text-[10px] italic mb-2">Izin diberikan untuk kerja dijalankan yang tertera diatas selama</p>
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-3 divide-y md:divide-y-0 md:divide-x divide-black">
-            <!-- Waktu Izin -->
-            <div class="md:col-span-6 space-y-2 pr-2">
-              <div class="flex items-center gap-2">
-                <span class="w-28 font-semibold">Dari</span>:
-                <span>Tgl</span>
-                <input type="date" id="izin_dari_tgl" required class="border-b border-black text-[10px]">
-                <span>Jam</span>
-                <input type="time" id="izin_dari_jam" required class="border-b border-black text-[10px]">
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="w-28 font-semibold">Sampai Dengan</span>:
-                <span>Tgl</span>
-                <input type="date" id="izin_sampai_tgl" required class="border-b border-black text-[10px]">
-                <span>Jam</span>
-                <input type="time" id="izin_sampai_jam" required class="border-b border-black text-[10px]">
-              </div>
-            </div>
-            <!-- TTD Pemberi Izin & Pengawas Pekerjaan -->
-            <div class="md:col-span-6 pl-2 grid grid-cols-2 gap-2 text-center">
-              <div>
-                <span class="font-semibold block mb-1">Pemberi Izin</span>
-                <div id="slot-ttd-f-pemberi"></div>
-              </div>
-              <div>
-                <span class="font-semibold block mb-1">Pengawas Pekerjaan</span>
-                <div id="slot-ttd-f-pengawas"></div>
-              </div>
-            </div>
-          </div>
+      <!-- Main Operational Table -->
+      <div class="section-header">
+        <div>
+          <div class="section-title" id="currentSectionTitle">Pantauan Taspat Aktif</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;" id="syncStatus">Menghubungkan ke server...</div>
         </div>
-
-        <!-- G. PERSETUJUAN PENGGANTIAN PELAKSANA PEKERJAAN -->
-        <div class="border-2 border-black p-2 mb-3">
-          <span class="font-bold block">G. PERSETUJUAN PENGGANTIAN PELAKSANA PEKERJAAN (Diisi Oleh Pelaksana Pekerjaan/Kontraktor)</span>
-          <p class="text-[9.5px] italic mb-2">Saya menyatakan bahwa Saya telah membaca & memahami pekerjaan ini, yang akan dilaksanakan sesuai dengan segala persyaratan yang berlaku</p>
-          <div class="overflow-x-auto">
-            <table class="w-full border-collapse border border-black text-[10px]">
-              <thead class="bg-gray-100">
-                <tr class="border-b border-black">
-                  <th class="border border-black p-1 text-left">Penanggung Jawab Izin Kerja</th>
-                  <th class="border border-black p-1 text-left">Nama</th>
-                  <th class="border border-black p-1 text-left">Instansi</th>
-                  <th class="border border-black p-1 text-center w-36">Tandatangan</th>
-                  <th class="border border-black p-1 text-center">Tanggal</th>
-                  <th class="border border-black p-1 text-center">Jam</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="border border-black p-1 font-semibold">Pelaksana Pekerjaan (Berkompetensi)</td>
-                  <td class="border border-black p-1"><input type="text" id="g_pelaksana_nama" class="w-full focus:outline-none"></td>
-                  <td class="border border-black p-1"><input type="text" id="g_pelaksana_instansi" class="w-full focus:outline-none"></td>
-                  <td class="border border-black p-1 text-center"><div id="slot-ttd-g-pelaksana"></div></td>
-                  <td class="border border-black p-1 text-center"><input type="date" id="g_pelaksana_tgl" class="text-[10px]"></td>
-                  <td class="border border-black p-1 text-center"><input type="time" id="g_pelaksana_jam" class="text-[10px]"></td>
-                </tr>
-                <tr>
-                  <td class="border border-black p-1 font-semibold">Orang Pengganti (Berkompetensi)</td>
-                  <td class="border border-black p-1"><input type="text" id="g_pengganti_nama" class="w-full focus:outline-none"></td>
-                  <td class="border border-black p-1"><input type="text" id="g_pengganti_instansi" class="w-full focus:outline-none"></td>
-                  <td class="border border-black p-1 text-center"><div id="slot-ttd-g-pengganti"></div></td>
-                  <td class="border border-black p-1 text-center"><input type="date" id="g_pengganti_tgl" class="text-[10px]"></td>
-                  <td class="border border-black p-1 text-center"><input type="time" id="g_pengganti_jam" class="text-[10px]"></td>
-                </tr>
-                <tr>
-                  <td class="border border-black p-1 font-semibold">Pemberi Izin</td>
-                  <td class="border border-black p-1"><input type="text" id="g_pemberi_nama" class="w-full focus:outline-none"></td>
-                  <td class="border border-black p-1"><input type="text" id="g_pemberi_instansi" class="w-full focus:outline-none"></td>
-                  <td class="border border-black p-1 text-center"><div id="slot-ttd-g-pemberi"></div></td>
-                  <td class="border border-black p-1 text-center"><input type="date" id="g_pemberi_tgl" class="text-[10px]"></td>
-                  <td class="border border-black p-1 text-center"><input type="time" id="g_pemberi_jam" class="text-[10px]"></td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="section-actions">
+          
+          <!-- Pemilih Petak Jalan Khusus Pantauan Taspat -->
+          <div class="daily-filter-box" id="petakSelectBox" title="Pilih petak jalan untuk mencetak riwayat taspat">
+            <span class="daily-filter-label">🛤️ Petak:</span>
+            <select id="selectPetakTaspat" class="daily-date-input" style="font-weight: 700; cursor: pointer;">
+              <option value="AWN - JAKK">AWN - JAKK</option>
+              <option value="AWN - SMC">AWN - SMC</option>
+              <option value="AWN - PWT">AWN - PWT</option>
+            </select>
           </div>
+
+          <div class="daily-filter-box" title="Pilih tanggal untuk melihat riwayat aktivitas per hari">
+            <span class="daily-filter-label">📅 Riwayat:</span>
+            <input type="date" id="historyDateInput" class="daily-date-input" onchange="onDateFilterChange()">
+          </div>
+          <button type="button" class="btn-date-toggle" id="btnToggleAllDate" onclick="toggleAllDates()" title="Tampilkan Semua Data Tanpa Filter Tanggal">Semua</button>
+          <button class="btn-pdf-print" id="btnPrintPdf" onclick="handlePrintOrPdf()" title="Cetak Riwayat Per Hari Sheet Ini">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            <span id="btnPrintText">Cetak Riwayat Per Hari (PDF)</span>
+          </button>
         </div>
+      </div>
 
-        <!-- H. PEMBATALAN -->
-        <div class="border-2 border-black p-2 mb-3">
-          <span class="font-bold block mb-1">H. PEMBATALAN</span>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 divide-y md:divide-y-0 md:divide-x divide-black text-[10px]">
-            <!-- Sisi Kiri Pembatalan -->
-            <div class="pr-2 space-y-2">
-              <p>Saya (Pemberi Izin) menyatakan bahwa pekerjaan yang tercantum pada izin kerja ini telah saya hentikan untuk sementara dan saya telah memberitahukan pemberhentian ini kepada Pengawas Pekerja</p>
-              <div class="flex items-center gap-1">
-                <span class="font-bold">Alasan:</span>
-                <input type="text" id="h_alasan" class="border-b border-black w-full focus:outline-none text-[10px]">
-              </div>
-              <table class="w-full border-collapse border border-black mt-2">
-                <thead>
-                  <tr class="bg-gray-100"><th class="border border-black p-1">Tanggal</th><th class="border border-black p-1">Waktu</th><th class="border border-black p-1">Nama</th><th class="border border-black p-1 w-28">Tanda Tangan</th></tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="border border-black p-1"><input type="date" id="h_kiri_tgl" class="w-full text-[9px]"></td>
-                    <td class="border border-black p-1"><input type="time" id="h_kiri_waktu" class="w-full text-[9px]"></td>
-                    <td class="border border-black p-1"><input type="text" id="h_kiri_nama" class="w-full text-[10px]"></td>
-                    <td class="border border-black p-1 text-center"><div id="slot-ttd-h-kiri"></div></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- Sisi Kanan Pembatalan -->
-            <div class="pl-2 space-y-2">
-              <p>Saya menyatakan bahwa pekerjaan yang tercantum pada izin kerja yang telah diberhentikan untuk sementara ini, bisa dimulai kembali setelah saya memeriksa kondisi sekitarnya dan telah melaksanakan pencegahan-pencegahan yang diminta</p>
-              <div class="h-4"></div>
-              <table class="w-full border-collapse border border-black mt-2">
-                <thead>
-                  <tr class="bg-gray-100"><th class="border border-black p-1">Tanggal</th><th class="border border-black p-1">Waktu</th><th class="border border-black p-1">Nama</th><th class="border border-black p-1 w-28">Tanda Tangan</th></tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="border border-black p-1"><input type="date" id="h_kanan_tgl" class="w-full text-[9px]"></td>
-                    <td class="border border-black p-1"><input type="time" id="h_kanan_waktu" class="w-full text-[9px]"></td>
-                    <td class="border border-black p-1"><input type="text" id="h_kanan_nama" class="w-full text-[10px]"></td>
-                    <td class="border border-black p-1 text-center"><div id="slot-ttd-h-kanan"></div></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- Penyelesaian Izin Kerja -->
-        <div class="border-2 border-black p-2 mb-3">
-          <span class="font-bold block mb-1">Penyelesaian Izin Kerja</span>
-          <div class="space-y-1 mb-2 text-[10px]">
-            <label class="flex items-start gap-1.5 cursor-pointer">
-              <input type="checkbox" name="penyelesaian" value="selesai_diperiksa" class="mt-0.5">
-              <span>Selesai & diperiksa, tindakan pencegahan khusus (isolasi,...) telah diambil kembali, lokasi kerja ditinggalkan dalam keadaan aman dan bahwa operasional dapat kembali normal</span>
-            </label>
-            <label class="flex items-center gap-1.5 cursor-pointer">
-              <input type="checkbox" name="penyelesaian" value="belum_selesai">
-              <span>Belum selesai dan akan dilanjutkan dengan izin kerja no....</span>
-              <input type="text" id="lanjut_izin_no" class="border-b border-black text-[10px] ml-1">
-            </label>
-            <label class="flex items-center gap-1.5 cursor-pointer">
-              <input type="checkbox" name="penyelesaian" value="dihentikan">
-              <span>Tidak terselesaikan dan secara tegas dihentikan</span>
-            </label>
-            <label class="flex items-center gap-1.5 cursor-pointer">
-              <input type="checkbox" name="penyelesaian" value="langkah_sebelum_normal">
-              <span>Beberapa langkah harus diambil sebelum operasional dapat berlangsung kembali</span>
-            </label>
-          </div>
-
-          <table class="w-full border-collapse border border-black text-[10px]">
-            <thead class="bg-gray-100">
-              <tr>
-                <th class="border border-black p-1 text-left">Penanggung Jawab Izin Kerja</th>
-                <th class="border border-black p-1 text-left">Nama</th>
-                <th class="border border-black p-1 text-left">Instansi</th>
-                <th class="border border-black p-1 text-center w-36">Tandatangan</th>
-                <th class="border border-black p-1 text-center">Tanggal</th>
-                <th class="border border-black p-1 text-center">Jam</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="border border-black p-1 font-semibold">Pemberi Izin</td>
-                <td class="border border-black p-1"><input type="text" id="selesai_pemberi_nama" class="w-full focus:outline-none"></td>
-                <td class="border border-black p-1"><input type="text" id="selesai_pemberi_instansi" class="w-full focus:outline-none"></td>
-                <td class="border border-black p-1 text-center"><div id="slot-ttd-selesai-pemberi"></div></td>
-                <td class="border border-black p-1 text-center"><input type="date" id="selesai_tgl" class="text-[10px]"></td>
-                <td class="border border-black p-1 text-center"><input type="time" id="selesai_jam" class="text-[10px]"></td>
-              </tr>
-            </tbody>
+      <div class="table-container">
+        <div class="table-responsive">
+          <table id="dataTable">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
           </table>
         </div>
+      </div>
 
-        <!-- Note Bawah Sesuai Gambar -->
-        <div class="border border-black p-2 text-[9.5px] space-y-0.5 mb-4">
-          <span class="font-bold">Note:</span>
-          <div>Pengisian "Alasan" untuk poin H. Pembatalan:</div>
-          <div>a. Keadaan darurat;</div>
-          <div>b. Untuk alasan keselamatan operasional perkeretaapian;</div>
-          <div>c. Pekerjaan yang dilakukan hanya dalam satu shift; dan</div>
-          <div>d. Pekerjaan ditangguhkan atau ditunda selama sembilan puluh (90) menit atau lebih.</div>
+    </main>
+
+    <!-- RIGHT STATISTIC SIDEBAR -->
+    <aside class="stat-sidebar">
+      
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="avatar-wrapper">AWN</div>
+        <h3>PPKA Arjawinangun</h3>
+        <p>Wilayah Operasi Daop 3 Cirebon</p>
+      </div>
+
+      <!-- Mini Chart Simulation -->
+      <div class="widget-box">
+        <div class="widget-header">
+          <span>Trafik Jalur & Taspat</span>
+          <span style="color: var(--primary); font-size: 0.75rem;">Minggu Ini</span>
+        </div>
+        <div class="chart-bars">
+          <div class="bar-item">
+            <div class="bar-pill" style="height: 45px;"></div>
+            <div class="bar-label">AWN-JK</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-pill active" style="height: 80px;"></div>
+            <div class="bar-label">AWN-SM</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-pill" style="height: 35px;"></div>
+            <div class="bar-label">AWN-PW</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-pill" style="height: 60px;"></div>
+            <div class="bar-label">SOP/Stb</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- On-Duty Crew List (Petugas Dinas Terjadwal) -->
+      <div class="widget-box">
+        <div class="widget-header">
+          <span>Petugas Dinas Terjadwal</span>
+          <span id="crewScheduleDate" style="color: var(--primary); font-size: 0.73rem; font-weight: 700;"></span>
         </div>
 
-        <!-- Tombol Aksi Form -->
-        <div class="flex flex-wrap gap-2 justify-end no-print pt-3 border-t">
-          <button type="button" onclick="window.print()" class="bg-gray-600 hover:bg-gray-700 text-white font-medium px-4 py-2 rounded text-xs">
-            Cetak Blangko Kosong
+        <!-- Shift Selector Tabs -->
+        <div class="shift-selector-bar">
+          <button type="button" class="shift-pill active" id="pillShiftPagi" onclick="selectShiftView('pagi')">
+            Pagi
+            <small>06:10 - 14:10</small>
           </button>
-          <button type="reset" class="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded text-xs">
-            Reset Form
+          <button type="button" class="shift-pill" id="pillShiftSiang" onclick="selectShiftView('siang')">
+            Siang
+            <small>14:10 - 22:10</small>
           </button>
-          <button type="submit" class="bg-blue-800 hover:bg-blue-900 text-white font-bold px-6 py-2 rounded text-xs shadow-md">
-            Simpan Izin Kerja
+          <button type="button" class="shift-pill" id="pillShiftMalam" onclick="selectShiftView('malam')">
+            Malam
+            <small>22:10 - 06:10</small>
           </button>
+        </div>
+
+        <!-- Alarm / Indikator Waktu Pergantian Shift Real-Time -->
+        <div class="shift-timer-box" id="shiftTimerBox">
+          <div class="shift-timer-text">
+            <span class="shift-timer-label" id="shiftTimerLabel">Sisa Waktu Shift</span>
+            <span class="shift-timer-clock" id="shiftTimerClock">00:00:00</span>
+          </div>
+          <span style="font-size: 1.15rem;" id="shiftTimerIcon">⏳</span>
+        </div>
+
+        <!-- Banner Visual Peringatan 15 Menit Pergantian Shift -->
+        <div class="shift-alarm-banner" id="shiftAlarmBanner">
+          ⚠️ <strong>PERINGATAN PERGANTIAN DINAS!</strong><br>
+          <span id="shiftAlarmText">Waktu serah terima dinas PPKA kurang dari 15 menit. Siapkan catatan warta & stopblok!</span>
+        </div>
+
+        <div class="shift-status-line">
+          <span class="shift-badge-info" id="activeShiftBadgeText">
+            <span style="font-size: 0.65rem;">●</span> Dinas Pagi (06:10 - 14:10)
+          </span>
+          <button type="button" class="btn-edit-crew" onclick="openCrewModal()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Isi Nama
+          </button>
+        </div>
+
+        <!-- Dynamic Crew List (Seluruh Nama Terlihat Jelas) -->
+        <div class="crew-list" id="crewListContainer">
+          <!-- Di-render oleh JavaScript -->
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- MODAL ATUR NAMA PETUGAS DINAS -->
+  <div class="modal-overlay" id="crewModal">
+    <div class="modal-card">
+      <h3 class="modal-title">Atur Nama Petugas Dinas & Sinkronisasi</h3>
+      <p style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 14px;">
+        *Nama petugas lebih dari satu dapat dipisahkan tanda koma (,), garis miring (/), atau 'dan'.
+      </p>
+      <form id="crewForm" onsubmit="event.preventDefault(); saveCrewModal();">
+        <div class="form-group">
+          <label>Pilih Shift Dinas</label>
+          <select id="modalCrewShiftSelect" class="form-control" onchange="onModalShiftChange()">
+            <option value="pagi">Dinas Pagi (06:10 - 14:10)</option>
+            <option value="siang">Dinas Siang (14:10 - 22:10)</option>
+            <option value="malam">Dinas Malam (22:10 - 06:10)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Nama Petugas PPKA (Inisial PPKA)</label>
+          <input type="text" id="inputPpkaName" class="form-control" placeholder="Contoh: Bpk. Hendra, Bpk. Sutrisno" required>
+        </div>
+
+        <div class="form-group">
+          <label>Nama Pengawas Langsir (Inisial PP)</label>
+          <input type="text" id="inputPengawasLangsirName" class="form-control" placeholder="Contoh: Bpk. Heri, Bpk. Wahyu" required>
+        </div>
+
+        <div class="form-group">
+          <label>Nama Petugas K2 (Komersial & Pelayanan)</label>
+          <input type="text" id="inputK2Name" class="form-control" placeholder="Contoh: Ibu Maya, Sdr. Reza" required>
+        </div>
+
+        <div class="form-group">
+          <label>Nama Petugas Security (Keamanan Stasiun & Emplasemen)</label>
+          <input type="text" id="inputSecurityName" class="form-control" placeholder="Contoh: Sdr. Agus, Sdr. Danu" required>
+        </div>
+
+        <div class="form-group">
+          <label>Nama Petugas Langsir (Inisial PLR - Jalur 5-9 AWN)</label>
+          <input type="text" id="inputLangsirName" class="form-control" placeholder="Contoh: Sdr. Doni, Sdr. Eko" required>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeCrewModal()">Batal</button>
+          <button type="submit" class="btn-primary" id="btnSaveCrewSubmit">Simpan & Sinkron ke Spreadsheet</button>
         </div>
       </form>
     </div>
+  </div>
 
-    <!-- ==================== TAB 2: RIWAYAT PENGISIAN & FILTER ==================== -->
-    <div id="view-riwayat" class="hidden space-y-4 no-print">
-      <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
-        <h2 class="text-base font-bold text-gray-800 mb-3 flex items-center justify-between">
-          <span>Riwayat Pengisian Izin Kerja</span>
-          <span id="badge-total" class="text-xs bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full font-semibold">0 Data</span>
-        </h2>
-
-        <!-- Filter Box -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 bg-gray-50 p-3 rounded border border-gray-200 text-xs">
-          <div>
-            <label class="block font-medium mb-1">Dari Tanggal:</label>
-            <input type="date" id="filter-dari-tgl" onchange="renderRiwayat()" class="w-full border rounded p-1.5 focus:ring-1 focus:ring-blue-500">
-          </div>
-          <div>
-            <label class="block font-medium mb-1">Sampai Tanggal:</label>
-            <input type="date" id="filter-sampai-tgl" onchange="renderRiwayat()" class="w-full border rounded p-1.5 focus:ring-1 focus:ring-blue-500">
-          </div>
-          <div>
-            <label class="block font-medium mb-1">Pencarian Kata Kunci:</label>
-            <input type="text" id="filter-cari" oninput="renderRiwayat()" placeholder="No. Permit / Nama Pemohon / Lokasi" class="w-full border rounded p-1.5 focus:ring-1 focus:ring-blue-500">
-          </div>
-          <div class="flex items-end gap-2">
-            <button type="button" onclick="resetFilter()" class="w-1/2 bg-gray-200 hover:bg-gray-300 font-semibold py-1.5 rounded text-xs">
-              Reset Filter
-            </button>
-            <button type="button" onclick="exportDataJSON()" class="w-1/2 bg-green-700 hover:bg-green-800 text-white font-semibold py-1.5 rounded text-xs">
-              Export Backup
-            </button>
-          </div>
+  <!-- MODAL INPUT KUSTOM -->
+  <div class="modal-overlay" id="inputModal">
+    <div class="modal-card">
+      <h3 class="modal-title" id="modalHeading">Entri Data Operasional</h3>
+      <form id="entryForm" onsubmit="event.preventDefault(); handleFormSubmit();">
+        <div id="dynamicFormFields"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeInputModal()">Batal</button>
+          <button type="submit" class="btn-primary" id="btnSubmitModal">Simpan Data</button>
         </div>
-      </div>
-
-      <!-- Tabel Riwayat -->
-      <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-        <div class="overflow-x-auto custom-scrollbar">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-blue-900 text-white font-semibold uppercase">
-              <tr>
-                <th class="p-2.5">No. Permit</th>
-                <th class="p-2.5">Tgl Berlaku</th>
-                <th class="p-2.5">Pemohon</th>
-                <th class="p-2.5">Lokasi</th>
-                <th class="p-2.5">Deskripsi Singkat</th>
-                <th class="p-2.5 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="tabel-riwayat-body" class="divide-y divide-gray-200">
-              <!-- Baris riwayat akan di-render di sini -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+      </form>
     </div>
+  </div>
 
-  </main>
-
-  <!-- ==================== MODAL TANDA TANGAN DIGITAL ==================== -->
-  <div id="modal-ttd" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 no-print">
-    <div class="bg-white rounded-lg shadow-2xl max-w-sm w-full p-4">
-      <h3 class="font-bold text-sm text-gray-800 mb-2">Tanda Tangan Digital</h3>
-      <p class="text-[11px] text-gray-500 mb-3">Tarik garis tanda tangan menggunakan mouse atau layar sentuh.</p>
-      <div class="border-2 border-dashed border-gray-300 rounded mb-3 bg-gray-50">
-        <canvas id="pad-canvas" width="350" height="150" class="w-full touch-none cursor-crosshair"></canvas>
-      </div>
-      <div class="flex justify-between items-center gap-2">
-        <button type="button" onclick="clearCanvas()" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs font-medium">Hapus</button>
-        <div class="space-x-2">
-          <button type="button" onclick="closeModalCanvas()" class="px-3 py-1 bg-gray-300 hover:bg-gray-400 rounded text-xs font-medium">Batal</button>
-          <button type="button" onclick="saveCanvasSignature()" class="px-4 py-1 bg-blue-800 hover:bg-blue-900 text-white rounded text-xs font-bold">Gunakan</button>
-        </div>
+  <!-- MODAL KONFIRMASI HAPUS KUSTOM -->
+  <div class="modal-overlay" id="deleteConfirmModal">
+    <div class="modal-card" style="max-width: 420px; text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 10px;">🗑️</div>
+      <h3 class="modal-title" style="margin-bottom: 8px;">Hapus Data Ini?</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+        Apakah Anda yakin ingin menghapus data dengan ID: <strong id="deleteTargetIdDisplay" style="color: var(--text-main);">-</strong>?<br>Tindakan ini tidak dapat dibatalkan.
+      </p>
+      <div class="modal-actions" style="justify-content: center;">
+        <button type="button" class="btn-secondary" onclick="closeDeleteModal()">Batalkan</button>
+        <button type="button" class="btn-danger" id="btnConfirmDelete" onclick="executeDelete()">Hapus Permanen</button>
       </div>
     </div>
   </div>
 
-  <!-- SCRIPT LOGIKA FORMULIR, TTD & LOCALSTORAGE -->
+  <!-- MODAL HASIL CETAK & DOWNLOAD PDF -->
+  <div class="modal-overlay" id="pdfResultModal">
+    <div class="modal-card" style="max-width: 440px; text-align: center;">
+      <div style="font-size: 2.8rem; margin-bottom: 10px;">📄</div>
+      <h3 class="modal-title" style="margin-bottom: 6px;" id="pdfModalTitle">Laporan Riwayat Siap</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;" id="pdfModalDesc">
+        Dokumen resmi telah selesai diproses. Anda dapat langsung mencetak atau membuka berkas PDF di Google Drive.
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a id="btnOpenDrivePdf" href="#" target="_blank" class="btn-primary" style="gap: 8px;">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          Buka Berkas PDF (Google Drive)
+        </a>
+        <button type="button" class="btn-secondary" onclick="reprintCurrentDocument()" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Cetak Ulang / Simpan PDF
+        </button>
+        <button type="button" class="btn-secondary" onclick="closePdfResultModal()" style="margin-top: 4px;">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- KONTAINER CETAK DOKUMEN LAPORAN RESMI -->
+  <div id="printableReportArea"></div>
+
   <script>
-    // Konfigurasi Slot TTD
-    const signatureSlots = [
-      { id: 'ttd_pemohon', container: 'slot-ttd-pemohon' },
-      { id: 'ttd_f_pemberi', container: 'slot-ttd-f-pemberi' },
-      { id: 'ttd_f_pengawas', container: 'slot-ttd-f-pengawas' },
-      { id: 'ttd_g_pelaksana', container: 'slot-ttd-g-pelaksana' },
-      { id: 'ttd_g_pengganti', container: 'slot-ttd-g-pengganti' },
-      { id: 'ttd_g_pemberi', container: 'slot-ttd-g-pemberi' },
-      { id: 'ttd_h_kiri', container: 'slot-ttd-h-kiri' },
-      { id: 'ttd_h_kanan', container: 'slot-ttd-h-kanan' },
-      { id: 'ttd_selesai_pemberi', container: 'slot-ttd-selesai-pemberi' }
-    ];
+    // State Aplikasi
+    var currentActiveSheet = "PANTAUAN TASPAT";
+    var pendingDeleteId = null;
+    var cachedPrintHtml = "";
+    var selectedDateFilter = "";
+    var isShowAllDates = false;
+    var globalDataCache = {
+      sheets: {},
+      counters: {},
+      crewRoster: {},
+      spreadsheetUrl: "#"
+    };
 
-    // Penampung Base64 TTD
-    const signatureData = {};
-    let activeCanvasSlot = null;
+    /* =========================================================
+       MANAJEMEN PETUGAS DINAS TERJADWAL & SHIFT JAM OPERASIONAL
+       - Dinas Pagi  : 06:10 - 14:10
+       - Dinas Siang : 14:10 - 22:10
+       - Dinas Malam : 22:10 - 06:10
+       ========================================================= */
+    var SHIFT_CONFIG = {
+      pagi: { label: "Dinas Pagi", timeRange: "06:10 - 14:10", startMin: 370, endMin: 850 },
+      siang: { label: "Dinas Siang", timeRange: "14:10 - 22:10", startMin: 850, endMin: 1330 },
+      malam: { label: "Dinas Malam", timeRange: "22:10 - 06:10", startMin: 1330, endMin: 370 }
+    };
 
-    // Inisialisasi komponen TTD (Upload + Gambar)
-    function initSignatureSlots() {
-      signatureSlots.forEach(slot => {
-        const el = document.getElementById(slot.container);
-        if (!el) return;
-        el.innerHTML = `
-          <div class="flex flex-col items-center justify-center p-1 bg-gray-50 border border-gray-200 rounded text-[9px]">
-            <div id="preview-${slot.id}" class="w-full h-12 flex items-center justify-center border border-dashed border-gray-300 rounded mb-1 bg-white overflow-hidden">
-              <span class="text-gray-400 italic text-[8.5px]">Belum bertanda tangan</span>
-            </div>
-            <div class="flex gap-1 w-full no-print">
-              <label class="cursor-pointer bg-blue-100 hover:bg-blue-200 text-blue-800 px-1 py-0.5 rounded text-[8px] font-semibold text-center flex-1">
-                Upload
-                <input type="file" accept="image/*" class="hidden" onchange="handleUploadTTD(event, '${slot.id}')">
-              </label>
-              <button type="button" onclick="openModalCanvas('${slot.id}')" class="bg-orange-100 hover:bg-orange-200 text-orange-800 px-1 py-0.5 rounded text-[8px] font-semibold flex-1">
-                Gores
-              </button>
-              <button type="button" onclick="hapusTTD('${slot.id}')" class="text-red-600 hover:text-red-800 px-0.5 font-bold" title="Hapus TTD">✕</button>
-            </div>
-          </div>
-        `;
-      });
-    }
+    var currentViewShift = "pagi";
 
-    function setPreviewTTD(slotId, base64) {
-      signatureData[slotId] = base64;
-      const preview = document.getElementById(`preview-${slotId}`);
-      if (preview) {
-        if (base64) {
-          preview.innerHTML = `<img src="${base64}" class="max-h-full max-w-full object-contain">`;
+    var defaultCrewSchedule = {
+      pagi: {
+        ppka: "Bpk. Hendra, Bpk. Sutrisno",
+        pengawasLangsir: "Bpk. Heri",
+        k2: "Ibu Maya",
+        security: "Sdr. Agus, Sdr. Danu",
+        langsir: "Sdr. Doni"
+      },
+      siang: {
+        ppka: "Bpk. Rian, Bpk. Fauzi",
+        pengawasLangsir: "Bpk. Wahyu",
+        k2: "Sdr. Dimas",
+        security: "Sdr. Joko, Sdr. Bayu",
+        langsir: "Sdr. Tri"
+      },
+      malam: {
+        ppka: "Bpk. Aris",
+        pengawasLangsir: "Bpk. Suryo",
+        k2: "Ibu Nina",
+        security: "Sdr. Danu, Sdr. Ilham",
+        langsir: "Sdr. Eko"
+      }
+    };
+
+    var crewScheduleStore = defaultCrewSchedule;
+
+    function initCrewStore() {
+      try {
+        var stored = localStorage.getItem("nexus_awn_crew_roster");
+        if (stored) {
+          crewScheduleStore = JSON.parse(stored);
         } else {
-          preview.innerHTML = `<span class="text-gray-400 italic text-[8.5px]">Belum bertanda tangan</span>`;
+          crewScheduleStore = defaultCrewSchedule;
+        }
+      } catch (e) {
+        crewScheduleStore = defaultCrewSchedule;
+      }
+
+      currentViewShift = determineCurrentActiveShift();
+      selectShiftView(currentViewShift);
+      startShiftCountdownLoop();
+    }
+
+    function determineCurrentActiveShift() {
+      var now = new Date();
+      var currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+      if (currentMinutes >= 370 && currentMinutes < 850) {
+        return "pagi";
+      } else if (currentMinutes >= 850 && currentMinutes < 1330) {
+        return "siang";
+      } else {
+        return "malam";
+      }
+    }
+
+    function selectShiftView(shiftKey) {
+      currentViewShift = shiftKey;
+
+      var pillPagi = document.getElementById("pillShiftPagi");
+      var pillSiang = document.getElementById("pillShiftSiang");
+      var pillMalam = document.getElementById("pillShiftMalam");
+      if (pillPagi) pillPagi.classList.toggle("active", shiftKey === "pagi");
+      if (pillSiang) pillSiang.classList.toggle("active", shiftKey === "siang");
+      if (pillMalam) pillMalam.classList.toggle("active", shiftKey === "malam");
+
+      var cfg = SHIFT_CONFIG[shiftKey] || SHIFT_CONFIG.pagi;
+      var activeShiftBadge = document.getElementById("activeShiftBadgeText");
+      if (activeShiftBadge) {
+        activeShiftBadge.innerHTML = "<span style='font-size:0.65rem;'>●</span> " + cfg.label + " (" + cfg.timeRange + ")";
+      }
+
+      renderCrewList();
+    }
+
+    /* Helper Pemecah Nama Petugas Lebih Dari Satu */
+    function parseMultipleNames(nameString) {
+      if (!nameString || nameString.trim() === "" || nameString === "Belum Diisi") {
+        return ["Belum Diisi"];
+      }
+      var clean = nameString.replace(/\s+dan\s+/gi, ", ").replace(/[\/;]/g, ", ");
+      var parts = clean.split(",");
+      var result = [];
+      for (var i = 0; i < parts.length; i++) {
+        var n = parts[i].trim();
+        if (n.length > 0) {
+          result.push(n);
+        }
+      }
+      return result.length > 0 ? result : [nameString];
+    }
+
+    function renderCrewList() {
+      var container = document.getElementById("crewListContainer");
+      if (!container) return;
+
+      var currentShiftData = (crewScheduleStore && crewScheduleStore[currentViewShift]) || defaultCrewSchedule[currentViewShift];
+      var cfg = SHIFT_CONFIG[currentViewShift] || SHIFT_CONFIG.pagi;
+
+      // Inisial: PPKA = "PPKA", Pengawas Langsir = "PP", K2 = "K2", Security = "SEC", Petugas Langsir = "PLR"
+      var crewRoles = [
+        {
+          key: "ppka",
+          short: "PPKA",
+          title: "PPKA",
+          desc: "Petugas Pengatur Perjalanan KA",
+          avatarBg: "#eeeef8",
+          avatarColor: "#5A45FE",
+          rawNames: currentShiftData.ppka || "Belum Diisi"
+        },
+        {
+          key: "pengawasLangsir",
+          short: "PP",
+          title: "Pengawas Langsir",
+          desc: "Pengawas Operasional Langsir",
+          avatarBg: "#f3e8ff",
+          avatarColor: "#8b5cf6",
+          rawNames: currentShiftData.pengawasLangsir || "Belum Diisi"
+        },
+        {
+          key: "k2",
+          short: "K2",
+          title: "Petugas K2",
+          desc: "Komersial & Pelayanan Stasiun",
+          avatarBg: "#fff4e5",
+          avatarColor: "#ff9f43",
+          rawNames: currentShiftData.k2 || "Belum Diisi"
+        },
+        {
+          key: "security",
+          short: "SEC",
+          title: "Petugas Security",
+          desc: "Keamanan Stasiun & Emplasemen",
+          avatarBg: "#eef2f5",
+          avatarColor: "#2c3e50",
+          rawNames: currentShiftData.security || "Belum Diisi"
+        },
+        {
+          key: "langsir",
+          short: "PLR",
+          title: "Petugas Langsir",
+          desc: "Jalur 5 - 9 Awang",
+          avatarBg: "#eafaf1",
+          avatarColor: "#2ecc71",
+          rawNames: currentShiftData.langsir || "Belum Diisi"
+        }
+      ];
+
+      var html = "";
+      for (var i = 0; i < crewRoles.length; i++) {
+        var item = crewRoles[i];
+        var nameList = parseMultipleNames(item.rawNames);
+
+        html += "<div class='crew-item'>";
+        html += "  <div class='crew-info'>";
+        html += "    <div class='crew-avatar' style='background:" + item.avatarBg + "; color:" + item.avatarColor + ";'>" + item.short + "</div>";
+        html += "    <div class='crew-details'>";
+        html += "      <span class='crew-role-label'>" + item.title + " • " + cfg.label + "</span>";
+        html += "      <div class='crew-name-badge-list'>";
+        for (var n = 0; n < nameList.length; n++) {
+          html += "      <span class='crew-name-badge'>" + nameList[n] + "</span>";
+        }
+        html += "      </div>";
+        html += "    </div>";
+        html += "  </div>";
+        html += "  <button type='button' class='crew-btn' onclick='openCrewModal(\"" + currentViewShift + "\")'>Ubah</button>";
+        html += "</div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    /* =========================================================
+       COUNTDOWN TIMER & ALARM PERGANTIAN SHIFT (15 MENIT)
+       ========================================================= */
+    function startShiftCountdownLoop() {
+      updateShiftCountdown();
+      setInterval(updateShiftCountdown, 1000);
+    }
+
+    function updateShiftCountdown() {
+      var now = new Date();
+      var curMin = now.getHours() * 60 + now.getMinutes();
+      var curSec = now.getSeconds();
+
+      var targetMin = 0;
+      var targetShiftName = "";
+
+      if (curMin >= 370 && curMin < 850) {
+        targetShiftName = "Dinas Siang (14:10)";
+        targetMin = 850;
+      } else if (curMin >= 850 && curMin < 1330) {
+        targetShiftName = "Dinas Malam (22:10)";
+        targetMin = 1330;
+      } else {
+        targetShiftName = "Dinas Pagi (06:10)";
+        targetMin = (curMin >= 1330) ? (1440 + 370) : 370;
+      }
+
+      var diffSeconds = (targetMin * 60) - (curMin * 60 + curSec);
+      if (diffSeconds < 0) diffSeconds = 0;
+
+      var hours = Math.floor(diffSeconds / 3600);
+      var minutes = Math.floor((diffSeconds % 3600) / 60);
+      var seconds = diffSeconds % 60;
+
+      var hoursStr = ("0" + hours).slice(-2);
+      var minStr = ("0" + minutes).slice(-2);
+      var secStr = ("0" + seconds).slice(-2);
+
+      var clockEl = document.getElementById("shiftTimerClock");
+      var labelEl = document.getElementById("shiftTimerLabel");
+      var timerBox = document.getElementById("shiftTimerBox");
+      var timerIcon = document.getElementById("shiftTimerIcon");
+      var alarmBanner = document.getElementById("shiftAlarmBanner");
+      var alarmText = document.getElementById("shiftAlarmText");
+
+      if (clockEl) {
+        clockEl.innerText = hoursStr + ":" + minStr + ":" + secStr;
+      }
+
+      var isWarningActive = (diffSeconds <= 900 && diffSeconds > 0);
+
+      if (isWarningActive) {
+        if (timerBox) timerBox.classList.add("shift-alarm-active");
+        if (timerIcon) timerIcon.innerText = "🚨";
+        if (labelEl) labelEl.innerText = "JELANG " + targetShiftName.toUpperCase();
+        if (alarmBanner) {
+          alarmBanner.style.display = "block";
+          if (alarmText) {
+            alarmText.innerHTML = "Tersisa <strong>" + minStr + ":" + secStr + "</strong> menuju <strong>" + targetShiftName + "</strong>.<br>Segera lengkapi buku serah terima & periksa stopblok!";
+          }
+        }
+      } else {
+        if (timerBox) timerBox.classList.remove("shift-alarm-active");
+        if (timerIcon) timerIcon.innerText = "⏳";
+        if (labelEl) labelEl.innerText = "Menuju " + targetShiftName;
+        if (alarmBanner) {
+          alarmBanner.style.display = "none";
         }
       }
     }
 
-    function handleUploadTTD(event, slotId) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => setPreviewTTD(slotId, e.target.result);
-        reader.readAsDataURL(file);
+    function openCrewModal(shiftKey) {
+      var targetShift = shiftKey || currentViewShift;
+      var selectEl = document.getElementById("modalCrewShiftSelect");
+      if (selectEl) {
+        selectEl.value = targetShift;
+      }
+      populateCrewModalInputs(targetShift);
+      document.getElementById("crewModal").classList.add("active");
+    }
+
+    function closeCrewModal() {
+      document.getElementById("crewModal").classList.remove("active");
+    }
+
+    function onModalShiftChange() {
+      var selectEl = document.getElementById("modalCrewShiftSelect");
+      if (selectEl) {
+        populateCrewModalInputs(selectEl.value);
       }
     }
 
-    function hapusTTD(slotId) {
-      setPreviewTTD(slotId, null);
+    function populateCrewModalInputs(shiftKey) {
+      var data = (crewScheduleStore && crewScheduleStore[shiftKey]) || defaultCrewSchedule[shiftKey];
+      document.getElementById("inputPpkaName").value = data.ppka || "";
+      document.getElementById("inputPengawasLangsirName").value = data.pengawasLangsir || "";
+      document.getElementById("inputK2Name").value = data.k2 || "";
+      document.getElementById("inputSecurityName").value = data.security || "";
+      document.getElementById("inputLangsirName").value = data.langsir || "";
     }
 
-    // Modal Canvas TTD
-    const canvas = document.getElementById('pad-canvas');
-    const ctx = canvas.getContext('2d');
-    let isDrawing = false;
+    function saveCrewModal() {
+      var selectEl = document.getElementById("modalCrewShiftSelect");
+      var shiftKey = selectEl ? selectEl.value : currentViewShift;
 
-    function openModalCanvas(slotId) {
-      activeCanvasSlot = slotId;
-      document.getElementById('modal-ttd').classList.remove('hidden');
-      clearCanvas();
-    }
+      var ppkaVal = document.getElementById("inputPpkaName").value.trim();
+      var pengawasLangsirVal = document.getElementById("inputPengawasLangsirName").value.trim();
+      var k2Val = document.getElementById("inputK2Name").value.trim();
+      var securityVal = document.getElementById("inputSecurityName").value.trim();
+      var langsirVal = document.getElementById("inputLangsirName").value.trim();
 
-    function closeModalCanvas() {
-      activeCanvasSlot = null;
-      document.getElementById('modal-ttd').classList.add('hidden');
-    }
-
-    function clearCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-    }
-
-    function saveCanvasSignature() {
-      if (activeCanvasSlot) {
-        const dataUrl = canvas.toDataURL('image/png');
-        setPreviewTTD(activeCanvasSlot, dataUrl);
+      if (!crewScheduleStore[shiftKey]) {
+        crewScheduleStore[shiftKey] = {};
       }
-      closeModalCanvas();
-    }
 
-    // Event Canvas
-    function getCanvasPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      if (e.touches && e.touches.length > 0) {
-        return {
-          x: (e.touches[0].clientX - rect.left) * scaleX,
-          y: (e.touches[0].clientY - rect.top) * scaleY
-        };
+      var crewPayload = {
+        ppka: ppkaVal || "Belum Diisi",
+        pengawasLangsir: pengawasLangsirVal || "Belum Diisi",
+        k2: k2Val || "Belum Diisi",
+        security: securityVal || "Belum Diisi",
+        langsir: langsirVal || "Belum Diisi"
+      };
+
+      crewScheduleStore[shiftKey] = crewPayload;
+
+      try {
+        localStorage.setItem("nexus_awn_crew_roster", JSON.stringify(crewScheduleStore));
+      } catch (err) {}
+
+      closeCrewModal();
+      selectShiftView(shiftKey);
+
+      var shiftName = (SHIFT_CONFIG[shiftKey] && SHIFT_CONFIG[shiftKey].label) || shiftKey;
+      showToast("Menyimpan & menyinkronkan petugas " + shiftName + " ke spreadsheet...");
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && res.success) {
+              showToast(res.message);
+            } else {
+              showToast("Peringatan: Data lokal tersimpan, namun gagal sinkron sheet: " + (res ? res.message : ""));
+            }
+          })
+          .withFailureHandler(function(err) {
+            showToast("Error sinkron: " + err.message);
+          })
+          .syncCrewScheduleToSheet(shiftKey, crewPayload);
+      } else {
+        showToast("Mode Demo: Nama petugas " + shiftName + " tersimpan secara visual.");
       }
-      return {
-        x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top) * scaleY
+    }
+
+    /* =========================================================
+       FORM DEFINITIONS PER SHEET
+       ========================================================= */
+    var FORM_DEFINITIONS = {
+      "PANTAUAN TASPAT": [
+        { label: "Petak Jalan AWN - JAKK", type: "text", placeholder: "cth: KM 202+400 V=60" },
+        { label: "Petak Jalan AWN - SMC", type: "text", placeholder: "cth: Aman Terkendali" },
+        { label: "Petak Jalan AWN - PWT", type: "text", placeholder: "cth: KM 215+200 V=80" }
+      ],
+      "PANTAUAN PEMASANGAN STOPBLOK": [
+        { label: "Jalur", type: "text", placeholder: "cth: Jalur 4" },
+        { label: "Nomor Sarana", type: "text", placeholder: "cth: K3 0 14 22" },
+        { label: "Nomor Stopblok", type: "text", placeholder: "cth: SB-AWN-01" },
+        { label: "Keterangan", type: "text", placeholder: "cth: Terkunci di ujung timur" }
+      ],
+      "STABLING KERETA DAN GERBONG": [
+        { label: "Jalur V", type: "text", placeholder: "cth: 6 GD Kosong" },
+        { label: "Jalur Simpan", type: "text", placeholder: "cth: Rangkaian KP" },
+        { label: "Jalur Langsir", type: "text", placeholder: "cth: Clear" },
+        { label: "Jalur 6", type: "text", placeholder: "cth: Clear" },
+        { label: "Jalur 7", type: "text", placeholder: "cth: Clear" },
+        { label: "Jalur 8", type: "text", placeholder: "cth: Clear" },
+        { label: "Jalur 9", type: "text", placeholder: "cth: Clear" },
+        { label: "Lokomotif Langsir", type: "text", placeholder: "cth: CC201 83 25" }
+      ],
+      "LODING PLAN": [
+        { label: "Kategori (Jalan/Batal)", type: "text", placeholder: "cth: Jalan" },
+        { label: "Stamformasi", type: "text", placeholder: "cth: 8K3 + 1MP3" },
+        { label: "Keterangan", type: "text", placeholder: "cth: Siap berangkat tepat waktu" },
+        { label: "Menunjuk", type: "text", placeholder: "cth: PPKA Cirebon" }
+      ],
+      "INFORMASI UPDATE PERKA": [
+        { label: "Informasi", type: "textarea", placeholder: "cth: Persilangan KA 118 di Jalur 3" },
+        { label: "Catatan", type: "text", placeholder: "cth: Warta No 44/OP/2026" }
+      ],
+      "INFORMASI UPDATE PNP": [
+        { label: "Nomor Kereta Api", type: "text", placeholder: "cth: KA 120" },
+        { label: "Nama Kereta", type: "text", placeholder: "cth: Argo Cheribon" },
+        { label: "Jumlah Penumpang", type: "number", placeholder: "cth: 340" },
+        { label: "Keterangan", type: "text", placeholder: "cth: Naik 50, Turun 80 di AWN" }
+      ],
+      "SOP DAN INSTRUKSI": [
+        { label: "Judul Dokumen / SOP", type: "text", placeholder: "cth: SOP Langsir Jalur 6 & 7", key: "judul" },
+        { label: "Kategori", type: "text", placeholder: "cth: Instruksi Operasional / Surat Edaran", key: "kategori" },
+        { label: "Pilih Berkas Dokumen (Upload)", type: "file", placeholder: "", key: "file" },
+        { label: "Keterangan Tambahan", type: "textarea", placeholder: "cth: Disahkan oleh KS AWN", key: "keterangan" }
+      ]
+    };
+
+    // Safe Canvas Mock Preview
+    function initCanvasMock() {
+      globalDataCache = {
+        sheets: {
+          "PANTAUAN TASPAT": [
+            ["TSP-0002", "02/10/2026 09:15:00", "KM 202+400 s/d 203+100 (V=60)", "Aman Terkendali (V=100)", "KM 215+200 (V=80)"],
+            ["TSP-0001", "02/10/2026 06:30:00", "Aman Terkendali (V=100)", "KM 198+000 (V=70)", "Aman Terkendali"]
+          ],
+          "PANTAUAN PEMASANGAN STOPBLOK": [
+            ["STB-0001", "02/10/2026 07:00:00", "Jalur 4", "K3 0 14 22", "SB-AWN-02", "Terkunci aman di wesel barat"]
+          ],
+          "STABLING KERETA DAN GERBONG": [
+            ["STG-0001", "02/10/2026 05:45:00", "6 GD Kosong", "Cadangan Rangkaian", "Lok CC206 Siap", "Clear", "Clear", "Clear", "Clear", "CC201 83 25"]
+          ],
+          "LODING PLAN": [],
+          "INFORMASI UPDATE PERKA": [
+            ["PRK-0001", "02/10/2026 08:20:00", "Persilangan KA 118 dengan KA 221 di AWN Jalur 3", "Warta No. 44/OP/2026"]
+          ],
+          "INFORMASI UPDATE PNP": [],
+          "SOP DAN INSTRUKSI": [
+            ["SOP-0001", "02/10/2026 08:00:00", "SOP Pengoperasian Wesel Elektrik AWN", "Instruksi Operasional", "SOP-Wesel-AWN.pdf", "https://drive.google.com", "Wajib ditaati PPKA & Petugas Langsir"]
+          ]
+        },
+        counters: { taspatCount: 2, stopblokCount: 1, stablingCount: 1, perkaCount: 1, lodingCount: 0, pnpCount: 0, sopCount: 1 },
+        spreadsheetUrl: "#"
       };
+      updateUI();
+      document.getElementById("syncStatus").innerText = "Canvas Preview Mode";
     }
 
-    function startDraw(e) {
-      e.preventDefault();
-      isDrawing = true;
-      const pos = getCanvasPos(e);
-      ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
-      ctx.lineWidth = 2;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = '#000000';
+    function refreshData() {
+      document.getElementById("syncStatus").innerText = "Memperbarui data...";
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(response) {
+            if (response && response.success) {
+              globalDataCache = response.data;
+              
+              if (response.data.crewRoster && Object.keys(response.data.crewRoster).length > 0) {
+                for (var s in response.data.crewRoster) {
+                  if (response.data.crewRoster[s]) {
+                    crewScheduleStore[s] = response.data.crewRoster[s];
+                  }
+                }
+                renderCrewList();
+              }
+
+              updateUI();
+              document.getElementById("syncStatus").innerText = "Terakhir disinkron: " + response.data.lastSync;
+              showToast("Data operasional berhasil disinkron!");
+            } else {
+              document.getElementById("syncStatus").innerText = "Gagal memuat data.";
+              showToast("Gagal mengambil data dari Google Sheets.");
+            }
+          })
+          .withFailureHandler(function(err) {
+            document.getElementById("syncStatus").innerText = "Koneksi terputus.";
+            showToast("Error: " + err.message);
+          })
+          .getAllData();
+      } else {
+        initCanvasMock();
+      }
     }
 
-    function draw(e) {
-      if (!isDrawing) return;
-      e.preventDefault();
-      const pos = getCanvasPos(e);
-      ctx.lineTo(pos.x, pos.y);
-      ctx.stroke();
+    function updateUI() {
+      document.getElementById("countTaspat").innerText = (globalDataCache.counters && globalDataCache.counters.taspatCount) || 0;
+      document.getElementById("countStopblok").innerText = (globalDataCache.counters && globalDataCache.counters.stopblokCount) || 0;
+      document.getElementById("countStabling").innerText = (globalDataCache.counters && globalDataCache.counters.stablingCount) || 0;
+      document.getElementById("countSop").innerText = (globalDataCache.counters && globalDataCache.counters.sopCount) || 0;
+
+      renderCurrentTable();
     }
 
-    function endDraw() {
-      isDrawing = false;
+    function switchTab(sheetName, element) {
+      currentActiveSheet = sheetName;
+      document.getElementById("currentSectionTitle").innerText = sheetName;
+      document.getElementById("heroBtnLabel").innerText = (sheetName === "SOP DAN INSTRUKSI") ? "+ Unggah SOP / Dokumen" : "+ Tambah Catatan Baru";
+
+      // Tombol Cetak PDF & Pemilih Petak Jalan HANYA tampil pada PANTAUAN TASPAT
+      var btnPrint = document.getElementById("btnPrintPdf");
+      var petakBox = document.getElementById("petakSelectBox");
+      if (sheetName === "PANTAUAN TASPAT") {
+        if (btnPrint) btnPrint.style.display = "inline-flex";
+        if (petakBox) petakBox.style.display = "inline-flex";
+      } else {
+        if (btnPrint) btnPrint.style.display = "none";
+        if (petakBox) petakBox.style.display = "none";
+      }
+
+      var navItems = document.querySelectorAll(".nav-list .nav-item");
+      for (var i = 0; i < navItems.length; i++) {
+        navItems[i].classList.remove("active");
+      }
+      if (element) {
+        element.classList.add("active");
+      }
+
+      renderCurrentTable();
     }
 
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', draw);
-    window.addEventListener('mouseup', endDraw);
-    canvas.addEventListener('touchstart', startDraw, { passive: false });
-    canvas.addEventListener('touchmove', draw, { passive: false });
-    window.addEventListener('touchend', endDraw);
+    function renderCurrentTable() {
+      var thead = document.getElementById("tableHead");
+      var tbody = document.getElementById("tableBody");
+      thead.innerHTML = "";
+      tbody.innerHTML = "";
 
-    // ==================== PENYIMPANAN DATA (LOCALSTORAGE) ====================
-    const STORAGE_KEY = 'NEXUS_IZIN_KERJA_STORAGE';
+      var headers = getHeadersForSheet(currentActiveSheet);
+      var headerHtml = "<tr>";
+      for (var h = 0; h < headers.length; h++) {
+        headerHtml += "<th>" + headers[h] + "</th>";
+      }
+      headerHtml += "<th>Aksi</th></tr>";
+      thead.innerHTML = headerHtml;
 
-    function getStorageData() {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
-    }
+      var allRows = (globalDataCache.sheets && globalDataCache.sheets[currentActiveSheet]) || [];
+      var rows = allRows;
 
-    function saveStorageData(list) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    }
+      if (!isShowAllDates && selectedDateFilter) {
+        var targetDdMmYyyy = isoToIndoDate(selectedDateFilter);
+        rows = allRows.filter(function(r) {
+          var dateCol = (r[1] || "").trim();
+          return dateCol.indexOf(targetDdMmYyyy) === 0 || dateCol.indexOf(selectedDateFilter) === 0;
+        });
+      }
 
-    function simpanIzinKerja(e) {
-      e.preventDefault();
-
-      // Ambil nilai checkbox
-      const getCheckedValues = (name) => {
-        return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
-      };
-
-      const record = {
-        id: 'PERMIT-' + Date.now(),
-        savedAt: new Date().toISOString(),
-        tgl_berlaku: document.getElementById('tgl_berlaku').value,
-        wilayah: document.getElementById('wilayah').value,
-        permit_no: document.getElementById('permit_no').value,
-        lokasi: document.getElementById('lokasi').value,
-        pemohon_nama: document.getElementById('pemohon_nama').value,
-        deskripsi_kerja: document.getElementById('deskripsi_kerja').value,
-        aplikasi: getCheckedValues('aplikasi'),
-        peralatan: getCheckedValues('peralatan'),
-        bahaya: getCheckedValues('bahaya'),
-        pencegahan: getCheckedValues('pencegahan'),
-        pencegahan_lain: document.getElementById('pencegahan_lain').value,
-        pencegahan_lain2: document.getElementById('pencegahan_lain2').value,
-        apd: getCheckedValues('apd'),
-        izin_dari_tgl: document.getElementById('izin_dari_tgl').value,
-        izin_dari_jam: document.getElementById('izin_dari_jam').value,
-        izin_sampai_tgl: document.getElementById('izin_sampai_tgl').value,
-        izin_sampai_jam: document.getElementById('izin_sampai_jam').value,
-        g_pelaksana_nama: document.getElementById('g_pelaksana_nama').value,
-        g_pelaksana_instansi: document.getElementById('g_pelaksana_instansi').value,
-        g_pelaksana_tgl: document.getElementById('g_pelaksana_tgl').value,
-        g_pelaksana_jam: document.getElementById('g_pelaksana_jam').value,
-        g_pengganti_nama: document.getElementById('g_pengganti_nama').value,
-        g_pengganti_instansi: document.getElementById('g_pengganti_instansi').value,
-        g_pengganti_tgl: document.getElementById('g_pengganti_tgl').value,
-        g_pengganti_jam: document.getElementById('g_pengganti_jam').value,
-        g_pemberi_nama: document.getElementById('g_pemberi_nama').value,
-        g_pemberi_instansi: document.getElementById('g_pemberi_instansi').value,
-        g_pemberi_tgl: document.getElementById('g_pemberi_tgl').value,
-        g_pemberi_jam: document.getElementById('g_pemberi_jam').value,
-        h_alasan: document.getElementById('h_alasan').value,
-        h_kiri_tgl: document.getElementById('h_kiri_tgl').value,
-        h_kiri_waktu: document.getElementById('h_kiri_waktu').value,
-        h_kiri_nama: document.getElementById('h_kiri_nama').value,
-        h_kanan_tgl: document.getElementById('h_kanan_tgl').value,
-        h_kanan_waktu: document.getElementById('h_kanan_waktu').value,
-        h_kanan_nama: document.getElementById('h_kanan_nama').value,
-        penyelesaian: getCheckedValues('penyelesaian'),
-        lanjut_izin_no: document.getElementById('lanjut_izin_no').value,
-        selesai_pemberi_nama: document.getElementById('selesai_pemberi_nama').value,
-        selesai_pemberi_instansi: document.getElementById('selesai_pemberi_instansi').value,
-        selesai_tgl: document.getElementById('selesai_tgl').value,
-        selesai_jam: document.getElementById('selesai_jam').value,
-        signatures: { ...signatureData }
-      };
-
-      const list = getStorageData();
-      list.unshift(record);
-      saveStorageData(list);
-
-      alert(`Izin Kerja ${record.permit_no} berhasil disimpan ke Riwayat!`);
-      switchTab('riwayat');
-    }
-
-    // ==================== TAMPILAN RIWAYAT & FILTER ====================
-    function renderRiwayat() {
-      const list = getStorageData();
-      const dariTgl = document.getElementById('filter-dari-tgl').value;
-      const sampaiTgl = document.getElementById('filter-sampai-tgl').value;
-      const cari = (document.getElementById('filter-cari').value || '').toLowerCase();
-
-      const filtered = list.filter(item => {
-        const itemTgl = item.tgl_berlaku || '';
-        if (dariTgl && itemTgl < dariTgl) return false;
-        if (sampaiTgl && itemTgl > sampaiTgl) return false;
-        if (cari) {
-          const matchPermit = (item.permit_no || '').toLowerCase().includes(cari);
-          const matchPemohon = (item.pemohon_nama || '').toLowerCase().includes(cari);
-          const matchLokasi = (item.lokasi || '').toLowerCase().includes(cari);
-          if (!matchPermit && !matchPemohon && !matchLokasi) return false;
-        }
-        return true;
-      });
-
-      document.getElementById('badge-total').innerText = `${filtered.length} Data`;
-      const tbody = document.getElementById('tabel-riwayat-body');
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-400">Tidak ada riwayat izin kerja yang sesuai dengan filter.</td></tr>`;
+      if (rows.length === 0) {
+        var emptyMsg = isShowAllDates 
+          ? "Belum ada rekaman riwayat pada sheet " + currentActiveSheet + "." 
+          : "Tidak ada aktivitas pada tanggal " + (isoToIndoDate(selectedDateFilter) || "hari ini") + " untuk sheet " + currentActiveSheet + ".";
+        tbody.innerHTML = "<tr><td colspan='" + (headers.length + 1) + "' style='text-align: center; color: var(--text-muted); padding: 30px;'>" + emptyMsg + "</td></tr>";
         return;
       }
 
-      tbody.innerHTML = filtered.map(item => `
-        <tr class="hover:bg-slate-50 transition border-b">
-          <td class="p-2.5 font-bold text-blue-900">${item.permit_no || '-'}</td>
-          <td class="p-2.5">${item.tgl_berlaku || '-'}</td>
-          <td class="p-2.5 font-medium">${item.pemohon_nama || '-'}</td>
-          <td class="p-2.5 max-w-[150px] truncate" title="${item.lokasi}">${item.lokasi || '-'}</td>
-          <td class="p-2.5 max-w-[200px] truncate" title="${item.deskripsi_kerja}">${item.deskripsi_kerja || '-'}</td>
-          <td class="p-2.5 text-center whitespace-nowrap space-x-1">
-            <button type="button" onclick="muatDokumen('${item.id}')" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-[11px] font-semibold">Buka / Cetak</button>
-            <button type="button" onclick="hapusDokumen('${item.id}')" class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-[11px] font-semibold">Hapus</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function muatDokumen(id) {
-      const item = getStorageData().find(x => x.id === id);
-      if (!item) return;
-
-      // Isi input reguler
-      const fields = [
-        'tgl_berlaku', 'wilayah', 'permit_no', 'lokasi', 'pemohon_nama', 'deskripsi_kerja',
-        'pencegahan_lain', 'pencegahan_lain2', 'izin_dari_tgl', 'izin_dari_jam', 'izin_sampai_tgl', 'izin_sampai_jam',
-        'g_pelaksana_nama', 'g_pelaksana_instansi', 'g_pelaksana_tgl', 'g_pelaksana_jam',
-        'g_pengganti_nama', 'g_pengganti_instansi', 'g_pengganti_tgl', 'g_pengganti_jam',
-        'g_pemberi_nama', 'g_pemberi_instansi', 'g_pemberi_tgl', 'g_pemberi_jam',
-        'h_alasan', 'h_kiri_tgl', 'h_kiri_waktu', 'h_kiri_nama', 'h_kanan_tgl', 'h_kanan_waktu', 'h_kanan_nama',
-        'lanjut_izin_no', 'selesai_pemberi_nama', 'selesai_pemberi_instansi', 'selesai_tgl', 'selesai_jam'
-      ];
-
-      fields.forEach(f => {
-        const el = document.getElementById(f);
-        if (el) el.value = item[f] || '';
-      });
-
-      // Kembalikan checkbox
-      ['aplikasi', 'peralatan', 'bahaya', 'pencegahan', 'apd', 'penyelesaian'].forEach(name => {
-        const vals = item[name] || [];
-        document.querySelectorAll(`input[name="${name}"]`).forEach(cb => {
-          cb.checked = vals.includes(cb.value);
-        });
-      });
-
-      // Kembalikan TTD
-      if (item.signatures) {
-        Object.keys(item.signatures).forEach(k => {
-          setPreviewTTD(k, item.signatures[k]);
-        });
+      var rowsHtml = "";
+      for (var r = 0; r < rows.length; r++) {
+        var row = rows[r];
+        var rowId = row[0] || "";
+        rowsHtml += "<tr>";
+        for (var c = 0; c < row.length; c++) {
+          var val = row[c] || "-";
+          if (c === 0) {
+            rowsHtml += "<td><span class='badge-chip badge-active'>" + val + "</span></td>";
+          } else if (typeof val === 'string' && val.indexOf("http") === 0) {
+            rowsHtml += "<td><a href='" + val + "' target='_blank' class='file-link-chip'>📄 Buka File</a></td>";
+          } else {
+            rowsHtml += "<td>" + val + "</td>";
+          }
+        }
+        rowsHtml += "<td><button class='btn-delete-row' onclick='promptDeleteRow(\"" + rowId + "\")'>Hapus</button></td>";
+        rowsHtml += "</tr>";
       }
-
-      switchTab('form');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      tbody.innerHTML = rowsHtml;
     }
 
-    function hapusDokumen(id) {
-      if (confirm('Yakin ingin menghapus arsip izin kerja ini?')) {
-        const list = getStorageData().filter(x => x.id !== id);
-        saveStorageData(list);
-        renderRiwayat();
+    function getHeadersForSheet(sheetName) {
+      var map = {
+        "PANTAUAN TASPAT": ["ID", "Tanggal", "AWN - JAKK", "AWN - SMC", "AWN - PWT"],
+        "PANTAUAN PEMASANGAN STOPBLOK": ["ID", "Tanggal", "Jalur", "Sarana", "No Stopblok", "Keterangan"],
+        "STABLING KERETA DAN GERBONG": ["ID", "Tanggal", "Jalur V", "Simpan", "Langsir", "Jalur 6", "Jalur 7", "Jalur 8", "Jalur 9", "Lok Langsir"],
+        "LODING PLAN": ["ID", "Tanggal", "Status", "Stamformasi", "Keterangan", "Menunjuk"],
+        "INFORMASI UPDATE PERKA": ["ID", "Tanggal", "Informasi", "Catatan"],
+        "INFORMASI UPDATE PNP": ["ID", "Tanggal", "No KA", "Nama Kereta", "Jumlah Penumpang", "Keterangan"],
+        "SOP DAN INSTRUKSI": ["ID", "Tanggal", "Judul SOP", "Kategori", "Nama File", "Tautan Drive", "Keterangan"],
+        "JADWAL DINAS": ["ID", "Tanggal", "Shift", "Jam Dinas", "PPKA", "Pengawas Langsir", "Petugas K2", "Security", "Petugas Langsir", "Waktu Simpan"]
+      };
+      return map[sheetName] || ["ID", "Tanggal", "Data"];
+    }
+
+    function filterTable() {
+      var query = document.getElementById("searchInput").value.toLowerCase();
+      var rows = document.getElementById("tableBody").getElementsByTagName("tr");
+
+      for (var i = 0; i < rows.length; i++) {
+        var text = rows[i].innerText.toLowerCase();
+        if (text.indexOf(query) > -1) {
+          rows[i].style.display = "";
+        } else {
+          rows[i].style.display = "none";
+        }
       }
     }
 
-    function resetFilter() {
-      document.getElementById('filter-dari-tgl').value = '';
-      document.getElementById('filter-sampai-tgl').value = '';
-      document.getElementById('filter-cari').value = '';
-      renderRiwayat();
+    function openInputModal() {
+      var container = document.getElementById("dynamicFormFields");
+      container.innerHTML = "";
+      document.getElementById("modalHeading").innerText = (currentActiveSheet === "SOP DAN INSTRUKSI") ? "Unggah Dokumen SOP & Instruksi" : "Tambah Data: " + currentActiveSheet;
+
+      var fields = FORM_DEFINITIONS[currentActiveSheet] || [];
+      var html = "";
+
+      for (var i = 0; i < fields.length; i++) {
+        var f = fields[i];
+        html += "<div class='form-group'>";
+        html += "<label>" + f.label + "</label>";
+        if (f.type === "textarea") {
+          html += "<textarea class='form-control form-input-item' data-key='" + (f.key || "") + "' rows='3' placeholder='" + f.placeholder + "' required></textarea>";
+        } else if (f.type === "file") {
+          html += "<input type='file' id='fileUploadInput' class='form-control form-input-item' data-key='" + (f.key || "") + "' required>";
+        } else {
+          html += "<input type='" + f.type + "' class='form-control form-input-item' data-key='" + (f.key || "") + "' placeholder='" + f.placeholder + "' required>";
+        }
+        html += "</div>";
+      }
+
+      container.innerHTML = html;
+      document.getElementById("inputModal").classList.add("active");
     }
 
-    function exportDataJSON() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getStorageData(), null, 2));
-      const a = document.createElement('a');
-      a.href = dataStr;
-      a.download = `NEXUS_Izin_Kerja_Backup_${new Date().toISOString().split('T')[0]}.json`;
-      a.click();
+    function closeInputModal() {
+      document.getElementById("inputModal").classList.remove("active");
     }
 
-    function switchTab(tab) {
-      const viewForm = document.getElementById('view-form');
-      const viewRiwayat = document.getElementById('view-riwayat');
-      const btnTabForm = document.getElementById('btn-tab-form');
-      const btnTabRiwayat = document.getElementById('btn-tab-riwayat');
+    function handleFormSubmit() {
+      if (currentActiveSheet === "SOP DAN INSTRUKSI") {
+        handleSopUploadSubmit();
+        return;
+      }
 
-      if (tab === 'form') {
-        viewForm.classList.remove('hidden');
-        viewRiwayat.classList.add('hidden');
-        btnTabForm.className = "px-3 py-1.5 rounded text-sm font-semibold bg-orange-500 text-white shadow";
-        btnTabRiwayat.className = "px-3 py-1.5 rounded text-sm font-semibold bg-blue-800 hover:bg-blue-700 text-white";
+      var inputs = document.getElementById("dynamicFormFields").querySelectorAll(".form-input-item");
+      var values = [];
+      for (var i = 0; i < inputs.length; i++) {
+        values.push(inputs[i].value.trim());
+      }
+
+      var nowStr = new Date().toLocaleString("id-ID");
+      var tempId = "TMP-" + Math.floor(1000 + Math.random() * 9000);
+      var optimisticRow = [tempId, nowStr].concat(values);
+
+      if (!globalDataCache.sheets[currentActiveSheet]) {
+        globalDataCache.sheets[currentActiveSheet] = [];
+      }
+      globalDataCache.sheets[currentActiveSheet].unshift(optimisticRow);
+      renderCurrentTable();
+      closeInputModal();
+      showToast("Merekam data ke Google Sheets...");
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && res.success) {
+              optimisticRow[0] = res.createdId;
+              renderCurrentTable();
+              showToast(res.message);
+            } else {
+              showToast("Gagal menyimpan data!");
+              refreshData();
+            }
+          })
+          .withFailureHandler(function(err) {
+            showToast("Error backend: " + err.message);
+            refreshData();
+          })
+          .submitNewEntry(currentActiveSheet, values);
       } else {
-        viewForm.classList.add('hidden');
-        viewRiwayat.classList.remove('hidden');
-        btnTabRiwayat.className = "px-3 py-1.5 rounded text-sm font-semibold bg-orange-500 text-white shadow";
-        btnTabForm.className = "px-3 py-1.5 rounded text-sm font-semibold bg-blue-800 hover:bg-blue-700 text-white";
-        renderRiwayat();
+        showToast("Mode Demo: Data tersimpan secara visual.");
       }
     }
 
-    // Inisialisasi awal saat halaman dimuat
-    window.addEventListener('DOMContentLoaded', () => {
-      initSignatureSlots();
-      // Set default tanggal hari ini
-      const today = new Date().toISOString().split('T')[0];
-      const elTgl = document.getElementById('tgl_berlaku');
-      if (elTgl && !elTgl.value) elTgl.value = today;
+    function handleSopUploadSubmit() {
+      var fileInput = document.getElementById("fileUploadInput");
+      if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        showToast("Pilih berkas file yang akan diunggah!");
+        return;
+      }
+
+      var file = fileInput.files[0];
+      var inputs = document.getElementById("dynamicFormFields").querySelectorAll(".form-input-item");
+      var judul = inputs[0] ? inputs[0].value.trim() : file.name;
+      var kategori = inputs[1] ? inputs[1].value.trim() : "Umum";
+      var keterangan = inputs[3] ? inputs[3].value.trim() : "-";
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var base64Data = e.target.result.split(",")[1];
+        var payload = {
+          fileName: file.name,
+          mimeType: file.type || "application/octet-stream",
+          base64Data: base64Data,
+          judul: judul,
+          kategori: kategori,
+          keterangan: keterangan
+        };
+
+        var nowStr = new Date().toLocaleString("id-ID");
+        var tempRow = ["SOP-TMP", nowStr, judul, kategori, file.name, "#", keterangan];
+        if (!globalDataCache.sheets["SOP DAN INSTRUKSI"]) {
+          globalDataCache.sheets["SOP DAN INSTRUKSI"] = [];
+        }
+        globalDataCache.sheets["SOP DAN INSTRUKSI"].unshift(tempRow);
+        renderCurrentTable();
+        closeInputModal();
+        showToast("Sedang mengunggah berkas ke Google Drive...");
+
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(res) {
+              if (res && res.success) {
+                tempRow[0] = res.createdId;
+                tempRow[5] = res.fileUrl;
+                renderCurrentTable();
+                showToast(res.message);
+              } else {
+                showToast("Gagal: " + res.message);
+                refreshData();
+              }
+            })
+            .withFailureHandler(function(err) {
+              showToast("Error saat upload: " + err.message);
+              refreshData();
+            })
+            .uploadFileToDrive(payload);
+        } else {
+          showToast("Mode Demo: Berkas SOP berhasil disimulasikan.");
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function promptDeleteRow(rowId) {
+      pendingDeleteId = rowId;
+      document.getElementById("deleteTargetIdDisplay").innerText = rowId;
+      document.getElementById("deleteConfirmModal").classList.add("active");
+    }
+
+    function closeDeleteModal() {
+      pendingDeleteId = null;
+      document.getElementById("deleteConfirmModal").classList.remove("active");
+    }
+
+    function executeDelete() {
+      if (!pendingDeleteId) return;
+      var targetId = pendingDeleteId;
+      closeDeleteModal();
+
+      var list = globalDataCache.sheets[currentActiveSheet] || [];
+      globalDataCache.sheets[currentActiveSheet] = list.filter(function(r) { return r[0] !== targetId; });
+      renderCurrentTable();
+      showToast("Menghapus data " + targetId + "...");
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && res.success) {
+              showToast(res.message);
+            } else {
+              showToast("Gagal: " + res.message);
+              refreshData();
+            }
+          })
+          .withFailureHandler(function(err) {
+            showToast("Error: " + err.message);
+            refreshData();
+          })
+          .deleteEntryById(currentActiveSheet, targetId);
+      } else {
+        showToast("Mode Demo: Data " + targetId + " berhasil dihapus.");
+      }
+    }
+
+    // Helper Format Tanggal
+    function getTodayIsoDate() {
+      var d = new Date();
+      var year = d.getFullYear();
+      var month = ("0" + (d.getMonth() + 1)).slice(-2);
+      var day = ("0" + d.getDate()).slice(-2);
+      return year + "-" + month + "-" + day;
+    }
+
+    function isoToIndoDate(isoStr) {
+      if (!isoStr) return "";
+      var parts = isoStr.split("-");
+      if (parts.length === 3) {
+        return parts[2] + "/" + parts[1] + "/" + parts[0];
+      }
+      return isoStr;
+    }
+
+    function onDateFilterChange() {
+      var input = document.getElementById("historyDateInput");
+      if (input && input.value) {
+        selectedDateFilter = input.value;
+        isShowAllDates = false;
+        var btnAll = document.getElementById("btnToggleAllDate");
+        if (btnAll) btnAll.classList.remove("active");
+        renderCurrentTable();
+        showToast("Memfilter aktivitas tanggal: " + isoToIndoDate(selectedDateFilter));
+      }
+    }
+
+    function toggleAllDates() {
+      isShowAllDates = !isShowAllDates;
+      var btn = document.getElementById("btnToggleAllDate");
+      if (isShowAllDates) {
+        if (btn) btn.classList.add("active");
+        showToast("Menampilkan seluruh riwayat aktivitas.");
+      } else {
+        if (btn) btn.classList.remove("active");
+        var input = document.getElementById("historyDateInput");
+        if (input && !input.value) {
+          input.value = getTodayIsoDate();
+        }
+        selectedDateFilter = input ? input.value : getTodayIsoDate();
+        showToast("Menampilkan aktivitas tanggal: " + isoToIndoDate(selectedDateFilter));
+      }
+      renderCurrentTable();
+    }
+
+    // Handler Cetak / PDF Riwayat Harian Khusus Pantauan Taspat per Petak Jalan
+    function handlePrintOrPdf() {
+      var targetDate = isShowAllDates ? "" : isoToIndoDate(selectedDateFilter);
+      var petakSelect = document.getElementById("selectPetakTaspat");
+      var selectedPetak = petakSelect ? petakSelect.value : "AWN - JAKK";
+      var dateInfo = targetDate ? "Tanggal " + targetDate : "Seluruh Riwayat";
+
+      showToast("Menyiapkan dokumen riwayat Taspat Petak " + selectedPetak + " (" + dateInfo + ")...");
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && res.success) {
+              cachedPrintHtml = res.htmlContent || "";
+              if (cachedPrintHtml) {
+                triggerBrowserPrint();
+              }
+              openPdfResultModal(res);
+              showToast("Dokumen Taspat Petak " + selectedPetak + " siap dicetak!");
+            } else {
+              showToast("Gagal: " + (res ? res.message : "Terjadi kendala menyiapkan data."));
+            }
+          })
+          .withFailureHandler(function(err) {
+            showToast("Error koneksi: " + err.message);
+          })
+          .generateSheetPdf(currentActiveSheet, targetDate, selectedPetak);
+      } else {
+        triggerMockPrint(targetDate, selectedPetak);
+      }
+    }
+
+    function extractBodyContent(html) {
+      if (!html) return "";
+      var match = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+      return match ? match[1] : html;
+    }
+
+    function triggerBrowserPrint() {
+      if (!cachedPrintHtml) {
+        showToast("Belum ada dokumen yang siap dicetak.");
+        return;
+      }
+
+      var container = document.getElementById("printableReportArea");
+      if (!container) {
+        container = document.createElement("div");
+        container.id = "printableReportArea";
+        document.body.appendChild(container);
+      }
+
+      container.innerHTML = extractBodyContent(cachedPrintHtml);
+
+      setTimeout(function() {
+        window.focus();
+        window.print();
+      }, 300);
+    }
+
+    function openPdfResultModal(res) {
+      var petakSelect = document.getElementById("selectPetakTaspat");
+      var selectedPetak = petakSelect ? petakSelect.value : "AWN - JAKK";
+      document.getElementById("pdfModalTitle").innerText = "Riwayat Taspat: " + selectedPetak;
+      var btnDrive = document.getElementById("btnOpenDrivePdf");
+
+      if (res.pdfUrl && res.pdfUrl !== "" && res.pdfUrl !== "#") {
+        btnDrive.href = res.pdfUrl;
+        btnDrive.style.display = "inline-flex";
+      } else {
+        btnDrive.style.display = "none";
+      }
+
+      document.getElementById("pdfResultModal").classList.add("active");
+    }
+
+    function closePdfResultModal() {
+      document.getElementById("pdfResultModal").classList.remove("active");
+    }
+
+    function reprintCurrentDocument() {
+      if (cachedPrintHtml) {
+        triggerBrowserPrint();
+      } else {
+        handlePrintOrPdf();
+      }
+    }
+
+    function triggerMockPrint(filterDate, petakName) {
+      var allRows = (globalDataCache.sheets && globalDataCache.sheets["PANTAUAN TASPAT"]) || [];
+      var rows = allRows;
+      if (filterDate && filterDate.trim() !== "") {
+        rows = allRows.filter(function(r) {
+          return (r[1] || "").indexOf(filterDate) === 0;
+        });
+      }
+
+      var selectedPetak = petakName || "AWN - JAKK";
+      var colIndex = 2;
+      if (selectedPetak.indexOf("SMC") > -1) colIndex = 3;
+      else if (selectedPetak.indexOf("PWT") > -1) colIndex = 4;
+
+      var nowStr = new Date().toLocaleString("id-ID");
+      var subtitleDate = filterDate ? "AKTIVITAS HARIAN (" + filterDate + ")" : "SELURUH RIWAYAT";
+
+      var tableHtml = "<table style='width:100%; border-collapse:collapse; margin-top:14px; font-family:sans-serif; font-size:10px;'><thead><tr style='background:#5A45FE; color:#fff;'>";
+      tableHtml += "<th style='border:1px solid #c9cdd7; padding:7px 9px; text-align:left; width:12%;'>ID</th>";
+      tableHtml += "<th style='border:1px solid #c9cdd7; padding:7px 9px; text-align:left; width:22%;'>TANGGAL & WAKTU</th>";
+      tableHtml += "<th style='border:1px solid #c9cdd7; padding:7px 9px; text-align:left; width:26%;'>PETAK JALAN</th>";
+      tableHtml += "<th style='border:1px solid #c9cdd7; padding:7px 9px; text-align:left; width:40%;'>KONDISI TASPAT / BATAS KECEPATAN</th>";
+      tableHtml += "</tr></thead><tbody>";
+
+      if (rows.length === 0) {
+        tableHtml += "<tr><td colspan='4' style='border:1px solid #e1e4ea; text-align:center; padding:15px; color:#666;'>NIHIL / TIDAK ADA PEMBATASAN KECEPATAN (TASPAT) PADA PETAK " + selectedPetak + " TANGGAL INI.</td></tr>";
+      } else {
+        for (var r = 0; r < rows.length; r++) {
+          var bg = (r % 2 === 0) ? "#fcfcfd" : "#ffffff";
+          tableHtml += "<tr style='background:" + bg + ";'>";
+          tableHtml += "<td style='border:1px solid #e1e4ea; padding:6px 9px; font-weight:bold;'>" + (rows[r][0] || "-") + "</td>";
+          tableHtml += "<td style='border:1px solid #e1e4ea; padding:6px 9px;'>" + (rows[r][1] || "-") + "</td>";
+          tableHtml += "<td style='border:1px solid #e1e4ea; padding:6px 9px; font-weight:bold; color:#5A45FE;'>" + selectedPetak + "</td>";
+          tableHtml += "<td style='border:1px solid #e1e4ea; padding:6px 9px;'>" + (rows[r][colIndex] || "-") + "</td>";
+          tableHtml += "</tr>";
+        }
+      }
+      tableHtml += "</tbody></table>";
+
+      cachedPrintHtml = "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Laporan Taspat " + selectedPetak + "</title>" +
+        "<style>@page { size: landscape; margin: 12mm; } body { font-family: sans-serif; color: #181920; margin: 0; padding: 18px; }</style>" +
+        "</head><body>" +
+        "<div style='border-bottom:2px solid #5A45FE; padding-bottom:10px; margin-bottom:14px; display:flex; justify-content:space-between;'>" +
+        "<div><h2 style='margin:0; font-size:16px; color:#181920;'>PT KERETA API INDONESIA (PERSERO)</h2>" +
+        "<div style='font-size:11.5px; color:#555;'>DAERAH OPERASI 3 CIREBON • STASIUN ARJAWINANGUN (AWN)</div>" +
+        "<div style='font-size:13.5px; font-weight:bold; margin-top:6px; color:#5A45FE;'>BUKU CATATAN HARIAN TASPAT: PETAK JALAN " + selectedPetak + " - " + subtitleDate + "</div></div>" +
+        "<div style='text-align:right; font-size:10.5px; color:#666;'>Waktu Cetak: " + nowStr + "<br>Dokumen Resmi Operasional PPKA AWN (Demo)</div>" +
+        "</div>" +
+        tableHtml +
+        "<div style='margin-top:36px; display:flex; justify-content:space-between; font-size:11px;'>" +
+        "<div style='text-align:center;'>Mengetahui,<br><b>Kepala Stasiun Arjawinangun</b><br><br><br><br><u>( ..................................... )</u></div>" +
+        "<div style='text-align:center;'>Petugas Pengatur Perjalanan KA (PPKA)<br><b>Stasiun Arjawinangun</b><br><br><br><br><u>( ..................................... )</u></div>" +
+        "</div>" +
+        "</body></html>";
+
+      triggerBrowserPrint();
+      openPdfResultModal({
+        pdfUrl: "#",
+        htmlContent: cachedPrintHtml
+      });
+      showToast("Pratinjau riwayat petak " + selectedPetak + " disiapkan!");
+    }
+
+    function showToast(message) {
+      var container = document.getElementById("toastContainer");
+      var toast = document.createElement("div");
+      toast.className = "toast";
+      toast.innerHTML = "<span>🔔</span> " + message;
+      container.appendChild(toast);
+
+      setTimeout(function() {
+        toast.style.opacity = "0";
+        setTimeout(function() { toast.remove(); }, 300);
+      }, 3500);
+    }
+
+    function openSpreadsheet() {
+      if (globalDataCache.spreadsheetUrl && globalDataCache.spreadsheetUrl !== "#") {
+        window.open(globalDataCache.spreadsheetUrl, "_blank");
+      } else {
+        showToast("URL Spreadsheet belum tersedia.");
+      }
+    }
+
+    /* =========================================================
+       1. FITUR TYPING TEXT EFFECT (Mengetik & Menghapus Berulang)
+       ========================================================= */
+    var typingWords = [
+      "Stasiun Arjawinangun (AWN)",
+      "Pantauan Taspat Petak Jalan",
+      "Monitoring Pemasangan Stopblok",
+      "Kesiapan Jalur Stabling KA & GD"
+    ];
+    var currentWordIndex = 0;
+    var currentCharIndex = 0;
+    var isDeletingText = false;
+    var typingSpeed = 90;
+    var deletingSpeed = 45;
+    var pauseAfterTyping = 2000;
+    var pauseAfterDeleting = 380;
+
+    function initTypingTextEffect() {
+      var targetElement = document.getElementById("typingEffectText");
+      if (!targetElement) return;
+
+      var currentFullWord = typingWords[currentWordIndex];
+
+      if (isDeletingText) {
+        currentCharIndex--;
+        targetElement.innerText = currentFullWord.substring(0, currentCharIndex);
+      } else {
+        currentCharIndex++;
+        targetElement.innerText = currentFullWord.substring(0, currentCharIndex);
+      }
+
+      var currentDelay = isDeletingText ? deletingSpeed : typingSpeed;
+
+      if (!isDeletingText && currentCharIndex === currentFullWord.length) {
+        currentDelay = pauseAfterTyping;
+        isDeletingText = true;
+      } else if (isDeletingText && currentCharIndex === 0) {
+        isDeletingText = false;
+        currentWordIndex = (currentWordIndex + 1) % typingWords.length;
+        currentDelay = pauseAfterDeleting;
+      }
+
+      setTimeout(initTypingTextEffect, currentDelay);
+    }
+
+    /* =========================================================
+       2. FITUR INFINITE LOGO SLIDER (Hardware Accelerated & Drag)
+       ========================================================= */
+    function initInfiniteLogoSlider() {
+      var viewport = document.getElementById("logoSliderViewport");
+      var track = document.getElementById("logoSliderTrack");
+      if (!viewport || !track) return;
+
+      track.innerHTML += track.innerHTML;
+
+      var currentPos = 0;
+      var isMouseDown = false;
+      var startX = 0;
+      var prevPos = 0;
+      var isHovered = false;
+      var scrollSpeed = 0.85;
+
+      viewport.addEventListener("mousedown", function(e) {
+        isMouseDown = true;
+        startX = e.pageX;
+        prevPos = currentPos;
+      });
+
+      viewport.addEventListener("mouseleave", function() {
+        isMouseDown = false;
+        isHovered = false;
+      });
+
+      viewport.addEventListener("mouseenter", function() {
+        isHovered = true;
+      });
+
+      window.addEventListener("mouseup", function() {
+        isMouseDown = false;
+      });
+
+      viewport.addEventListener("mousemove", function(e) {
+        if (!isMouseDown) return;
+        e.preventDefault();
+        var diff = e.pageX - startX;
+        currentPos = prevPos - diff;
+      });
+
+      viewport.addEventListener("touchstart", function(e) {
+        isMouseDown = true;
+        startX = e.touches[0].pageX;
+        prevPos = currentPos;
+      }, { passive: true });
+
+      viewport.addEventListener("touchend", function() {
+        isMouseDown = false;
+      });
+
+      viewport.addEventListener("touchmove", function(e) {
+        if (!isMouseDown) return;
+        var diff = e.touches[0].pageX - startX;
+        currentPos = prevPos - diff;
+      }, { passive: true });
+
+      function renderAutoScroll() {
+        if (!isMouseDown) {
+          currentPos += isHovered ? 0.35 : scrollSpeed;
+        }
+
+        var halfWidth = track.scrollWidth / 2;
+        if (halfWidth > 0) {
+          if (currentPos >= halfWidth) {
+            currentPos -= halfWidth;
+            prevPos -= halfWidth;
+          } else if (currentPos < 0) {
+            currentPos += halfWidth;
+            prevPos += halfWidth;
+          }
+        }
+
+        track.style.transform = "translateX(-" + currentPos + "px)";
+        requestAnimationFrame(renderAutoScroll);
+      }
+
+      requestAnimationFrame(renderAutoScroll);
+    }
+
+    // Inisialisasi Saat Halaman Selesai Dimuat
+    window.addEventListener("DOMContentLoaded", function() {
+      selectedDateFilter = getTodayIsoDate();
+      var dateInput = document.getElementById("historyDateInput");
+      if (dateInput) {
+        dateInput.value = selectedDateFilter;
+      }
+
+      var crewDateEl = document.getElementById("crewScheduleDate");
+      if (crewDateEl) {
+        var now = new Date();
+        var options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+        crewDateEl.innerText = now.toLocaleDateString('id-ID', options);
+      }
+
+      initCrewStore();
+      refreshData();
+      initTypingTextEffect();
+      initInfiniteLogoSlider();
     });
   </script>
 </body>
