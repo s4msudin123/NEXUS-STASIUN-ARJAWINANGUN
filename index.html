@@ -591,6 +591,187 @@
       border-color: var(--primary);
     }
 
+    /* Auto-Refresh Toggle Button */
+    .btn-autorefresh {
+      background: #ffffff;
+      border: 1px solid #dcdfe6;
+      color: var(--text-muted);
+      padding: 7px 15px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-autorefresh:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-autorefresh.active {
+      background: #f0fdf4;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    .refresh-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      transition: background 0.2s ease;
+    }
+
+    .btn-autorefresh.active .refresh-dot {
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+      animation: pulseGreenDot 1.8s infinite;
+    }
+
+    @keyframes pulseGreenDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
+
+    /* Integrated Viewer (Buku Gangguan, Izin Kerja, Buku Penjagaan Counter) */
+    .integrated-viewer-container {
+      background: var(--bg-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 120px);
+      overflow: hidden;
+      margin-bottom: 24px;
+      animation: fadeInViewer 0.25s ease;
+    }
+
+    @keyframes fadeInViewer {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .integrated-viewer-header {
+      background: linear-gradient(135deg, #1e2230 0%, #11131a 100%);
+      color: #ffffff;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      flex-wrap: wrap;
+    }
+
+    .integrated-viewer-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-return-home {
+      background: linear-gradient(135deg, var(--primary), #7663ff);
+      color: #ffffff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 24px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(90, 69, 254, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-return-home:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(90, 69, 254, 0.6);
+      background: linear-gradient(135deg, var(--primary-hover), #6752f5);
+    }
+
+    .integrated-viewer-title-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .integrated-viewer-icon {
+      font-size: 1.25rem;
+    }
+
+    .integrated-viewer-title {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.2px;
+    }
+
+    .integrated-viewer-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-viewer-action {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 7px 15px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-viewer-action:hover {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    .btn-viewer-close {
+      background: #ef4444;
+      color: #ffffff;
+      border: none;
+      padding: 7px 15px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-viewer-close:hover {
+      background: #dc2626;
+    }
+
+    .integrated-viewer-body {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: #ffffff;
+    }
+
+    .integrated-viewer-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
     /* Table Component */
     .table-container {
       background: var(--bg-surface);
@@ -1305,7 +1486,11 @@
       <div>
         <div class="nav-group-title">Menu Operasional</div>
         <ul class="nav-list">
-          <li class="nav-item active" onclick="switchTab('PANTAUAN TASPAT', this)">
+          <li class="nav-item active" id="navItemHome" onclick="goToHomeDashboard(this)">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Beranda (Home)
+          </li>
+          <li class="nav-item" id="navItemTaspat" onclick="switchTab('PANTAUAN TASPAT', this)">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
             Pantauan Taspat
           </li>
@@ -1333,7 +1518,7 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             SOP & Instruksi
           </li>
-          <li class="nav-item" onclick="window.open('https://script.google.com/macros/s/AKfycbzMdkU2x2VstWu8f3ZoY7qZYT5SK-wW5TFNm5Tsbvs2EYwe5tKUKuvfptHbxyec0iGA/exec', '_blank')">
+          <li class="nav-item" onclick="openExternalServiceView('Buku Gangguan Operasional', 'https://script.google.com/macros/s/AKfycbzMdkU2x2VstWu8f3ZoY7qZYT5SK-wW5TFNm5Tsbvs2EYwe5tKUKuvfptHbxyec0iGA/exec', '📖', this)">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
             Buku Gangguan Operasional
           </li>
@@ -1344,21 +1529,21 @@
               <svg class="nav-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
             </div>
             <ul id="submenuIzinKerja" class="nav-submenu">
-              <li class="nav-submenu-item" onclick="window.open('https://script.google.com/macros/s/AKfycbySLr-p01bqqa5dlJVe3gfl7xyhmS0TcXC2Filnc8pP95YxP9uGBou-PeUJ_C-toAhp/exec', '_blank')">
+              <li class="nav-submenu-item" onclick="openExternalServiceView('Izin Kerja Prasarana', 'https://script.google.com/macros/s/AKfycbySLr-p01bqqa5dlJVe3gfl7xyhmS0TcXC2Filnc8pP95YxP9uGBou-PeUJ_C-toAhp/exec', '👷', this)">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
                 <span>Izin Kerja Prasarana</span>
               </li>
-              <li class="nav-submenu-item" onclick="window.open('https://script.google.com/macros/s/AKfycbySLr-p01bqqa5dlJVe3gfl7xyhmS0TcXC2Filnc8pP95YxP9uGBou-PeUJ_C-toAhp/exec', '_blank')">
+              <li class="nav-submenu-item" onclick="openExternalServiceView('Izin Kerja PPKW & K2', 'https://script.google.com/macros/s/AKfycbySLr-p01bqqa5dlJVe3gfl7xyhmS0TcXC2Filnc8pP95YxP9uGBou-PeUJ_C-toAhp/exec', '👷', this)">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
                 <span>Izin Kerja PPKW & K2</span>
               </li>
-              <li class="nav-submenu-item" onclick="window.open('https://script.google.com/macros/s/AKfycbySLr-p01bqqa5dlJVe3gfl7xyhmS0TcXC2Filnc8pP95YxP9uGBou-PeUJ_C-toAhp/exec', '_blank')">
+              <li class="nav-submenu-item" onclick="openExternalServiceView('Izin Kerja Vendor', 'https://script.google.com/macros/s/AKfycbySLr-p01bqqa5dlJVe3gfl7xyhmS0TcXC2Filnc8pP95YxP9uGBou-PeUJ_C-toAhp/exec', '👷', this)">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
                 <span>Izin Kerja Vendor</span>
               </li>
             </ul>
           </li>
-          <li class="nav-item" onclick="window.open('https://script.google.com/macros/s/AKfycbx2wlMvuCf7xuBssvljV0i9ZahqC7zctmRGo142B1_zZ6XNwvCZ37118IX9YYhiogodTg/exec', '_blank')">
+          <li class="nav-item" onclick="openExternalServiceView('Buku Penjagaan Bentuk & Counter', 'https://script.google.com/macros/s/AKfycbx2wlMvuCf7xuBssvljV0i9ZahqC7zctmRGo142B1_zZ6XNwvCZ37118IX9YYhiogodTg/exec', '🔢', this)">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             Buku Penjagaan Bentuk & Counter
           </li>
@@ -1394,6 +1579,35 @@
           </div>
         </div>
       </div>
+
+      <!-- Integrated Viewer untuk Buku Gangguan Operasional, Izin Kerja & Buku Penjagaan Counter -->
+      <div id="integratedViewerContainer" class="integrated-viewer-container" style="display: none;">
+        <div class="integrated-viewer-header">
+          <div class="integrated-viewer-left">
+            <button type="button" class="btn-return-home" onclick="goToHomeDashboard()" title="Kembali ke Beranda Utama NEXUS">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>🏠 KEMBALI KE HOME NEXUS</span>
+            </button>
+            <div class="integrated-viewer-title-box">
+              <span id="integratedViewerIcon" class="integrated-viewer-icon">📖</span>
+              <span id="integratedViewerTitle" class="integrated-viewer-title">Buku Gangguan Operasional</span>
+            </div>
+          </div>
+          <div class="integrated-viewer-actions">
+            <a id="integratedViewerNewTabBtn" href="#" target="_blank" class="btn-viewer-action" title="Buka di tab browser terpisah">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Buka di Tab Baru</span>
+            </a>
+            <button type="button" class="btn-viewer-close" onclick="goToHomeDashboard()" title="Tutup Viewer dan Kembali ke Beranda">✕ Tutup</button>
+          </div>
+        </div>
+        <div class="integrated-viewer-body">
+          <iframe id="integratedViewerFrame" src="about:blank" class="integrated-viewer-iframe" allow="geolocation; microphone; camera"></iframe>
+        </div>
+      </div>
+
+      <!-- Dashboard Main Area (Hero, Metrik, Tabel Operasional) -->
+      <div id="dashboardMainArea">
 
       <!-- Hero Banner dengan Fitur Efek Teks Mengetik Otomatis -->
       <div class="hero-banner">
@@ -1523,6 +1737,15 @@
         </div>
         <div class="section-actions">
           
+          <!-- Tombol Kontrol Auto-Refresh & Segarkan Cepat -->
+          <button type="button" class="btn-autorefresh active" id="btnAutoRefreshToggle" onclick="toggleAutoRefresh()" title="Klik untuk mengaktifkan / menonaktifkan Refresh Otomatis">
+            <span class="refresh-dot"></span>
+            <span id="autoRefreshLabel">Auto-Refresh: ON (30d)</span>
+          </button>
+          <button type="button" class="btn-date-toggle" onclick="refreshData(true)" title="Segarkan Data Sekarang">
+            🔄 Segarkan
+          </button>
+
           <!-- Pemilih Petak Jalan Khusus Pantauan Taspat -->
           <div class="daily-filter-box" id="petakSelectBox" title="Pilih petak jalan untuk mencetak riwayat taspat">
             <span class="daily-filter-label">🛤️ Petak:</span>
@@ -1553,6 +1776,8 @@
           </table>
         </div>
       </div>
+
+      </div> <!-- /#dashboardMainArea -->
 
     </main>
 
@@ -2159,38 +2384,111 @@
       ]
     };
 
-    // Safe Canvas Mock Preview
-    function initCanvasMock() {
-      globalDataCache = {
-        sheets: {
-          "PANTAUAN TASPAT": [
-            ["TSP-0002", "02/10/2026 09:15:00", "KM 202+400 s/d 203+100 (V=60)", "Aman Terkendali (V=100)", "KM 215+200 (V=80)"],
-            ["TSP-0001", "02/10/2026 06:30:00", "Aman Terkendali (V=100)", "KM 198+000 (V=70)", "Aman Terkendali"]
-          ],
-          "PANTAUAN PEMASANGAN STOPBLOK": [
-            ["STB-0001", "02/10/2026 07:00:00", "Jalur 4", "K3 0 14 22", "SB-AWN-02", "Terkunci aman di wesel barat"]
-          ],
-          "STABLING KERETA DAN GERBONG": [
-            ["STG-0001", "02/10/2026 05:45:00", "6 GD Kosong", "Cadangan Rangkaian", "Lok CC206 Siap", "Clear", "Clear", "Clear", "Clear", "CC201 83 25"]
-          ],
-          "LODING PLAN": [],
-          "INFORMASI UPDATE PERKA": [
-            ["PRK-0001", "02/10/2026 08:20:00", "Persilangan KA 118 dengan KA 221 di AWN Jalur 3", "Warta No. 44/OP/2026"]
-          ],
-          "INFORMASI UPDATE PNP": [],
-          "SOP DAN INSTRUKSI": [
-            ["SOP-0001", "02/10/2026 08:00:00", "SOP Pengoperasian Wesel Elektrik AWN", "Instruksi Operasional", "SOP-Wesel-AWN.pdf", "https://drive.google.com", "Wajib ditaati PPKA & Petugas Langsir"]
-          ]
-        },
-        counters: { taspatCount: 2, stopblokCount: 1, stablingCount: 1, perkaCount: 1, lodingCount: 0, pnpCount: 0, sopCount: 1 },
-        spreadsheetUrl: "#"
+    /* =========================================================
+       PERSISTENT LOCAL STORAGE & SAFE SYNC HANDLERS
+       ========================================================= */
+    var STORAGE_KEY_DATA = "nexus_awn_operational_data_v1";
+
+    function saveNexusDataToLocalStorage() {
+      try {
+        if (globalDataCache && globalDataCache.sheets) {
+          localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(globalDataCache));
+        }
+      } catch (e) {
+        console.error("Gagal menyimpan ke localStorage:", e);
+      }
+    }
+
+    function loadNexusDataFromLocalStorage() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY_DATA);
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && parsed.sheets) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.error("Gagal membaca dari localStorage:", e);
+      }
+      return null;
+    }
+
+    function recalculateCounters() {
+      if (!globalDataCache || !globalDataCache.sheets) return;
+      var sh = globalDataCache.sheets;
+      globalDataCache.counters = {
+        taspatCount: (sh["PANTAUAN TASPAT"] || []).length,
+        stopblokCount: (sh["PANTAUAN PEMASANGAN STOPBLOK"] || []).length,
+        stablingCount: (sh["STABLING KERETA DAN GERBONG"] || []).length,
+        perkaCount: (sh["INFORMASI UPDATE PERKA"] || []).length,
+        lodingCount: (sh["LODING PLAN"] || []).length,
+        pnpCount: (sh["INFORMASI UPDATE PNP"] || []).length,
+        sopCount: (sh["SOP DAN INSTRUKSI"] || []).length
       };
+    }
+
+    // Inisialisasi Data (Memprioritaskan riwayat yang telah diinput pengguna)
+    function initCanvasMock() {
+      var saved = loadNexusDataFromLocalStorage();
+      if (saved && saved.sheets) {
+        globalDataCache = saved;
+      } else {
+        globalDataCache = {
+          sheets: {
+            "PANTAUAN TASPAT": [
+              ["TSP-0002", "02/10/2026 09:15:00", "KM 202+400 s/d 203+100 (V=60)", "Aman Terkendali (V=100)", "KM 215+200 (V=80)"],
+              ["TSP-0001", "02/10/2026 06:30:00", "Aman Terkendali (V=100)", "KM 198+000 (V=70)", "Aman Terkendali"]
+            ],
+            "PANTAUAN PEMASANGAN STOPBLOK": [
+              ["STB-0001", "02/10/2026 07:00:00", "Jalur 4", "K3 0 14 22", "SB-AWN-02", "Terkunci aman di wesel barat"]
+            ],
+            "STABLING KERETA DAN GERBONG": [
+              ["STG-0001", "02/10/2026 05:45:00", "6 GD Kosong", "Cadangan Rangkaian", "Lok CC206 Siap", "Clear", "Clear", "Clear", "Clear", "CC201 83 25"]
+            ],
+            "LODING PLAN": [],
+            "INFORMASI UPDATE PERKA": [
+              ["PRK-0001", "02/10/2026 08:20:00", "Persilangan KA 118 dengan KA 221 di AWN Jalur 3", "Warta No. 44/OP/2026"]
+            ],
+            "INFORMASI UPDATE PNP": [],
+            "SOP DAN INSTRUKSI": [
+              ["SOP-0001", "02/10/2026 08:00:00", "SOP Pengoperasian Wesel Elektrik AWN", "Instruksi Operasional", "SOP-Wesel-AWN.pdf", "https://drive.google.com", "Wajib ditaati PPKA & Petugas Langsir"]
+            ]
+          },
+          counters: { taspatCount: 2, stopblokCount: 1, stablingCount: 1, perkaCount: 1, lodingCount: 0, pnpCount: 0, sopCount: 1 },
+          spreadsheetUrl: "#"
+        };
+        saveNexusDataToLocalStorage();
+      }
+      recalculateCounters();
       updateUI();
-      document.getElementById("syncStatus").innerText = "Canvas Preview Mode";
+      var syncEl = document.getElementById("syncStatus");
+      if (syncEl) {
+        var lastTime = new Date().toLocaleTimeString('id-ID');
+        syncEl.innerHTML = "<span style='color:#00ca72; font-weight:700;'>● Data Tersimpan Aman</span> (" + lastTime + ")";
+      }
     }
 
     var isDataSyncing = false;
-    var autoSyncIntervalTimer = null;
+    var isAutoRefreshEnabled = true;
+    var autoRefreshCountdown = 30;
+    var autoRefreshTickerTimer = null;
+
+    function toggleAutoRefresh() {
+      isAutoRefreshEnabled = !isAutoRefreshEnabled;
+      var btn = document.getElementById("btnAutoRefreshToggle");
+      var label = document.getElementById("autoRefreshLabel");
+      if (isAutoRefreshEnabled) {
+        autoRefreshCountdown = 30;
+        if (btn) btn.classList.add("active");
+        if (label) label.innerText = "Auto-Refresh: ON (" + autoRefreshCountdown + "d)";
+        showToast("Auto-Refresh diaktifkan (setiap 30 detik).");
+      } else {
+        if (btn) btn.classList.remove("active");
+        if (label) label.innerText = "Auto-Refresh: OFF";
+        showToast("Auto-Refresh dinonaktifkan.");
+      }
+    }
 
     function toggleMobileSidebar() {
       var sidebar = document.querySelector(".sidebar");
@@ -2229,6 +2527,7 @@
             isDataSyncing = false;
             if (response && response.success) {
               globalDataCache = response.data;
+              saveNexusDataToLocalStorage();
               
               if (response.data.crewRoster && Object.keys(response.data.crewRoster).length > 0) {
                 for (var s in response.data.crewRoster) {
@@ -2242,10 +2541,11 @@
                 renderCrewList();
               }
 
+              recalculateCounters();
               updateUI();
               var lastSyncTime = response.data.lastSync || new Date().toLocaleTimeString('id-ID');
               if (syncEl) {
-                syncEl.innerHTML = "<span style='color:#00b060; font-weight:700;'>● Singkron Aktif</span> (Pembaruan: " + lastSyncTime + ")";
+                syncEl.innerHTML = "<span style='color:#00ca72; font-weight:700;'>● Sinkron Aktif</span> (" + lastSyncTime + ")";
               }
               if (isManual) {
                 showToast("Data operasional berhasil disinkron!");
@@ -2272,23 +2572,100 @@
           })
           .getAllData();
       } else {
+        // Mode Standalone / GitHub Pages: Memuat dari localStorage tanpa menimpa data
         isDataSyncing = false;
-        initCanvasMock();
+        var saved = loadNexusDataFromLocalStorage();
+        if (saved && saved.sheets) {
+          globalDataCache = saved;
+        } else {
+          initCanvasMock();
+        }
+        recalculateCounters();
+        updateUI();
         if (syncEl) {
-          syncEl.innerText = "Canvas Preview Mode (Demo Lokal)";
+          var lastTime = new Date().toLocaleTimeString('id-ID');
+          syncEl.innerHTML = "<span style='color:#00ca72; font-weight:700;'>● Data Tersimpan Aman</span> (" + lastTime + ")";
+        }
+        if (isManual) {
+          showToast("Data operasional berhasil disegarkan!");
         }
       }
     }
 
     function startAutoSyncLoop() {
-      if (autoSyncIntervalTimer) clearInterval(autoSyncIntervalTimer);
-      // Sinkronisasi otomatis setiap 25 detik di latar belakang
-      autoSyncIntervalTimer = setInterval(function() {
+      if (autoRefreshTickerTimer) clearInterval(autoRefreshTickerTimer);
+      autoRefreshCountdown = 30;
+
+      // Timer ticker 1 detik untuk mengupdate countdown dan menyegarkan data
+      autoRefreshTickerTimer = setInterval(function() {
+        if (!isAutoRefreshEnabled) return;
+
         var modalActive = document.querySelector(".modal-overlay.active");
-        if (!modalActive) {
+        if (modalActive) return; // Jeda refresh jika modal input sedang dibuka
+
+        autoRefreshCountdown--;
+        var label = document.getElementById("autoRefreshLabel");
+        if (label) {
+          label.innerText = "Auto-Refresh: ON (" + autoRefreshCountdown + "d)";
+        }
+
+        if (autoRefreshCountdown <= 0) {
+          autoRefreshCountdown = 30;
           refreshData(false);
         }
-      }, 25000);
+      }, 1000);
+    }
+
+    /* =========================================================
+       NAVIGASI HOME & INTEGRATED VIEWER HANDLERS
+       ========================================================= */
+    function goToHomeDashboard(element) {
+      closeMobileSidebar();
+      var viewer = document.getElementById("integratedViewerContainer");
+      var dash = document.getElementById("dashboardMainArea");
+      var frame = document.getElementById("integratedViewerFrame");
+      if (viewer) viewer.style.display = "none";
+      if (dash) dash.style.display = "block";
+      if (frame) frame.src = "about:blank";
+
+      var navItems = document.querySelectorAll(".nav-list .nav-item, .nav-submenu-item");
+      for (var i = 0; i < navItems.length; i++) {
+        navItems[i].classList.remove("active");
+      }
+      var homeNav = document.getElementById("navItemHome");
+      if (homeNav) homeNav.classList.add("active");
+
+      switchTab("PANTAUAN TASPAT", document.getElementById("navItemTaspat"));
+      showToast("Kembali ke Beranda Utama NEXUS Arjawinangun.");
+    }
+
+    function openExternalServiceView(title, url, icon, element) {
+      closeMobileSidebar();
+      var viewer = document.getElementById("integratedViewerContainer");
+      var dash = document.getElementById("dashboardMainArea");
+      var frame = document.getElementById("integratedViewerFrame");
+      var titleEl = document.getElementById("integratedViewerTitle");
+      var iconEl = document.getElementById("integratedViewerIcon");
+      var newTabBtn = document.getElementById("integratedViewerNewTabBtn");
+
+      if (dash) dash.style.display = "none";
+      if (viewer) viewer.style.display = "flex";
+
+      if (titleEl) titleEl.innerText = title;
+      if (iconEl) iconEl.innerText = icon || "📖";
+      if (newTabBtn) newTabBtn.href = url;
+      if (frame) frame.src = url;
+
+      var navItems = document.querySelectorAll(".nav-list .nav-item, .nav-submenu-item");
+      for (var i = 0; i < navItems.length; i++) {
+        navItems[i].classList.remove("active");
+      }
+      if (element) element.classList.add("active");
+
+      var mainContent = document.querySelector(".main-content");
+      if (mainContent) mainContent.scrollTop = 0;
+
+      showToast("Membuka " + title + " (Gunakan tombol Home untuk kembali)");
     }
 
     function updateUI() {
@@ -2317,6 +2694,17 @@
 
     function switchTab(sheetName, element) {
       closeMobileSidebar();
+
+      // Pastikan kembali ke area dashboard jika sedang membuka viewer eksternal
+      var viewer = document.getElementById("integratedViewerContainer");
+      var dash = document.getElementById("dashboardMainArea");
+      var frame = document.getElementById("integratedViewerFrame");
+      if (viewer) viewer.style.display = "none";
+      if (dash) dash.style.display = "block";
+      if (frame && frame.src !== "about:blank" && frame.src !== "") {
+        frame.src = "about:blank";
+      }
+
       currentActiveSheet = sheetName;
       document.getElementById("currentSectionTitle").innerText = sheetName;
       document.getElementById("heroBtnLabel").innerText = (sheetName === "SOP DAN INSTRUKSI") ? "+ Unggah SOP / Dokumen" : "+ Tambah Catatan Baru";
@@ -2332,7 +2720,7 @@
         if (petakBox) petakBox.style.display = "none";
       }
 
-      var navItems = document.querySelectorAll(".nav-list .nav-item");
+      var navItems = document.querySelectorAll(".nav-list .nav-item, .nav-submenu-item");
       for (var i = 0; i < navItems.length; i++) {
         navItems[i].classList.remove("active");
       }
@@ -2468,36 +2856,46 @@
       }
 
       var nowStr = new Date().toLocaleString("id-ID");
-      var tempId = "TMP-" + Math.floor(1000 + Math.random() * 9000);
+      
+      var prefix = "DAT-";
+      if (currentActiveSheet === "PANTAUAN TASPAT") prefix = "TSP-";
+      else if (currentActiveSheet === "PANTAUAN PEMASANGAN STOPBLOK") prefix = "STB-";
+      else if (currentActiveSheet === "STABLING KERETA DAN GERBONG") prefix = "STG-";
+      else if (currentActiveSheet === "LODING PLAN") prefix = "LOD-";
+      else if (currentActiveSheet === "INFORMASI UPDATE PERKA") prefix = "PRK-";
+      else if (currentActiveSheet === "INFORMASI UPDATE PNP") prefix = "PNP-";
+      else if (currentActiveSheet === "SOP DAN INSTRUKSI") prefix = "SOP-";
+
+      var tempId = prefix + Math.floor(1000 + Math.random() * 9000);
       var optimisticRow = [tempId, nowStr].concat(values);
 
       if (!globalDataCache.sheets[currentActiveSheet]) {
         globalDataCache.sheets[currentActiveSheet] = [];
       }
       globalDataCache.sheets[currentActiveSheet].unshift(optimisticRow);
+      recalculateCounters();
+      saveNexusDataToLocalStorage();
       renderCurrentTable();
+      updateUI();
       closeInputModal();
-      showToast("Merekam data ke Google Sheets...");
+      showToast("Data " + currentActiveSheet + " berhasil disimpan!");
 
       if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
           .withSuccessHandler(function(res) {
             if (res && res.success) {
               optimisticRow[0] = res.createdId;
+              saveNexusDataToLocalStorage();
               renderCurrentTable();
               showToast(res.message);
             } else {
-              showToast("Gagal menyimpan data!");
-              refreshData();
+              showToast("Peringatan: Data lokal aman tersimpan, sinkronisasi Google Sheets: " + (res ? res.message : "Tertunda"));
             }
           })
           .withFailureHandler(function(err) {
-            showToast("Error backend: " + err.message);
-            refreshData();
+            showToast("Peringatan jaringan: Data tersimpan lokal, error sinkron: " + err.message);
           })
           .submitNewEntry(currentActiveSheet, values);
-      } else {
-        showToast("Mode Demo: Data tersimpan secara visual.");
       }
     }
 
@@ -2527,14 +2925,18 @@
         };
 
         var nowStr = new Date().toLocaleString("id-ID");
-        var tempRow = ["SOP-TMP", nowStr, judul, kategori, file.name, "#", keterangan];
+        var sopId = "SOP-" + Math.floor(1000 + Math.random() * 9000);
+        var tempRow = [sopId, nowStr, judul, kategori, file.name, (payload.base64Data ? "data:" + payload.mimeType + ";base64," + payload.base64Data : "#"), keterangan];
         if (!globalDataCache.sheets["SOP DAN INSTRUKSI"]) {
           globalDataCache.sheets["SOP DAN INSTRUKSI"] = [];
         }
         globalDataCache.sheets["SOP DAN INSTRUKSI"].unshift(tempRow);
+        recalculateCounters();
+        saveNexusDataToLocalStorage();
         renderCurrentTable();
+        updateUI();
         closeInputModal();
-        showToast("Sedang mengunggah berkas ke Google Drive...");
+        showToast("Dokumen SOP berhasil disimpan!");
 
         if (typeof google !== 'undefined' && google.script && google.script.run) {
           google.script.run
@@ -2542,20 +2944,17 @@
               if (res && res.success) {
                 tempRow[0] = res.createdId;
                 tempRow[5] = res.fileUrl;
+                saveNexusDataToLocalStorage();
                 renderCurrentTable();
                 showToast(res.message);
               } else {
-                showToast("Gagal: " + res.message);
-                refreshData();
+                showToast("Peringatan: Dokumen tersimpan lokal, respon server: " + res.message);
               }
             })
             .withFailureHandler(function(err) {
-              showToast("Error saat upload: " + err.message);
-              refreshData();
+              showToast("Peringatan jaringan: Tersimpan lokal, upload Drive gagal: " + err.message);
             })
             .uploadFileToDrive(payload);
-        } else {
-          showToast("Mode Demo: Berkas SOP berhasil disimulasikan.");
         }
       };
 
@@ -2580,8 +2979,11 @@
 
       var list = globalDataCache.sheets[currentActiveSheet] || [];
       globalDataCache.sheets[currentActiveSheet] = list.filter(function(r) { return r[0] !== targetId; });
+      recalculateCounters();
+      saveNexusDataToLocalStorage();
       renderCurrentTable();
-      showToast("Menghapus data " + targetId + "...");
+      updateUI();
+      showToast("Data " + targetId + " berhasil dihapus.");
 
       if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
@@ -2589,17 +2991,13 @@
             if (res && res.success) {
               showToast(res.message);
             } else {
-              showToast("Gagal: " + res.message);
-              refreshData();
+              showToast("Peringatan: Terhapus lokal, gagal hapus di sheet: " + res.message);
             }
           })
           .withFailureHandler(function(err) {
-            showToast("Error: " + err.message);
-            refreshData();
+            showToast("Error sinkron hapus: " + err.message);
           })
           .deleteEntryById(currentActiveSheet, targetId);
-      } else {
-        showToast("Mode Demo: Data " + targetId + " berhasil dihapus.");
       }
     }
 
