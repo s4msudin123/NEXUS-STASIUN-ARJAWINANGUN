@@ -130,6 +130,58 @@
       stroke-width: 2;
     }
 
+    /* Submenu Izin Kerja */
+    .nav-submenu {
+      list-style: none;
+      display: none;
+      flex-direction: column;
+      gap: 3px;
+      padding-left: 18px;
+      margin-top: 3px;
+      margin-bottom: 4px;
+    }
+
+    .nav-submenu.open {
+      display: flex;
+    }
+
+    .nav-submenu-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-submenu-item:hover {
+      background: #f0edff;
+      color: var(--primary);
+    }
+
+    .nav-submenu-item svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.2;
+      flex-shrink: 0;
+    }
+
+    .nav-chevron {
+      margin-left: auto;
+      transition: transform 0.2s ease;
+      width: 16px !important;
+      height: 16px !important;
+      stroke-width: 2.2;
+    }
+
+    .nav-chevron.rotated {
+      transform: rotate(180deg);
+    }
+
     /* Main Content Area */
     .main-content {
       padding: 28px 32px;
@@ -1209,6 +1261,27 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
             Buku Gangguan Operasional
           </li>
+          <li class="nav-item-dropdown">
+            <div class="nav-item" onclick="toggleSubmenu('submenuIzinKerja', this)">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+              <span>Izin Kerja</span>
+              <svg class="nav-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </div>
+            <ul id="submenuIzinKerja" class="nav-submenu">
+              <li class="nav-submenu-item" onclick="window.open('https://script.google.com/macros/s/AKfycbySLr-p01bqqa5dlJVe3gfl7xyhmS0TcXC2Filnc8pP95YxP9uGBou-PeUJ_C-toAhp/exec', '_blank')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                <span>Izin Kerja Prasarana</span>
+              </li>
+              <li class="nav-submenu-item" onclick="window.open('https://script.google.com/macros/s/AKfycbySLr-p01bqqa5dlJVe3gfl7xyhmS0TcXC2Filnc8pP95YxP9uGBou-PeUJ_C-toAhp/exec', '_blank')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                <span>Izin Kerja PPKW & K2</span>
+              </li>
+              <li class="nav-submenu-item" onclick="window.open('https://script.google.com/macros/s/AKfycbySLr-p01bqqa5dlJVe3gfl7xyhmS0TcXC2Filnc8pP95YxP9uGBou-PeUJ_C-toAhp/exec', '_blank')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                <span>Izin Kerja Vendor</span>
+              </li>
+            </ul>
+          </li>
         </ul>
       </div>
 
@@ -2077,6 +2150,21 @@
       renderCurrentTable();
     }
 
+    function toggleSubmenu(submenuId, element) {
+      var submenu = document.getElementById(submenuId);
+      if (!submenu) return;
+      var isOpen = submenu.classList.contains("open");
+      if (isOpen) {
+        submenu.classList.remove("open");
+        var chevron = element.querySelector(".nav-chevron");
+        if (chevron) chevron.classList.remove("rotated");
+      } else {
+        submenu.classList.add("open");
+        var chevron = element.querySelector(".nav-chevron");
+        if (chevron) chevron.classList.add("rotated");
+      }
+    }
+
     function switchTab(sheetName, element) {
       currentActiveSheet = sheetName;
       document.getElementById("currentSectionTitle").innerText = sheetName;
@@ -2645,91 +2733,3 @@
       var isHovered = false;
       var scrollSpeed = 0.85;
 
-      viewport.addEventListener("mousedown", function(e) {
-        isMouseDown = true;
-        startX = e.pageX;
-        prevPos = currentPos;
-      });
-
-      viewport.addEventListener("mouseleave", function() {
-        isMouseDown = false;
-        isHovered = false;
-      });
-
-      viewport.addEventListener("mouseenter", function() {
-        isHovered = true;
-      });
-
-      window.addEventListener("mouseup", function() {
-        isMouseDown = false;
-      });
-
-      viewport.addEventListener("mousemove", function(e) {
-        if (!isMouseDown) return;
-        e.preventDefault();
-        var diff = e.pageX - startX;
-        currentPos = prevPos - diff;
-      });
-
-      viewport.addEventListener("touchstart", function(e) {
-        isMouseDown = true;
-        startX = e.touches[0].pageX;
-        prevPos = currentPos;
-      }, { passive: true });
-
-      viewport.addEventListener("touchend", function() {
-        isMouseDown = false;
-      });
-
-      viewport.addEventListener("touchmove", function(e) {
-        if (!isMouseDown) return;
-        var diff = e.touches[0].pageX - startX;
-        currentPos = prevPos - diff;
-      }, { passive: true });
-
-      function renderAutoScroll() {
-        if (!isMouseDown) {
-          currentPos += isHovered ? 0.35 : scrollSpeed;
-        }
-
-        var halfWidth = track.scrollWidth / 2;
-        if (halfWidth > 0) {
-          if (currentPos >= halfWidth) {
-            currentPos -= halfWidth;
-            prevPos -= halfWidth;
-          } else if (currentPos < 0) {
-            currentPos += halfWidth;
-            prevPos += halfWidth;
-          }
-        }
-
-        track.style.transform = "translateX(-" + currentPos + "px)";
-        requestAnimationFrame(renderAutoScroll);
-      }
-
-      requestAnimationFrame(renderAutoScroll);
-    }
-
-    // Inisialisasi Saat Halaman Selesai Dimuat
-    window.addEventListener("DOMContentLoaded", function() {
-      selectedDateFilter = getTodayIsoDate();
-      var dateInput = document.getElementById("historyDateInput");
-      if (dateInput) {
-        dateInput.value = selectedDateFilter;
-      }
-
-      var crewDateEl = document.getElementById("crewScheduleDate");
-      if (crewDateEl) {
-        var now = new Date();
-        var options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
-        crewDateEl.innerText = now.toLocaleDateString('id-ID', options);
-      }
-
-      initCrewStore();
-      refreshData();
-      initTypingTextEffect();
-      initInfiniteLogoSlider();
-    });
-  </script>
-</body>
-</html>
