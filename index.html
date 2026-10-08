@@ -1191,6 +1191,57 @@
       }
     }
 
+    /* Mobile Menu Drawer & Overlay */
+    .mobile-menu-btn {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s;
+    }
+    .mobile-menu-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .mobile-close-sidebar-btn {
+      display: none;
+      background: #f1f3f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .mobile-close-sidebar-btn:hover {
+      background: #e2e5f0;
+      color: var(--badge-red);
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(17, 19, 26, 0.45);
+      backdrop-filter: blur(3px);
+      z-index: 1000;
+    }
+    .sidebar-overlay.active {
+      display: block;
+    }
+
     /* Responsive */
     @media (max-width: 1200px) {
       .app-layout { grid-template-columns: 240px 1fr; }
@@ -1200,26 +1251,55 @@
 
     @media (max-width: 768px) {
       .app-layout { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
+      .mobile-menu-btn { display: flex; }
+      .mobile-close-sidebar-btn { display: flex; }
+      .sidebar {
+        display: flex !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 290px;
+        max-width: 85vw;
+        height: 100vh;
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        background: var(--bg-surface);
+        overflow-y: auto;
+      }
+      .sidebar.mobile-open {
+        transform: translateX(0);
+      }
       .metric-grid { grid-template-columns: 1fr; }
       .main-content { padding: 16px; }
       .hero-banner { padding: 24px 20px; }
       .hero-banner h1 { font-size: 1.35rem; }
+      .top-bar { gap: 10px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Mobile Drawer Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
   <div class="app-layout">
     
     <!-- LEFT SIDEBAR -->
     <aside class="sidebar">
-      <div class="brand-logo">
-        <div class="brand-icon">🚆</div>
-        <div>
-          <div>NEXUS RAIL</div>
-          <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">ARJAWINANGUN (AWN)</div>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="brand-logo">
+          <div class="brand-icon">🚆</div>
+          <div>
+            <div>NEXUS RAIL</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">ARJAWINANGUN (AWN)</div>
+          </div>
         </div>
+        <button class="mobile-close-sidebar-btn" onclick="closeMobileSidebar()" title="Tutup Menu">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
       </div>
 
       <div>
@@ -1252,10 +1332,6 @@
           <li class="nav-item" onclick="switchTab('SOP DAN INSTRUKSI', this)">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             SOP & Instruksi
-          </li>
-          <li class="nav-item" onclick="window.open('https://script.google.com/macros/s/AKfycbwmpUhIVRYTf4edrcFtrM7bS1Rt4O2yjDQjYYODbNeT49Na20BaoggESKqSCiNwtMNz6Q/exec', '_blank')">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            Tracking Posisi PPKW
           </li>
           <li class="nav-item" onclick="window.open('https://script.google.com/macros/s/AKfycbzMdkU2x2VstWu8f3ZoY7qZYT5SK-wW5TFNm5Tsbvs2EYwe5tKUKuvfptHbxyec0iGA/exec', '_blank')">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
@@ -1302,12 +1378,15 @@
       
       <!-- Top Search & Utility -->
       <div class="top-bar">
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" title="Buka Menu Navigasi">
+          <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
         <div class="search-box">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           <input type="text" id="searchInput" placeholder="Cari nomor KA, nomor stopblok, petak jalan, dokumen SOP..." onkeyup="filterTable()">
         </div>
         <div class="top-actions">
-          <div class="action-btn-circle" onclick="refreshData()" title="Sinkronisasi Data">
+          <div class="action-btn-circle" onclick="refreshData(true)" title="Sinkronisasi Data Sekarang">
             <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           </div>
           <div class="action-btn-circle" title="Pusat Notifikasi">
@@ -2110,11 +2189,44 @@
       document.getElementById("syncStatus").innerText = "Canvas Preview Mode";
     }
 
-    function refreshData() {
-      document.getElementById("syncStatus").innerText = "Memperbarui data...";
+    var isDataSyncing = false;
+    var autoSyncIntervalTimer = null;
+
+    function toggleMobileSidebar() {
+      var sidebar = document.querySelector(".sidebar");
+      var overlay = document.getElementById("sidebarOverlay");
+      if (!sidebar) return;
+      if (sidebar.classList.contains("mobile-open")) {
+        closeMobileSidebar();
+      } else {
+        sidebar.classList.add("mobile-open");
+        if (overlay) overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+    }
+
+    function closeMobileSidebar() {
+      var sidebar = document.querySelector(".sidebar");
+      var overlay = document.getElementById("sidebarOverlay");
+      if (sidebar) sidebar.classList.remove("mobile-open");
+      if (overlay) overlay.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    function refreshData(isManual) {
+      if (isDataSyncing) return;
+      isDataSyncing = true;
+
+      var syncEl = document.getElementById("syncStatus");
+      if (syncEl && isManual) {
+        syncEl.innerText = "Memperbarui data...";
+        syncEl.style.color = "var(--primary)";
+      }
+
       if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
           .withSuccessHandler(function(response) {
+            isDataSyncing = false;
             if (response && response.success) {
               globalDataCache = response.data;
               
@@ -2124,25 +2236,59 @@
                     crewScheduleStore[s] = response.data.crewRoster[s];
                   }
                 }
+                try {
+                  localStorage.setItem("nexus_awn_crew_roster", JSON.stringify(crewScheduleStore));
+                } catch(e) {}
                 renderCrewList();
               }
 
               updateUI();
-              document.getElementById("syncStatus").innerText = "Terakhir disinkron: " + response.data.lastSync;
-              showToast("Data operasional berhasil disinkron!");
+              var lastSyncTime = response.data.lastSync || new Date().toLocaleTimeString('id-ID');
+              if (syncEl) {
+                syncEl.innerHTML = "<span style='color:#00b060; font-weight:700;'>● Singkron Aktif</span> (Pembaruan: " + lastSyncTime + ")";
+              }
+              if (isManual) {
+                showToast("Data operasional berhasil disinkron!");
+              }
             } else {
-              document.getElementById("syncStatus").innerText = "Gagal memuat data.";
-              showToast("Gagal mengambil data dari Google Sheets.");
+              if (syncEl) {
+                syncEl.innerText = "Gagal memuat data Google Sheets.";
+                syncEl.style.color = "var(--badge-red)";
+              }
+              if (isManual) {
+                showToast("Gagal mengambil data dari Google Sheets.");
+              }
             }
           })
           .withFailureHandler(function(err) {
-            document.getElementById("syncStatus").innerText = "Koneksi terputus.";
-            showToast("Error: " + err.message);
+            isDataSyncing = false;
+            if (syncEl) {
+              syncEl.innerText = "Koneksi terputus: " + (err.message || "");
+              syncEl.style.color = "var(--badge-red)";
+            }
+            if (isManual) {
+              showToast("Error koneksi: " + err.message);
+            }
           })
           .getAllData();
       } else {
+        isDataSyncing = false;
         initCanvasMock();
+        if (syncEl) {
+          syncEl.innerText = "Canvas Preview Mode (Demo Lokal)";
+        }
       }
+    }
+
+    function startAutoSyncLoop() {
+      if (autoSyncIntervalTimer) clearInterval(autoSyncIntervalTimer);
+      // Sinkronisasi otomatis setiap 25 detik di latar belakang
+      autoSyncIntervalTimer = setInterval(function() {
+        var modalActive = document.querySelector(".modal-overlay.active");
+        if (!modalActive) {
+          refreshData(false);
+        }
+      }, 25000);
     }
 
     function updateUI() {
@@ -2170,6 +2316,7 @@
     }
 
     function switchTab(sheetName, element) {
+      closeMobileSidebar();
       currentActiveSheet = sheetName;
       document.getElementById("currentSectionTitle").innerText = sheetName;
       document.getElementById("heroBtnLabel").innerText = (sheetName === "SOP DAN INSTRUKSI") ? "+ Unggah SOP / Dokumen" : "+ Tambah Catatan Baru";
@@ -2674,154 +2821,3 @@
         showToast("URL Spreadsheet belum tersedia.");
       }
     }
-
-    /* =========================================================
-       1. FITUR TYPING TEXT EFFECT (Mengetik & Menghapus Berulang)
-       ========================================================= */
-    var typingWords = [
-      "Stasiun Arjawinangun (AWN)",
-      "Pantauan Taspat Petak Jalan",
-      "Monitoring Pemasangan Stopblok",
-      "Kesiapan Jalur Stabling KA & GD"
-    ];
-    var currentWordIndex = 0;
-    var currentCharIndex = 0;
-    var isDeletingText = false;
-    var typingSpeed = 90;
-    var deletingSpeed = 45;
-    var pauseAfterTyping = 2000;
-    var pauseAfterDeleting = 380;
-
-    function initTypingTextEffect() {
-      var targetElement = document.getElementById("typingEffectText");
-      if (!targetElement) return;
-
-      var currentFullWord = typingWords[currentWordIndex];
-
-      if (isDeletingText) {
-        currentCharIndex--;
-        targetElement.innerText = currentFullWord.substring(0, currentCharIndex);
-      } else {
-        currentCharIndex++;
-        targetElement.innerText = currentFullWord.substring(0, currentCharIndex);
-      }
-
-      var currentDelay = isDeletingText ? deletingSpeed : typingSpeed;
-
-      if (!isDeletingText && currentCharIndex === currentFullWord.length) {
-        currentDelay = pauseAfterTyping;
-        isDeletingText = true;
-      } else if (isDeletingText && currentCharIndex === 0) {
-        isDeletingText = false;
-        currentWordIndex = (currentWordIndex + 1) % typingWords.length;
-        currentDelay = pauseAfterDeleting;
-      }
-
-      setTimeout(initTypingTextEffect, currentDelay);
-    }
-
-    /* =========================================================
-       2. FITUR INFINITE LOGO SLIDER (Hardware Accelerated & Drag)
-       ========================================================= */
-    function initInfiniteLogoSlider() {
-      var viewport = document.getElementById("logoSliderViewport");
-      var track = document.getElementById("logoSliderTrack");
-      if (!viewport || !track) return;
-
-      track.innerHTML += track.innerHTML;
-
-      var currentPos = 0;
-      var isMouseDown = false;
-      var startX = 0;
-      var prevPos = 0;
-      var isHovered = false;
-      var scrollSpeed = 0.85;
-
-      viewport.addEventListener("mousedown", function(e) {
-        isMouseDown = true;
-        startX = e.pageX;
-        prevPos = currentPos;
-      });
-
-      viewport.addEventListener("mouseleave", function() {
-        isMouseDown = false;
-        isHovered = false;
-      });
-
-      viewport.addEventListener("mouseenter", function() {
-        isHovered = true;
-      });
-
-      window.addEventListener("mouseup", function() {
-        isMouseDown = false;
-      });
-
-      viewport.addEventListener("mousemove", function(e) {
-        if (!isMouseDown) return;
-        e.preventDefault();
-        var diff = e.pageX - startX;
-        currentPos = prevPos - diff;
-      });
-
-      viewport.addEventListener("touchstart", function(e) {
-        isMouseDown = true;
-        startX = e.touches[0].pageX;
-        prevPos = currentPos;
-      }, { passive: true });
-
-      viewport.addEventListener("touchend", function() {
-        isMouseDown = false;
-      });
-
-      viewport.addEventListener("touchmove", function(e) {
-        if (!isMouseDown) return;
-        var diff = e.touches[0].pageX - startX;
-        currentPos = prevPos - diff;
-      }, { passive: true });
-
-      function renderAutoScroll() {
-        if (!isMouseDown) {
-          currentPos += isHovered ? 0.35 : scrollSpeed;
-        }
-
-        var halfWidth = track.scrollWidth / 2;
-        if (halfWidth > 0) {
-          if (currentPos >= halfWidth) {
-            currentPos -= halfWidth;
-            prevPos -= halfWidth;
-          } else if (currentPos < 0) {
-            currentPos += halfWidth;
-            prevPos += halfWidth;
-          }
-        }
-
-        track.style.transform = "translateX(-" + currentPos + "px)";
-        requestAnimationFrame(renderAutoScroll);
-      }
-
-      requestAnimationFrame(renderAutoScroll);
-    }
-
-    // Inisialisasi Saat Halaman Selesai Dimuat
-    window.addEventListener("DOMContentLoaded", function() {
-      selectedDateFilter = getTodayIsoDate();
-      var dateInput = document.getElementById("historyDateInput");
-      if (dateInput) {
-        dateInput.value = selectedDateFilter;
-      }
-
-      var crewDateEl = document.getElementById("crewScheduleDate");
-      if (crewDateEl) {
-        var now = new Date();
-        var options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
-        crewDateEl.innerText = now.toLocaleDateString('id-ID', options);
-      }
-
-      initCrewStore();
-      refreshData();
-      initTypingTextEffect();
-      initInfiniteLogoSlider();
-    });
-  </script>
-</body>
-</html>
