@@ -2733,3 +2733,91 @@
       var isHovered = false;
       var scrollSpeed = 0.85;
 
+      viewport.addEventListener("mousedown", function(e) {
+        isMouseDown = true;
+        startX = e.pageX;
+        prevPos = currentPos;
+      });
+
+      viewport.addEventListener("mouseleave", function() {
+        isMouseDown = false;
+        isHovered = false;
+      });
+
+      viewport.addEventListener("mouseenter", function() {
+        isHovered = true;
+      });
+
+      window.addEventListener("mouseup", function() {
+        isMouseDown = false;
+      });
+
+      viewport.addEventListener("mousemove", function(e) {
+        if (!isMouseDown) return;
+        e.preventDefault();
+        var diff = e.pageX - startX;
+        currentPos = prevPos - diff;
+      });
+
+      viewport.addEventListener("touchstart", function(e) {
+        isMouseDown = true;
+        startX = e.touches[0].pageX;
+        prevPos = currentPos;
+      }, { passive: true });
+
+      viewport.addEventListener("touchend", function() {
+        isMouseDown = false;
+      });
+
+      viewport.addEventListener("touchmove", function(e) {
+        if (!isMouseDown) return;
+        var diff = e.touches[0].pageX - startX;
+        currentPos = prevPos - diff;
+      }, { passive: true });
+
+      function renderAutoScroll() {
+        if (!isMouseDown) {
+          currentPos += isHovered ? 0.35 : scrollSpeed;
+        }
+
+        var halfWidth = track.scrollWidth / 2;
+        if (halfWidth > 0) {
+          if (currentPos >= halfWidth) {
+            currentPos -= halfWidth;
+            prevPos -= halfWidth;
+          } else if (currentPos < 0) {
+            currentPos += halfWidth;
+            prevPos += halfWidth;
+          }
+        }
+
+        track.style.transform = "translateX(-" + currentPos + "px)";
+        requestAnimationFrame(renderAutoScroll);
+      }
+
+      requestAnimationFrame(renderAutoScroll);
+    }
+
+    // Inisialisasi Saat Halaman Selesai Dimuat
+    window.addEventListener("DOMContentLoaded", function() {
+      selectedDateFilter = getTodayIsoDate();
+      var dateInput = document.getElementById("historyDateInput");
+      if (dateInput) {
+        dateInput.value = selectedDateFilter;
+      }
+
+      var crewDateEl = document.getElementById("crewScheduleDate");
+      if (crewDateEl) {
+        var now = new Date();
+        var options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+        crewDateEl.innerText = now.toLocaleDateString('id-ID', options);
+      }
+
+      initCrewStore();
+      refreshData();
+      initTypingTextEffect();
+      initInfiniteLogoSlider();
+    });
+  </script>
+</body>
+</html>
